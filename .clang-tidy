@@ -1,0 +1,7 @@
+---
+Checks: 'clang-diagnostic-*,clang-analyzer-*,*,-llvm-header-guard,-cppcoreguidelines-special-member-functions,-hicpp-special-member-functions'
+WarningsAsErrors: ''
+HeaderFilterRegex: 'Plus7/.*'
+AnalyzeTemporaryDtors: false
+FormatStyle: file
+...
