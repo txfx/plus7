@@ -1,6 +1,6 @@
 #pragma once
 
-#include <utils/NonCopyable.hpp>
+#include <Utils/NonCopyable.hpp>
 
 namespace p7 {
 struct App : public NonCopyable
