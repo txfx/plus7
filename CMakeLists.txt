@@ -1,8 +1,5 @@
+cmake_minimum_required(VERSION 3.6)
 project(Plus7)
 
-find_package(SDL2 REQUIRED)
-
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-add_executable(HelloWorld samples/HelloWorld.cpp)
+add_subdirectory(plus7)
+add_subdirectory(samples)
