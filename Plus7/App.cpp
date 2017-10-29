@@ -6,17 +6,14 @@ namespace p7 {
 
 App::App()
 {
-    initialized = SDL_Init(SDL_INIT_EVENTS | SDL_INIT_TIMER) == 0;
+    SDL_Init(SDL_INIT_EVENTS | SDL_INIT_TIMER);
 }
 
 App::~App()
 {
     modules.clear();
 
-    if (initialized)
-    {
-        SDL_Quit();
-    }
+    SDL_Quit();
 }
 
 void App::Run()
