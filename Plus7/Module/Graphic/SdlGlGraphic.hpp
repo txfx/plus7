@@ -1,23 +1,23 @@
 #pragma once
 
-#include "Base.hpp"
+#include <Module/Base.hpp>
 
 struct SDL_Window;
 using SDL_GLContext = void*;
 
 namespace p7 {
 namespace module {
-struct Graphic : public Base
+struct SdlGlGraphic : public Base
 {
 public:
-    explicit Graphic(App& _app);
-    Graphic(const char* _name, int _w, int _h, App& _app);
-    ~Graphic() override;
+    explicit SdlGlGraphic(App& _app);
+    SdlGlGraphic(const char* _name, int _w, int _h, App& _app);
+    ~SdlGlGraphic() override;
 
     void Update() override;
 
 private:
-    Graphic(const char* _name, int _w, int _h, bool _visible, App& _app);
+    SdlGlGraphic(const char* _name, int _w, int _h, bool _visible, App& _app);
 
 private:
     int           width;
