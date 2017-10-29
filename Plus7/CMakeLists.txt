@@ -1,6 +1,3 @@
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 set(SOURCE_FILES App.cpp Module/Graphic.cpp)
 add_library(Plus7 STATIC ${SOURCE_FILES})
 
