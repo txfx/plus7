@@ -7,7 +7,10 @@ protected:
     NonCopyable()  = default;
     ~NonCopyable() = default;
 
-private:
+    NonCopyable(NonCopyable&&) = default;
+    NonCopyable& operator=(NonCopyable&&) = default;
+
+public:
     NonCopyable(const NonCopyable&) = delete;
     const NonCopyable& operator=(const NonCopyable&) = delete;
 };
