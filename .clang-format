@@ -17,6 +17,7 @@ BraceWrapping:
   SplitEmptyFunction: false
   SplitEmptyRecord: false
   SplitEmptyNamespace: false
+NamespaceIndentation: None
 FixNamespaceComments: 'true'
 SortIncludes: 'true'
 SortUsingDeclarations: 'true'
