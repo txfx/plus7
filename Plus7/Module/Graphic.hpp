@@ -10,7 +10,7 @@ namespace module {
 struct Graphic : public Base
 {
 public:
-    Graphic(App& _app);
+    explicit Graphic(App& _app);
     Graphic(const char* _name, int _w, int _h, App& _app);
     ~Graphic() override;
 
