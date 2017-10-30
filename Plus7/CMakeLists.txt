@@ -1,4 +1,4 @@
-set(SOURCE_FILES App.cpp Module/Gfx/SdlGl/SdlGlRenderer.cpp)
+set(SOURCE_FILES App.cpp Modules/Gfx/SdlGl/SdlGlRenderer.cpp)
 add_library(Plus7 STATIC ${SOURCE_FILES})
 
 find_package(OpenGL REQUIRED)
