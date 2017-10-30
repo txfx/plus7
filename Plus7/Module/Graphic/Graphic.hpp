@@ -3,7 +3,7 @@
 #include "SdlGl/SdlGlGraphic.hpp"
 
 namespace p7 {
-namespace module {
+namespace gfx {
 using Graphic = SdlGlGraphic;
 }
 } // namespace p7

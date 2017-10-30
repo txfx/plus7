@@ -6,7 +6,7 @@ struct SDL_Window;
 using SDL_GLContext = void*;
 
 namespace p7 {
-namespace module {
+namespace gfx {
 struct SdlGlGraphic : public Module
 {
 public:
@@ -26,5 +26,5 @@ private:
     SDL_Window*   window;
     SDL_GLContext glcontext;
 };
-} // namespace module
+} // namespace gfx
 } // namespace p7

@@ -4,7 +4,7 @@
 #include <SDL.h>
 
 namespace p7 {
-namespace module {
+namespace gfx {
 
 SdlGlGraphic::SdlGlGraphic(App& _app)
     : SdlGlGraphic("", 0, 0, /* _visible*/ false, _app)
@@ -54,5 +54,5 @@ void SdlGlGraphic::Update()
     SDL_GL_SwapWindow(window);
 }
 
-} // namespace module
+} // namespace gfx
 } // namespace p7

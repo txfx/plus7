@@ -6,7 +6,7 @@
 int main()
 {
     using p7::App;
-    using p7::module::Graphic;
+    using p7::gfx::Graphic;
 
     App helloWorldApp;
     helloWorldApp.LoadModule<Graphic>("Hello World", 640, 480);
