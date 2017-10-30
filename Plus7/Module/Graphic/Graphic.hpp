@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SdlGlGraphic.hpp"
+#include "SdlGl/SdlGlGraphic.hpp"
 
 namespace p7 {
 namespace module {
