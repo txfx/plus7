@@ -52,6 +52,11 @@ void SdlGlRenderer::Clear(float _r, float _g, float _b, float _a)
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
+void SdlGlRenderer::SetRasterizerState(const RasterizerState& _state)
+{
+    _state.Apply();
+}
+
 void SdlGlRenderer::Update()
 {
     glViewport(0, 0, width, height);

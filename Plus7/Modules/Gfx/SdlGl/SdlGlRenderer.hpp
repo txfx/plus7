@@ -2,14 +2,13 @@
 
 #include <Module.hpp>
 #include <Modules/Gfx/RasterizerProperties.hpp>
+#include <Modules/Gfx/RasterizerState.hpp>
 
 struct SDL_Window;
 using SDL_GLContext = void*;
 
 namespace p7 {
 namespace gfx {
-
-struct RasterizerState;
 
 struct SdlGlRenderer : public Module
 {
@@ -23,6 +22,7 @@ public:
 
     // Renderer
     void Clear(float _r, float _g, float _b, float _a = 1.0f);
+    void SetRasterizerState(const RasterizerState& _state);
 
 private:
     SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, App& _app);
