@@ -46,11 +46,16 @@ SdlGlRenderer::~SdlGlRenderer()
     }
 }
 
+void SdlGlRenderer::Clear(float _r, float _g, float _b, float _a)
+{
+    glClearColor(_r, _g, _b, _a);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
 void SdlGlRenderer::Update()
 {
     glViewport(0, 0, width, height);
-    glClearColor(1, 1, 1, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
+    Clear(1, 0, 0, 1);
     SDL_GL_SwapWindow(window);
 }
 

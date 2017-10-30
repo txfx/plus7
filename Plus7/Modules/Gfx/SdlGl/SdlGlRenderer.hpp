@@ -21,6 +21,9 @@ public:
     // Module
     void Update() override;
 
+    // Renderer
+    void Clear(float _r, float _g, float _b, float _a = 1.0f);
+
 private:
     SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, App& _app);
 
