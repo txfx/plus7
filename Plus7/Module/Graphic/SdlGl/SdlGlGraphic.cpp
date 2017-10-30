@@ -15,7 +15,7 @@ SdlGlGraphic::SdlGlGraphic(const char* _name, int _w, int _h, App& _app)
 {}
 
 SdlGlGraphic::SdlGlGraphic(const char* _name, int _w, int _h, bool _visible, App& _app)
-    : Base(_app)
+    : Module(_app)
     , width(_w)
     , height(_h)
 {

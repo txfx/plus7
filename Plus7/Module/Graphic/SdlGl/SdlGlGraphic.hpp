@@ -1,13 +1,13 @@
 #pragma once
 
-#include <Module/Base.hpp>
+#include <Module.hpp>
 
 struct SDL_Window;
 using SDL_GLContext = void*;
 
 namespace p7 {
 namespace module {
-struct SdlGlGraphic : public Base
+struct SdlGlGraphic : public Module
 {
 public:
     explicit SdlGlGraphic(App& _app);

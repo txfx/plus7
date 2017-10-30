@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Module/Base.hpp>
+#include <Module.hpp>
 #include <Utils/NonCopyable.hpp>
 
 #include <algorithm>
@@ -46,6 +46,6 @@ public:
 private:
     bool exit_requested = false;
 
-    std::vector<std::unique_ptr<module::Base>> modules;
+    std::vector<std::unique_ptr<Module>> modules;
 }; // namespace p7
 } // namespace p7
