@@ -1,12 +1,16 @@
 #pragma once
 
 #include <Module.hpp>
+#include <Modules/Gfx/RasterizerProperties.hpp>
 
 struct SDL_Window;
 using SDL_GLContext = void*;
 
 namespace p7 {
 namespace gfx {
+
+struct RasterizerState;
+
 struct SdlGlRenderer : public Module
 {
 public:
@@ -14,6 +18,7 @@ public:
     SdlGlRenderer(const char* _name, int _w, int _h, App& _app);
     ~SdlGlRenderer() override;
 
+    // Module
     void Update() override;
 
 private:
