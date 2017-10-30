@@ -1,4 +1,4 @@
-#include "SdlGlGraphic.hpp"
+#include "SdlGlRenderer.hpp"
 
 #include <GL/gl.h>
 #include <SDL.h>
@@ -6,15 +6,15 @@
 namespace p7 {
 namespace gfx {
 
-SdlGlGraphic::SdlGlGraphic(App& _app)
-    : SdlGlGraphic("", 0, 0, /* _visible*/ false, _app)
+SdlGlRenderer::SdlGlRenderer(App& _app)
+    : SdlGlRenderer("", 0, 0, /* _visible*/ false, _app)
 {}
 
-SdlGlGraphic::SdlGlGraphic(const char* _name, int _w, int _h, App& _app)
-    : SdlGlGraphic(_name, _w, _h, /*_visible*/ true, _app)
+SdlGlRenderer::SdlGlRenderer(const char* _name, int _w, int _h, App& _app)
+    : SdlGlRenderer(_name, _w, _h, /*_visible*/ true, _app)
 {}
 
-SdlGlGraphic::SdlGlGraphic(const char* _name, int _w, int _h, bool _visible, App& _app)
+SdlGlRenderer::SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, App& _app)
     : Module(_app)
     , width(_w)
     , height(_h)
@@ -36,7 +36,7 @@ SdlGlGraphic::SdlGlGraphic(const char* _name, int _w, int _h, bool _visible, App
     glcontext = SDL_GL_CreateContext(window);
 }
 
-SdlGlGraphic::~SdlGlGraphic()
+SdlGlRenderer::~SdlGlRenderer()
 {
     if (initialized)
     {
@@ -46,7 +46,7 @@ SdlGlGraphic::~SdlGlGraphic()
     }
 }
 
-void SdlGlGraphic::Update()
+void SdlGlRenderer::Update()
 {
     glViewport(0, 0, width, height);
     glClearColor(1, 1, 1, 0);
