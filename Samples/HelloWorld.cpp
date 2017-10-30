@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include <App.hpp>
-#include <Module/Graphic/Renderer.hpp>
+#include <Module/Gfx/Renderer.hpp>
 
 int main()
 {
