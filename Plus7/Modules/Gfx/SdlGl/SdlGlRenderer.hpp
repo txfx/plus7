@@ -21,9 +21,17 @@ public:
 
     // Renderer
     void Clear(float _r, float _g, float _b, float _a) override;
-    void SetBlendState(const BlendState& _state) override;
-    void SetDepthState(const DepthState& _state) override;
-    void SetRasterizerState(const RasterizerState& _state) override;
+
+    void SetViewport(float _x, float _y, float _w, float _h) override;
+    void SetScissor(float _x, float _y, float _w, float _h) override;
+
+    void BindIndexBuffer(Buffer& _buffer) override;
+    void BindVertexBuffer(Buffer& _buffer, uint8_t _binding) override;
+    void BindConstantBuffer(Buffer& _buffer, uint8_t _binding) override;
+
+    void BindBlendState(const BlendState& _state) override;
+    void BindDepthState(const DepthState& _state) override;
+    void BindRasterizerState(const RasterizerState& _state) override;
 
 private:
     SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, App& _app);

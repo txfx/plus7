@@ -53,17 +53,23 @@ void SdlGlRenderer::Clear(float _r, float _g, float _b, float _a)
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void SdlGlRenderer::SetBlendState(const BlendState& _state)
+void SdlGlRenderer::SetViewport(float /* _x */, float /* _y */, float /* _w */, float /* _h */) {}
+void SdlGlRenderer::SetScissor(float /* _x */, float /* _y */, float /* _w */, float /* _h */) {}
+void SdlGlRenderer::BindIndexBuffer(Buffer& /* _buffer */) {}
+void SdlGlRenderer::BindVertexBuffer(Buffer& /* _buffer */, uint8_t /* _binding */) {}
+void SdlGlRenderer::BindConstantBuffer(Buffer& /* _buffer */, uint8_t /* _binding */) {}
+
+void SdlGlRenderer::BindBlendState(const BlendState& _state)
 {
     _state.Apply();
 }
 
-void SdlGlRenderer::SetDepthState(const DepthState& _state)
+void SdlGlRenderer::BindDepthState(const DepthState& _state)
 {
     _state.Apply();
 }
 
-void SdlGlRenderer::SetRasterizerState(const RasterizerState& _state)
+void SdlGlRenderer::BindRasterizerState(const RasterizerState& _state)
 {
     _state.Apply();
 }
