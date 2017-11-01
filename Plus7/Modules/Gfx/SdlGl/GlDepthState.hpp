@@ -10,7 +10,7 @@ namespace gfx {
 struct GlDepthState
 {
 public:
-    GlDepthState(const DepthProperties& _properties);
+    explicit GlDepthState(const DepthProperties& _properties);
 
     void Apply() const;
 

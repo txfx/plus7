@@ -10,7 +10,7 @@ namespace gfx {
 struct GlRasterizerState
 {
 public:
-    GlRasterizerState(const RasterizerProperties& _properties);
+    explicit GlRasterizerState(const RasterizerProperties& _properties);
 
     void Apply() const;
 
