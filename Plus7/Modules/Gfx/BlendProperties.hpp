@@ -37,6 +37,16 @@ enum class BlendOp
 
 struct BlendProperties
 {
+    constexpr BlendProperties(BlendFactor _src, BlendFactor _dst, BlendOp _op)
+        : enable(true)
+        , srcRgb(_src)
+        , dstRgb(_dst)
+        , opRgb(_op)
+        , srcAlpha(_src)
+        , dstAlpha(_dst)
+        , opAlpha(_op)
+    {}
+
     bool        enable   = false;
     BlendFactor srcRgb   = BlendFactor::One;
     BlendFactor dstRgb   = BlendFactor::Zero;
