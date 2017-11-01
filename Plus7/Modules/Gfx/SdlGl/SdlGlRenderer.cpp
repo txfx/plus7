@@ -1,7 +1,8 @@
 #include "SdlGlRenderer.hpp"
 
-#include <GL/gl.h>
 #include <SDL.h>
+
+#include "gl_headers.h"
 
 namespace p7 {
 namespace gfx {

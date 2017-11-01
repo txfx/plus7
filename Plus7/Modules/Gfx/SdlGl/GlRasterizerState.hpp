@@ -2,7 +2,7 @@
 
 #include <Modules/Gfx/RasterizerProperties.hpp>
 
-#include <GL/gl.h>
+#include "gl_headers.h"
 
 namespace p7 {
 namespace gfx {
