@@ -2,6 +2,7 @@
 
 #include <Module.hpp>
 #include <Modules/Gfx/BlendState.hpp>
+#include <Modules/Gfx/DepthState.hpp>
 #include <Modules/Gfx/RasterizerState.hpp>
 
 struct SDL_Window;
@@ -22,8 +23,9 @@ public:
 
     // Renderer
     void Clear(float _r, float _g, float _b, float _a = 1.0f);
-    void SetRasterizerState(const RasterizerState& _state);
     void SetBlendState(const BlendState& _state);
+    void SetDepthState(const DepthState& _state);
+    void SetRasterizerState(const RasterizerState& _state);
 
 private:
     SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, App& _app);

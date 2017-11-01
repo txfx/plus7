@@ -53,12 +53,17 @@ void SdlGlRenderer::Clear(float _r, float _g, float _b, float _a)
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void SdlGlRenderer::SetRasterizerState(const RasterizerState& _state)
+void SdlGlRenderer::SetBlendState(const BlendState& _state)
 {
     _state.Apply();
 }
 
-void SdlGlRenderer::SetBlendState(const BlendState& _state)
+void SdlGlRenderer::SetDepthState(const DepthState& _state)
+{
+    _state.Apply();
+}
+
+void SdlGlRenderer::SetRasterizerState(const RasterizerState& _state)
 {
     _state.Apply();
 }
