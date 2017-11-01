@@ -3,9 +3,9 @@
 namespace p7 {
 namespace gfx {
 namespace {
-GLenum ToGl(BlendFactor mode)
+GLenum ToGl(BlendFactor _mode)
 {
-    switch (mode)
+    switch (_mode)
     {
     case BlendFactor::Zero:
         return GL_ZERO;
@@ -48,9 +48,9 @@ GLenum ToGl(BlendFactor mode)
     }
 }
 
-GLenum ToGl(BlendOp mode)
+GLenum ToGl(BlendOp _mode)
 {
-    switch (mode)
+    switch (_mode)
     {
     case BlendOp::Add:
         return GL_FUNC_ADD;
