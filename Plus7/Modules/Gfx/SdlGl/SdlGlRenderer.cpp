@@ -58,6 +58,11 @@ void SdlGlRenderer::SetRasterizerState(const RasterizerState& _state)
     _state.Apply();
 }
 
+void SdlGlRenderer::SetBlendState(const BlendState& _state)
+{
+    _state.Apply();
+}
+
 void SdlGlRenderer::Update()
 {
     glViewport(0, 0, width, height);

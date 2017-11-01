@@ -1,7 +1,7 @@
 #pragma once
 
 #include "BlendProperties.hpp"
-#include <Modules/Gfx/SdlGlBlendState.hpp>
+#include <Modules/Gfx/SdlGl/GlBlendState.hpp>
 
 namespace p7 {
 namespace gfx {
