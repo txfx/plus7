@@ -33,6 +33,9 @@ public:
     void BindDepthState(const DepthState& _state) override;
     void BindRasterizerState(const RasterizerState& _state) override;
 
+    void Draw(uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance) override;
+    void DrawIndexed(uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance) override;
+
 private:
     SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, App& _app);
 

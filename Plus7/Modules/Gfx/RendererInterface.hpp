@@ -25,6 +25,15 @@ public:
     virtual void BindBlendState(const BlendState& _state)           = 0;
     virtual void BindDepthState(const DepthState& _state)           = 0;
     virtual void BindRasterizerState(const RasterizerState& _state) = 0;
+
+    virtual void Draw(uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance)                             = 0;
+    virtual void DrawIndexed(uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance) = 0;
+
+    void Draw(uint32_t _vertexCount) { Draw(_vertexCount, 1, 0, 0); }
+    void Draw(uint32_t _vertexCount, uint32_t _instanceCount) { Draw(_vertexCount, _instanceCount, 0, 0); }
+
+    void DrawIndexed(uint32_t _indexCount) { DrawIndexed(_indexCount, 1, 0, 0, 0); }
+    void DrawIndexed(uint32_t _indexCount, uint32_t _instanceCount) { DrawIndexed(_indexCount, _instanceCount, 0, 0, 0); }
 };
 
 } // namespace gfx
