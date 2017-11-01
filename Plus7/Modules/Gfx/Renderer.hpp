@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SdlGl/SdlGlRenderer.hpp"
+#include <Modules/Gfx/SdlGl/SdlGlRenderer.hpp>
 
 namespace p7 {
 namespace gfx {
