@@ -1,9 +1,7 @@
 #pragma once
 
 #include <Module.hpp>
-#include <Modules/Gfx/BlendState.hpp>
-#include <Modules/Gfx/DepthState.hpp>
-#include <Modules/Gfx/RasterizerState.hpp>
+#include <Modules/Gfx/RendererInterface.hpp>
 
 struct SDL_Window;
 using SDL_GLContext = void*;
@@ -11,7 +9,7 @@ using SDL_GLContext = void*;
 namespace p7 {
 namespace gfx {
 
-struct SdlGlRenderer : public Module
+struct SdlGlRenderer final : public Module, public RendererInterface
 {
 public:
     explicit SdlGlRenderer(App& _app);
@@ -22,10 +20,10 @@ public:
     void Update() override;
 
     // Renderer
-    void Clear(float _r, float _g, float _b, float _a = 1.0f);
-    void SetBlendState(const BlendState& _state);
-    void SetDepthState(const DepthState& _state);
-    void SetRasterizerState(const RasterizerState& _state);
+    void Clear(float _r, float _g, float _b, float _a) override;
+    void SetBlendState(const BlendState& _state) override;
+    void SetDepthState(const DepthState& _state) override;
+    void SetRasterizerState(const RasterizerState& _state) override;
 
 private:
     SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, App& _app);
