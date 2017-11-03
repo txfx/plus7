@@ -3,6 +3,7 @@
 #include "BlendState.hpp"
 #include "DepthState.hpp"
 #include "RasterizerState.hpp"
+#include "ShaderState.hpp"
 
 namespace p7 {
 namespace gfx {
@@ -25,6 +26,8 @@ public:
     virtual void BindBlendState(const BlendState& _state)           = 0;
     virtual void BindDepthState(const DepthState& _state)           = 0;
     virtual void BindRasterizerState(const RasterizerState& _state) = 0;
+
+    virtual void BindShaderState(const ShaderState& _state) = 0;
 
     virtual void Draw(uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance)                             = 0;
     virtual void DrawIndexed(uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance) = 0;

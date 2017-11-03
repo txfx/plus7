@@ -3,6 +3,7 @@ set(SOURCE_FILES
     Modules/Gfx/SdlGl/SdlGlRenderer.cpp
     Modules/Gfx/SdlGl/GlBlendState.cpp
     Modules/Gfx/SdlGl/GlDepthState.cpp
+    Modules/Gfx/SdlGl/GlShaderState.cpp
     Modules/Gfx/SdlGl/GlRasterizerState.cpp)
 add_library(Plus7 STATIC ${SOURCE_FILES})
 

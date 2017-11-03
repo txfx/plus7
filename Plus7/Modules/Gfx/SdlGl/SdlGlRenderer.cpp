@@ -74,6 +74,11 @@ void SdlGlRenderer::BindRasterizerState(const RasterizerState& _state)
     _state.Apply();
 }
 
+void SdlGlRenderer::BindShaderState(const ShaderState& _state)
+{
+    _state.Apply();
+}
+
 void SdlGlRenderer::Draw(
     uint32_t /* _vertexCount */,
     uint32_t /* _instanceCount */,
