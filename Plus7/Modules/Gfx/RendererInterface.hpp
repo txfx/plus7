@@ -5,10 +5,10 @@
 #include "RasterizerState.hpp"
 #include "ShaderState.hpp"
 
+#include "Buffer.hpp"
+
 namespace p7 {
 namespace gfx {
-
-struct Buffer;
 
 struct RendererInterface
 {
