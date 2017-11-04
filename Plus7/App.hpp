@@ -21,7 +21,7 @@ public:
     T& LoadModule(TArgs... args)
     {
         modules.emplace_back(std::make_unique<T>(args..., *this));
-        return dynamic_cast<T&>(*modules.back().get());
+        return dynamic_cast<T&>(*modules.back());
     }
 
     template <typename T>
