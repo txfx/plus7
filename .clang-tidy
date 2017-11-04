@@ -1,5 +1,5 @@
 ---
-Checks: 'clang-diagnostic-*,clang-analyzer-*,*,-llvm-header-guard,-cppcoreguidelines-special-member-functions,-hicpp-special-member-functions,-google-runtime-references,-cppcoreguidelines-pro-type-union-access'
+Checks: 'clang-diagnostic-*,clang-analyzer-*,*,-llvm-header-guard,-cppcoreguidelines-special-member-functions,-hicpp-special-member-functions,-google-runtime-references,-cppcoreguidelines-pro-type-union-access,-readability-else-after-return'
 WarningsAsErrors: ''
 HeaderFilterRegex: 'Plus7/.*'
 AnalyzeTemporaryDtors: false
