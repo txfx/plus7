@@ -37,7 +37,7 @@ enum class BlendOp
 
 struct BlendProperties
 {
-    constexpr BlendProperties(BlendFactor _src, BlendFactor _dst, BlendOp _op)
+    constexpr BlendProperties(BlendFactor _src, BlendFactor _dst, BlendOp _op) noexcept
         : enable(true)
         , srcRgb(_src)
         , dstRgb(_dst)
