@@ -1,14 +1,11 @@
 #pragma once
 
-#include <cstdint>
+#include <Modules/Gfx/SdlGl/GlBuffer.hpp>
 
 namespace p7 {
 namespace gfx {
 
-struct Buffer
-{
-    uint32_t GetSize() const;
-};
+using Buffer = GlBuffer;
 
 struct BufferSpan
 {
@@ -17,6 +14,8 @@ struct BufferSpan
 
     uint32_t GetOffset() const;
     uint32_t GetSize() const;
+
+    void UpdateData(void* _data) { GetBuffer().UpdateData(GetOffset(), GetSize(), _data); }
 };
 } // namespace gfx
 } // namespace p7

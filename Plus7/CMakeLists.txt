@@ -2,6 +2,7 @@ set(SOURCE_FILES
     App.cpp
     Modules/Gfx/SdlGl/SdlGlRenderer.cpp
     Modules/Gfx/SdlGl/GlBlendState.cpp
+    Modules/Gfx/SdlGl/GlBuffer.cpp
     Modules/Gfx/SdlGl/GlDepthState.cpp
     Modules/Gfx/SdlGl/GlShaderState.cpp
     Modules/Gfx/SdlGl/GlRasterizerState.cpp)
