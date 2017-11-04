@@ -55,9 +55,9 @@ void SdlGlRenderer::Clear(float _r, float _g, float _b, float _a)
 
 void SdlGlRenderer::SetViewport(float /* _x */, float /* _y */, float /* _w */, float /* _h */) {}
 void SdlGlRenderer::SetScissor(float /* _x */, float /* _y */, float /* _w */, float /* _h */) {}
-void SdlGlRenderer::BindIndexBuffer(Buffer& /* _buffer */) {}
-void SdlGlRenderer::BindVertexBuffer(Buffer& /* _buffer */, uint8_t /* _binding */) {}
-void SdlGlRenderer::BindConstantBuffer(Buffer& /* _buffer */, uint8_t /* _binding */) {}
+void SdlGlRenderer::BindIndexBuffer(const Buffer& /* _buffer */, uint32_t /* _offset */, uint32_t /* _size */) {}
+void SdlGlRenderer::BindVertexBuffer(const Buffer& /* _buffer */, uint32_t /* _offset */, uint32_t /* _size */, uint8_t /* _binding */) {}
+void SdlGlRenderer::BindConstantBuffer(const Buffer& /* _buffer */, uint32_t /* _offset */, uint32_t /* _size */, uint8_t /* _binding */) {}
 
 void SdlGlRenderer::BindBlendState(const BlendState& _state)
 {
