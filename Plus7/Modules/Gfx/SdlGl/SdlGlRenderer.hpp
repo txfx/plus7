@@ -38,7 +38,7 @@ public:
 
     void BindShaderState(const ShaderState& _state) override;
 
-    void BindTexture(const Texture& _texture, uint8_t _binding) override;
+    void BindTexture(const TexturePtr& _texture, uint8_t _binding) override;
 
     void Draw(uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance) override;
     using RendererInterface::Draw;

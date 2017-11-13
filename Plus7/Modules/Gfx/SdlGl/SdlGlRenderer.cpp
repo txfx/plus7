@@ -79,7 +79,7 @@ void SdlGlRenderer::BindShaderState(const ShaderState& _state)
     _state.Apply();
 }
 
-void SdlGlRenderer::BindTexture(const Texture& /* _texture */, uint8_t /* _binding */) {}
+void SdlGlRenderer::BindTexture(const TexturePtr& /* _texture */, uint8_t /* _binding */) {}
 
 void SdlGlRenderer::Draw(
     uint32_t /* _vertexCount */,

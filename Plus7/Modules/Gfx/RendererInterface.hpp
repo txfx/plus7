@@ -4,13 +4,12 @@
 #include "DepthState.hpp"
 #include "RasterizerState.hpp"
 #include "ShaderState.hpp"
+#include "Texture.hpp"
 
 #include "Buffer.hpp"
 
 namespace p7 {
 namespace gfx {
-
-struct Texture;
 
 struct RendererInterface
 {
@@ -45,7 +44,7 @@ public:
     virtual void BindShaderState(const ShaderState& _state) = 0;
 
     // Texture
-    virtual void BindTexture(const Texture& _texture, uint8_t _binding) = 0;
+    virtual void BindTexture(const TexturePtr& _texture, uint8_t _binding) = 0;
 
     // Draw
     virtual void Draw(uint32_t _vertexCount, uint32_t _instanceCount, uint32_t _firstVertex, uint32_t _firstInstance)                             = 0;
