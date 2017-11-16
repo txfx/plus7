@@ -5,7 +5,8 @@
 namespace p7 {
 namespace gfx {
 
-struct Texture;
+struct Texture
+{};
 
 using TexturePtr = std::shared_ptr<Texture>;
 } // namespace gfx
