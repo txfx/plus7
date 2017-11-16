@@ -25,11 +25,11 @@ public:
     void SetViewport(float _x, float _y, float _w, float _h) override;
     void SetScissor(float _x, float _y, float _w, float _h) override;
 
-    void BindIndexBuffer(const Buffer& _buffer, uint32_t _offset, uint32_t _size) override;
+    void BindIndexBuffer(const BufferPtr& _buffer, uint32_t _offset, uint32_t _size) override;
     using RendererInterface::BindIndexBuffer;
-    void BindVertexBuffer(const Buffer& _buffer, uint32_t _offset, uint32_t _size, uint8_t _binding) override;
+    void BindVertexBuffer(const BufferPtr& _buffer, uint32_t _offset, uint32_t _size, uint8_t _binding) override;
     using RendererInterface::BindVertexBuffer;
-    void BindConstantBuffer(const Buffer& _buffer, uint32_t _offset, uint32_t _size, uint8_t _binding) override;
+    void BindConstantBuffer(const BufferPtr& _buffer, uint32_t _offset, uint32_t _size, uint8_t _binding) override;
     using RendererInterface::BindConstantBuffer;
 
     void BindBlendState(const BlendState& _state) override;

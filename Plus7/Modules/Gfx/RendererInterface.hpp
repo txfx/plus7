@@ -23,17 +23,17 @@ public:
     virtual void SetScissor(float _x, float _y, float _w, float _h)  = 0;
 
     // Buffers
-    virtual void BindIndexBuffer(const Buffer& _buffer, uint32_t _offset, uint32_t _size)                      = 0;
-    virtual void BindVertexBuffer(const Buffer& _buffer, uint32_t _offset, uint32_t _size, uint8_t _binding)   = 0;
-    virtual void BindConstantBuffer(const Buffer& _buffe, uint32_t _offset, uint32_t _sizer, uint8_t _binding) = 0;
+    virtual void BindIndexBuffer(const BufferPtr& _buffer, uint32_t _offset, uint32_t _size)                      = 0;
+    virtual void BindVertexBuffer(const BufferPtr& _buffer, uint32_t _offset, uint32_t _size, uint8_t _binding)   = 0;
+    virtual void BindConstantBuffer(const BufferPtr& _buffe, uint32_t _offset, uint32_t _sizer, uint8_t _binding) = 0;
 
-    inline void BindIndexBuffer(const Buffer& _buffer) { BindIndexBuffer(_buffer, 0, _buffer.GetSize()); }
+    inline void BindIndexBuffer(const BufferPtr& _buffer) { BindIndexBuffer(_buffer, 0, _buffer->GetSize()); }
     inline void BindIndexBuffer(const BufferSpan& _span) { BindIndexBuffer(_span.GetBuffer(), _span.GetOffset(), _span.GetSize()); }
 
-    inline void BindVertexBuffer(const Buffer& _buffer, uint8_t _binding) { BindVertexBuffer(_buffer, 0, _buffer.GetSize(), _binding); }
+    inline void BindVertexBuffer(const BufferPtr& _buffer, uint8_t _binding) { BindVertexBuffer(_buffer, 0, _buffer->GetSize(), _binding); }
     inline void BindVertexBuffer(const BufferSpan& _span, uint8_t _binding) { BindVertexBuffer(_span.GetBuffer(), _span.GetOffset(), _span.GetSize(), _binding); }
 
-    inline void BindConstantBuffer(const Buffer& _buffer, uint8_t _binding) { BindConstantBuffer(_buffer, 0, _buffer.GetSize(), _binding); }
+    inline void BindConstantBuffer(const BufferPtr& _buffer, uint8_t _binding) { BindConstantBuffer(_buffer, 0, _buffer->GetSize(), _binding); }
     inline void BindConstantBuffer(const BufferSpan& _span, uint8_t _binding) { BindConstantBuffer(_span.GetBuffer(), _span.GetOffset(), _span.GetSize(), _binding); }
 
     // Render states
