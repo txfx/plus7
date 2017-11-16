@@ -20,6 +20,8 @@ public:
     void Update() override;
 
     // Renderer
+    Device& GetDevice() override { return device; }
+
     void Clear(float _r, float _g, float _b, float _a) override;
 
     void SetViewport(float _x, float _y, float _w, float _h) override;
@@ -54,6 +56,7 @@ private:
     bool          initialized;
     SDL_Window*   window;
     SDL_GLContext glcontext;
+    GlDevice      device;
 };
 } // namespace gfx
 } // namespace p7

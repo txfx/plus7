@@ -2,6 +2,7 @@
 
 #include "BlendState.hpp"
 #include "DepthState.hpp"
+#include "Device.hpp"
 #include "RasterizerState.hpp"
 #include "ShaderState.hpp"
 #include "Texture.hpp"
@@ -14,6 +15,9 @@ namespace gfx {
 struct RendererInterface
 {
 public:
+    // Device
+    virtual Device& GetDevice() = 0;
+
     // clear
     virtual void Clear(float _r, float _g, float _b, float _a) = 0;
     inline void  Clear(float _r, float _g, float _b) { Clear(_r, _g, _b, 1.0f); }
