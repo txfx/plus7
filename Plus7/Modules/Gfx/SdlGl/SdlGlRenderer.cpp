@@ -82,19 +82,35 @@ void SdlGlRenderer::BindShaderState(const ShaderState& _state)
 void SdlGlRenderer::BindTexture(const TexturePtr& /* _texture */, uint8_t /* _binding */) {}
 
 void SdlGlRenderer::Draw(
-    uint32_t /* _vertexCount */,
-    uint32_t /* _instanceCount */,
-    uint32_t /* _firstVertex */,
-    uint32_t /* _firstInstance */)
-{}
+    uint32_t _vertexCount,
+    uint32_t _instanceCount,
+    uint32_t _firstVertex,
+    uint32_t _firstInstance)
+{
+    glDrawArraysInstancedBaseInstance(
+        GL_TRIANGLES,
+        _firstVertex,
+        _vertexCount,
+        _instanceCount,
+        _firstInstance);
+}
 
 void SdlGlRenderer::DrawIndexed(
-    uint32_t /* _indexCount */,
-    uint32_t /* _instanceCount */,
-    uint32_t /* _firstIndex */,
-    int32_t /* _vertexOffset */,
-    uint32_t /* _firstInstance */)
-{}
+    uint32_t _indexCount,
+    uint32_t _instanceCount,
+    uint32_t _firstIndex,
+    int32_t  _vertexOffset,
+    uint32_t _firstInstance)
+{
+    glDrawElementsInstancedBaseVertexBaseInstance(
+        GL_TRIANGLES,
+        _indexCount,
+        GL_UNSIGNED_SHORT,
+        (void*)(uintptr_t)(_firstIndex * 2),
+        _instanceCount,
+        _vertexOffset,
+        _firstInstance);
+}
 
 void SdlGlRenderer::Update()
 {
