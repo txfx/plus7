@@ -2,7 +2,6 @@
 
 #include "BlendState.hpp"
 #include "DepthState.hpp"
-#include "Device.hpp"
 #include "RasterizerState.hpp"
 #include "ShaderState.hpp"
 #include "Texture.hpp"
