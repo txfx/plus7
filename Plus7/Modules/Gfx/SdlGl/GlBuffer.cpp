@@ -3,19 +3,39 @@
 namespace p7 {
 namespace gfx {
 
-GlBuffer::GlBuffer(uint32_t /* _size */)
-{}
-
-GlBuffer::GlBuffer(uint32_t /* _size */, const void* /* _data */)
-{}
-
-uint32_t GlBuffer::GetSize() const
+namespace {
+GLenum ToGl(BufferType _type)
 {
-    return 0;
+    switch (_type)
+    {
+    case BufferType::Vertex:
+        return GL_ARRAY_BUFFER;
+    case BufferType::Index:
+        return GL_ELEMENT_ARRAY_BUFFER;
+    case BufferType::Constant:
+        return GL_UNIFORM_BUFFER;
+    }
+}
+} // namespace
+
+GlBuffer::GlBuffer(const BufferProperties& _properties, const void* _data)
+    : DummyBuffer(_properties, _data)
+    , type(ToGl(_properties.type))
+{
+    glGenBuffers(1, &buffer);
+    UpdateData(0, GetSize(), _data);
 }
 
-void GlBuffer::UpdateData(uint32_t /* _offset */, uint32_t /* _size */, void* /* _data */)
+GlBuffer::~GlBuffer()
 {
+    glDeleteBuffers(1, &buffer);
+}
+
+void GlBuffer::UpdateData(uint32_t /* _offset */, uint32_t /* _size */, const void* _data)
+{
+    glBindBuffer(type, buffer);
+    glBufferData(type, GetSize(), _data, GL_DYNAMIC_DRAW);
+    glBindBuffer(type, 0);
 }
 
 } // namespace gfx

@@ -17,8 +17,8 @@ public:
     virtual TexturePtr CreateTexture(const TextureProperties& _properties, const void* _data);
 
     // Buffer
-    virtual BufferPtr  CreateBuffer(uint32_t _size, const void* _data);
-    virtual BufferSpan CreateTempBuffer(uint32_t _size, const void* _data);
+    virtual BufferPtr  CreateBuffer(const BufferProperties& _properties, const void* _data);
+    virtual BufferSpan CreateTempBuffer(const BufferProperties& _properties, const void* _data);
 };
 } // namespace gfx
 } // namespace p7

@@ -8,15 +8,14 @@ TexturePtr DummyRenderer::CreateTexture(const TextureProperties& _properties, co
     return std::make_shared<Texture>(_properties, _data);
 }
 
-// Buffer
-BufferPtr DummyRenderer::CreateBuffer(uint32_t _size, const void* _data)
+BufferPtr DummyRenderer::CreateBuffer(const BufferProperties& _properties, const void* _data)
 {
-    return std::make_shared<GlBuffer>(_size, _data);
+    return std::make_shared<Buffer>(_properties, _data);
 }
 
-BufferSpan DummyRenderer::CreateTempBuffer(uint32_t /* _size */, const void* /* _data */)
+BufferSpan DummyRenderer::CreateTempBuffer(const BufferProperties& _properties, const void* _data)
 {
-    return BufferSpan{};
+    return BufferSpan{ CreateBuffer(_properties, _data), 0, _properties.size };
 }
 
 } // namespace gfx

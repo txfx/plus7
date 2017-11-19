@@ -6,10 +6,23 @@
 namespace p7 {
 namespace gfx {
 
-using BufferPtr = std::shared_ptr<GlBuffer>;
+using Buffer    = GlBuffer;
+using BufferPtr = std::shared_ptr<Buffer>;
 
 struct BufferSpan
 {
+    BufferSpan(BufferPtr& _buffer, uint32_t _offset, uint32_t _size)
+        : buffer(_buffer)
+        , offset(_offset)
+        , size(_size)
+    {}
+
+    BufferSpan(BufferPtr&& _buffer, uint32_t _offset, uint32_t _size)
+        : buffer(_buffer)
+        , offset(_offset)
+        , size(_size)
+    {}
+
     BufferPtr&       GetBuffer() { return buffer; }
     const BufferPtr& GetBuffer() const { return buffer; }
 

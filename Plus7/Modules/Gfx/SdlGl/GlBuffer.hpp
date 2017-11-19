@@ -1,18 +1,22 @@
 #pragma once
 
-#include <Modules/Gfx/BufferInterface.hpp>
+#include <Modules/Gfx/Dummy/DummyBuffer.hpp>
+
+#include "gl_headers.h"
 
 namespace p7 {
 namespace gfx {
 
-struct GlBuffer final : public BufferInterface
+struct GlBuffer final : public DummyBuffer
 {
-    GlBuffer(uint32_t _size);
-    GlBuffer(uint32_t _size, const void* _data);
+    GlBuffer(const BufferProperties& _properties, const void* _data);
+    ~GlBuffer();
 
-    uint32_t GetSize() const override;
+    void UpdateData(uint32_t _offset, uint32_t _size, const void* _data) override;
 
-    void UpdateData(uint32_t _offset, uint32_t _size, void* _data) override;
+private:
+    GLenum type;
+    GLuint buffer;
 };
 
 } // namespace gfx
