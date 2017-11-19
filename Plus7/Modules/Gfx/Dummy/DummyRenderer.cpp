@@ -3,9 +3,9 @@
 namespace p7 {
 namespace gfx {
 
-TexturePtr DummyRenderer::CreateTexture(const TextureProperties& _properties, const void* /* _data */)
+TexturePtr DummyRenderer::CreateTexture(const TextureProperties& _properties, const void* _data)
 {
-    return std::make_shared<Texture>(_properties);
+    return std::make_shared<Texture>(_properties, _data);
 }
 
 // Buffer

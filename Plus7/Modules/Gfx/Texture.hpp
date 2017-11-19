@@ -2,11 +2,11 @@
 
 #include <memory>
 
-#include <Modules/Gfx/Dummy/DummyTexture.hpp>
+#include <Modules/Gfx/SdlGl/GlTexture.hpp>
 
 namespace p7 {
 namespace gfx {
-using Texture    = DummyTexture;
+using Texture    = GlTexture;
 using TexturePtr = std::shared_ptr<Texture>;
 } // namespace gfx
 } // namespace p7

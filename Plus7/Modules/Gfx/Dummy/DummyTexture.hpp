@@ -1,13 +1,14 @@
 #pragma once
 
 #include <Modules/Gfx/TextureProperties.hpp>
+#include <Utils/NonCopyable.hpp>
 
 namespace p7 {
 namespace gfx {
 
-struct DummyTexture
+struct DummyTexture : public NonCopyable
 {
-    explicit DummyTexture(const TextureProperties& _properties)
+    explicit DummyTexture(const TextureProperties& _properties, const void* /* _data */)
         : properties(_properties)
     {}
 
