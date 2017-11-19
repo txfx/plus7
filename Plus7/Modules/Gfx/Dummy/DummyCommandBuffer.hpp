@@ -1,12 +1,11 @@
 #pragma once
 
-#include "BlendState.hpp"
-#include "DepthState.hpp"
-#include "RasterizerState.hpp"
-#include "ShaderState.hpp"
-#include "Texture.hpp"
-
-#include "Buffer.hpp"
+#include <Modules/Gfx/BlendState.hpp>
+#include <Modules/Gfx/Buffer.hpp>
+#include <Modules/Gfx/DepthState.hpp>
+#include <Modules/Gfx/RasterizerState.hpp>
+#include <Modules/Gfx/ShaderState.hpp>
+#include <Modules/Gfx/Texture.hpp>
 
 namespace p7 {
 namespace gfx {

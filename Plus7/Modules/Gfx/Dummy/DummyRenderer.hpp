@@ -2,8 +2,8 @@
 
 #include <Utils/NonCopyable.hpp>
 
-#include "Buffer.hpp"
-#include "Texture.hpp"
+#include <Modules/Gfx/Buffer.hpp>
+#include <Modules/Gfx/Texture.hpp>
 
 namespace p7 {
 namespace gfx {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <Modules/Gfx/DummyCommandBuffer.hpp>
+#include <Modules/Gfx/Dummy/DummyCommandBuffer.hpp>
 
 namespace p7 {
 namespace gfx {

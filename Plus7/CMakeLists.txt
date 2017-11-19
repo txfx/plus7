@@ -1,6 +1,6 @@
 set(SOURCE_FILES
     App.cpp
-    Modules/Gfx/DummyRenderer.cpp
+    Modules/Gfx/Dummy/DummyRenderer.cpp
     Modules/Gfx/SdlGl/SdlGlRenderer.cpp
     Modules/Gfx/SdlGl/GlBlendState.cpp
     Modules/Gfx/SdlGl/GlBuffer.cpp

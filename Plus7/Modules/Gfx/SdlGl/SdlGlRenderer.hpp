@@ -3,7 +3,7 @@
 #include <Module.hpp>
 
 #include <Modules/Gfx/CommandBuffer.hpp>
-#include <Modules/Gfx/DummyRenderer.hpp>
+#include <Modules/Gfx/Dummy/DummyRenderer.hpp>
 
 struct SDL_Window;
 using SDL_GLContext = void*;
