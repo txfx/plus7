@@ -30,5 +30,11 @@ GlTexture::~GlTexture()
 {
     glDeleteTextures(1, &texture);
 }
+
+void GlTexture::Bind() const
+{
+    glBindTexture(GL_TEXTURE_2D, texture);
+}
+
 } // namespace gfx
 } // namespace p7

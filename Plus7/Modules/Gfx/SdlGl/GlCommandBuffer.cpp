@@ -35,7 +35,11 @@ void GlCommandBuffer::BindShaderState(const ShaderState& _state)
     _state.Bind();
 }
 
-void GlCommandBuffer::BindTexture(const TexturePtr& /* _texture */, uint8_t /* _binding */) {}
+void GlCommandBuffer::BindTexture(const TexturePtr& _texture, uint8_t _binding)
+{
+    glActiveTexture(GL_TEXTURE0 + _binding);
+    _texture->Bind();
+}
 
 void GlCommandBuffer::Draw(
     uint32_t _vertexCount,

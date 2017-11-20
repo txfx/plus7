@@ -12,6 +12,8 @@ struct GlTexture final : public DummyTexture
     explicit GlTexture(const TextureProperties& _properties, const void* _data);
     ~GlTexture();
 
+    void Bind() const;
+
 private:
     GLuint texture;
 };
