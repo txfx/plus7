@@ -9,6 +9,7 @@ struct GlCommandBuffer final : public DummyCommandBuffer
 public:
     // Renderer
     void Clear(float _r, float _g, float _b, float _a) override;
+    using DummyCommandBuffer::Clear;
 
     void SetViewport(float _x, float _y, float _w, float _h) override;
     void SetScissor(float _x, float _y, float _w, float _h) override;
