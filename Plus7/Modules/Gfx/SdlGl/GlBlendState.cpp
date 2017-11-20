@@ -77,7 +77,7 @@ GlBlendState::GlBlendState(const BlendProperties& _properties)
     , opAlpha(ToGl(_properties.opAlpha))
 {}
 
-void GlBlendState::Apply() const
+void GlBlendState::Bind() const
 {
     if (enable)
     {

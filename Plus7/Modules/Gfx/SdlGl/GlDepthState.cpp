@@ -38,7 +38,7 @@ GlDepthState::GlDepthState(const DepthProperties& _properties)
 {
 }
 
-void GlDepthState::Apply() const
+void GlDepthState::Bind() const
 {
     if (enable)
     {

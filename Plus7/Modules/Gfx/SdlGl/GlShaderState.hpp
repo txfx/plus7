@@ -12,7 +12,7 @@ public:
     explicit GlShaderState(const char* _vertex, const char* _pixel);
     ~GlShaderState();
 
-    void Apply() const;
+    void Bind() const;
 
 private:
     const GLuint program;

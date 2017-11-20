@@ -23,7 +23,7 @@ GlShaderState::~GlShaderState()
     glDeleteProgram(program);
 }
 
-void GlShaderState::Apply() const
+void GlShaderState::Bind() const
 {
     glUseProgram(program);
 }

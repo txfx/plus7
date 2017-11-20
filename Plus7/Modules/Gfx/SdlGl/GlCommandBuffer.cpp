@@ -17,22 +17,22 @@ void GlCommandBuffer::BindConstantBuffer(const BufferPtr& /* _buffer */, uint32_
 
 void GlCommandBuffer::BindBlendState(const BlendState& _state)
 {
-    _state.Apply();
+    _state.Bind();
 }
 
 void GlCommandBuffer::BindDepthState(const DepthState& _state)
 {
-    _state.Apply();
+    _state.Bind();
 }
 
 void GlCommandBuffer::BindRasterizerState(const RasterizerState& _state)
 {
-    _state.Apply();
+    _state.Bind();
 }
 
 void GlCommandBuffer::BindShaderState(const ShaderState& _state)
 {
-    _state.Apply();
+    _state.Bind();
 }
 
 void GlCommandBuffer::BindTexture(const TexturePtr& /* _texture */, uint8_t /* _binding */) {}

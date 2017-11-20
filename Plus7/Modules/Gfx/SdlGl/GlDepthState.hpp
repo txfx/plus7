@@ -12,7 +12,7 @@ struct GlDepthState
 public:
     explicit GlDepthState(const DepthProperties& _properties);
 
-    void Apply() const;
+    void Bind() const;
 
 private:
     const bool   enable;

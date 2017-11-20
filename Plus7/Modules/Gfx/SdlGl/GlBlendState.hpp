@@ -11,7 +11,7 @@ struct GlBlendState
 public:
     explicit GlBlendState(const BlendProperties& _properties);
 
-    void Apply() const;
+    void Bind() const;
 
 private:
     const bool   enable;

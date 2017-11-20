@@ -12,7 +12,7 @@ struct GlRasterizerState
 public:
     explicit GlRasterizerState(const RasterizerProperties& _properties);
 
-    void Apply() const;
+    void Bind() const;
 
 private:
     const GLenum fillmode;

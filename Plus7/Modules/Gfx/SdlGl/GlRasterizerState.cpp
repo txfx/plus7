@@ -52,7 +52,7 @@ GlRasterizerState::GlRasterizerState(const RasterizerProperties& _properties)
     , cull(_properties.cullmode != CullMode::None)
 {}
 
-void GlRasterizerState::Apply() const
+void GlRasterizerState::Bind() const
 {
     if (cull)
     {
