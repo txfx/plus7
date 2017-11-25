@@ -1,5 +1,7 @@
 #include "GlCommandBuffer.hpp"
 
+#include <Utils/Assert.hpp>
+
 namespace p7 {
 namespace gfx {
 
@@ -11,9 +13,23 @@ void GlCommandBuffer::Clear(float _r, float _g, float _b, float _a)
 
 void GlCommandBuffer::SetViewport(float /* _x */, float /* _y */, float /* _w */, float /* _h */) {}
 void GlCommandBuffer::SetScissor(float /* _x */, float /* _y */, float /* _w */, float /* _h */) {}
-void GlCommandBuffer::BindIndexBuffer(const BufferPtr& /* _buffer */, uint32_t /* _offset */, uint32_t /* _size */) {}
-void GlCommandBuffer::BindVertexBuffer(const BufferPtr& /* _buffer */, uint32_t /* _offset */, uint32_t /* _size */, uint8_t /* _binding */) {}
-void GlCommandBuffer::BindConstantBuffer(const BufferPtr& /* _buffer */, uint32_t /* _offset */, uint32_t /* _size */, uint8_t /* _binding */) {}
+void GlCommandBuffer::BindIndexBuffer(const BufferPtr& _buffer, uint32_t _offset, uint32_t _size)
+{
+    P7_ASSERT(_offset + _size <= _buffer->GetSize(), "Invalid offset or size");
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _buffer->GetGlId());
+}
+
+void GlCommandBuffer::BindVertexBuffer(const BufferPtr& _buffer, uint32_t _offset, uint32_t _size, uint8_t _binding)
+{
+    P7_ASSERT(_offset + _size <= _buffer->GetSize(), "Invalid offset or size");
+    glBindVertexBuffer(_binding, _buffer->GetGlId(), _offset, vertexLayoutStride);
+}
+
+void GlCommandBuffer::BindConstantBuffer(const BufferPtr& _buffer, uint32_t _offset, uint32_t _size, uint8_t _binding)
+{
+    P7_ASSERT(_offset + _size <= _buffer->GetSize(), "Invalid offset or size");
+    glBindBufferRange(GL_UNIFORM_BUFFER, _binding, _buffer->GetGlId(), _offset, _size);
+}
 
 void GlCommandBuffer::BindBlendState(const BlendState& _state)
 {
@@ -32,6 +48,7 @@ void GlCommandBuffer::BindRasterizerState(const RasterizerState& _state)
 
 void GlCommandBuffer::BindShaderState(const ShaderState& _state, const VertexLayout& _layout)
 {
+    vertexLayoutStride = _layout.GetStride();
     _state.Bind();
     _layout.Bind();
 }
@@ -67,7 +84,7 @@ void GlCommandBuffer::DrawIndexed(
         GL_TRIANGLES,
         _indexCount,
         GL_UNSIGNED_SHORT,
-        (void*)(uintptr_t)(_firstIndex * 2),
+        reinterpret_cast<void*>(_firstIndex * 2 + indexBufferOffset),
         _instanceCount,
         _vertexOffset,
         _firstInstance);

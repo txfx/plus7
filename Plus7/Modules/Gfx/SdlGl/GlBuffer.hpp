@@ -14,6 +14,8 @@ struct GlBuffer final : public DummyBuffer
 
     void UpdateData(uint32_t _offset, uint32_t _size, const void* _data) override;
 
+    GLuint GetGlId() const { return buffer; }
+
 private:
     GLenum type;
     GLuint buffer;

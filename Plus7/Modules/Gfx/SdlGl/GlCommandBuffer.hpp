@@ -1,5 +1,6 @@
 #pragma once
 
+#include "gl_headers.h"
 #include <Modules/Gfx/Dummy/DummyCommandBuffer.hpp>
 
 namespace p7 {
@@ -33,6 +34,10 @@ public:
     using DummyCommandBuffer::Draw;
     void DrawIndexed(uint32_t _indexCount, uint32_t _instanceCount, uint32_t _firstIndex, int32_t _vertexOffset, uint32_t _firstInstance) override;
     using DummyCommandBuffer::DrawIndexed;
+
+private:
+    GLsizei  vertexLayoutStride = 0;
+    uint32_t indexBufferOffset  = 0;
 };
 } // namespace gfx
 } // namespace p7
