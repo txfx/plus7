@@ -8,7 +8,7 @@ namespace gfx {
 
 struct DummyVertexLayout : public NonCopyable
 {
-    explicit DummyVertexLayout(const VertexLayoutProperties& _properties)
+    DummyVertexLayout(const VertexLayoutProperties& _properties)
         : properties(_properties)
     {}
 
