@@ -25,7 +25,7 @@ public:
     void BindDepthState(const DepthState& _state) override;
     void BindRasterizerState(const RasterizerState& _state) override;
 
-    void BindShaderState(const ShaderState& _state) override;
+    void BindShaderState(const ShaderState& _state, const VertexLayout& _layout) override;
 
     void BindTexture(const TexturePtr& _texture, uint8_t _binding) override;
 

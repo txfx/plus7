@@ -6,6 +6,7 @@
 #include <Modules/Gfx/RasterizerState.hpp>
 #include <Modules/Gfx/ShaderState.hpp>
 #include <Modules/Gfx/Texture.hpp>
+#include <Modules/Gfx/VertexLayout.hpp>
 
 namespace p7 {
 namespace gfx {
@@ -40,7 +41,7 @@ public:
     virtual void BindDepthState(const DepthState& /* _state */) {}
     virtual void BindRasterizerState(const RasterizerState& /* _state */) {}
 
-    virtual void BindShaderState(const ShaderState& /* _state */) {}
+    virtual void BindShaderState(const ShaderState& /* _state */, const VertexLayout& /* _layout*/) {}
 
     // Texture
     virtual void BindTexture(const TexturePtr& /* _texture */, uint8_t /* _binding */) {}

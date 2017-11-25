@@ -30,9 +30,10 @@ void GlCommandBuffer::BindRasterizerState(const RasterizerState& _state)
     _state.Bind();
 }
 
-void GlCommandBuffer::BindShaderState(const ShaderState& _state)
+void GlCommandBuffer::BindShaderState(const ShaderState& _state, const VertexLayout& _layout)
 {
     _state.Bind();
+    _layout.Bind();
 }
 
 void GlCommandBuffer::BindTexture(const TexturePtr& _texture, uint8_t _binding)
