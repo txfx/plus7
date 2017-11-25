@@ -13,13 +13,20 @@ GLenum ToGl(PixelFormat _format)
     }
 }
 
+GLuint glGenTexture()
+{
+    GLuint tex = -1;
+    glGenTextures(1, &tex);
+    return tex;
+}
+
 } // namespace
 
 GlTexture::GlTexture(const TextureProperties& _properties, const void* _data)
     : DummyTexture(_properties, _data)
+    , texture(glGenTexture())
 {
     glActiveTexture(GL_TEXTURE0);
-    glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexStorage2D(GL_TEXTURE_2D, 1, ToGl(properties.format), properties.width, properties.height);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, properties.width, properties.height, GL_RGBA, GL_UNSIGNED_BYTE, _data);
