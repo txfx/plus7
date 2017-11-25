@@ -9,13 +9,16 @@ namespace gfx {
 
 struct GlVertexLayout final : public DummyVertexLayout
 {
-    explicit GlVertexLayout(const VertexLayoutProperties& _properties);
+    GlVertexLayout(const VertexLayoutProperties& _properties);
     ~GlVertexLayout();
 
     void Bind() const;
 
+    GLsizei GetStride() const { return stride; }
+
 private:
-    GLuint vao;
+    GLuint  vao;
+    GLsizei stride;
 };
 
 } // namespace gfx

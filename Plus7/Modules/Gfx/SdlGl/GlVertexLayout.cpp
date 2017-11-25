@@ -1,5 +1,7 @@
 #include "GlVertexLayout.hpp"
 
+#include <Utils/Assert.hpp>
+
 namespace p7 {
 namespace gfx {
 
@@ -31,6 +33,7 @@ GLsizei GlTypeSize(GLenum _type)
     case GL_UNSIGNED_BYTE:
         return 1;
     default:
+        P7_ASSERT(false, "Unknown GL Type %d", _type);
         return -1;
     }
 }
@@ -65,6 +68,8 @@ GlVertexLayout::GlVertexLayout(const VertexLayoutProperties& _properties)
         offset = attribOffset + glAttrib.count * GlTypeSize(glAttrib.type);
     }
     glBindVertexArray(0);
+
+    stride = offset;
 }
 
 GlVertexLayout::~GlVertexLayout()
