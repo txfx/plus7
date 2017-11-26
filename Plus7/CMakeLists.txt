@@ -9,7 +9,8 @@ set(SOURCE_FILES
     Modules/Gfx/SdlGl/GlRasterizerState.cpp
     Modules/Gfx/SdlGl/GlShaderState.cpp
     Modules/Gfx/SdlGl/GlTexture.cpp
-    Modules/Gfx/SdlGl/GlVertexLayout.cpp)
+    Modules/Gfx/SdlGl/GlVertexLayout.cpp
+    Tasks/Pipeline.cpp)
 add_library(Plus7 STATIC ${SOURCE_FILES})
 
 find_package(OpenGL REQUIRED)
