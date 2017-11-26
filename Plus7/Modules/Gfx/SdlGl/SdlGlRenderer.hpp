@@ -24,6 +24,9 @@ public:
 
     inline CommandBuffer& GetCommandBuffer() { return commandBuffer; }
 
+    uint32_t GetWidth() const override { return width; }
+    uint32_t GetHeight() const override { return height; }
+
 private:
     SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, App& _app);
 

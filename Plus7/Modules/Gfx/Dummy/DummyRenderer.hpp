@@ -1,9 +1,10 @@
 #pragma once
 
-#include <Utils/NonCopyable.hpp>
+#include <cstdint>
 
 #include <Modules/Gfx/Buffer.hpp>
 #include <Modules/Gfx/Texture.hpp>
+#include <Utils/NonCopyable.hpp>
 
 namespace p7 {
 namespace gfx {
@@ -19,6 +20,9 @@ public:
     // Buffer
     virtual BufferPtr  CreateBuffer(const BufferProperties& _properties, const void* _data);
     virtual BufferSpan CreateTempBuffer(const BufferProperties& _properties, const void* _data);
+
+    virtual uint32_t GetWidth() const { return 0; }
+    virtual uint32_t GetHeight() const { return 0; }
 };
 } // namespace gfx
 } // namespace p7
