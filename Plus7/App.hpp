@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Module.hpp>
-#include <Utils/NonCopyable.hpp>
+#include <Tasks/Pipeline.hpp>
 
 #include <algorithm>
 #include <memory>
@@ -9,7 +9,7 @@
 
 namespace p7 {
 
-struct App : public NonCopyable
+struct App : public tasks::Pipeline
 {
 public:
     App();

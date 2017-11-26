@@ -1,9 +1,9 @@
 #pragma once
 
 #include <Module.hpp>
-
 #include <Modules/Gfx/CommandBuffer.hpp>
 #include <Modules/Gfx/Dummy/DummyRenderer.hpp>
+#include <Tasks/Task.hpp>
 
 struct SDL_Window;
 using SDL_GLContext = void*;
@@ -18,17 +18,16 @@ public:
     SdlGlRenderer(const char* _name, int _w, int _h, App& _app);
     ~SdlGlRenderer() override;
 
-    void BeginFrame() override;
-    void Update() override;
-    void EndFrame() override;
-
     inline CommandBuffer& GetCommandBuffer() { return commandBuffer; }
 
     uint32_t GetWidth() const override { return width; }
     uint32_t GetHeight() const override { return height; }
 
+    tasks::ID GetDisplayTask() const { return displayTask; }
+
 private:
     SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, App& _app);
+    void EndFrame();
 
 private:
     int             width;
@@ -37,6 +36,7 @@ private:
     SDL_Window*     window;
     SDL_GLContext   glcontext;
     GlCommandBuffer commandBuffer;
+    tasks::ID       displayTask;
 };
 } // namespace gfx
 } // namespace p7

@@ -13,10 +13,6 @@ public:
     {}
     virtual ~Module() = default;
 
-    virtual void BeginFrame() {}
-    virtual void Update() = 0;
-    virtual void EndFrame() {}
-
 protected:
     App& app;
 };

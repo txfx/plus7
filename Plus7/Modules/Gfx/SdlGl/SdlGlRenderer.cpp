@@ -1,5 +1,6 @@
 #include "SdlGlRenderer.hpp"
 
+#include <App.hpp>
 #include <SDL.h>
 
 #include "gl_headers.h"
@@ -19,6 +20,7 @@ SdlGlRenderer::SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, A
     : Module(_app)
     , width(_w)
     , height(_h)
+    , displayTask(_app.CreateTask([&]() { this->EndFrame(); }))
 {
     initialized = SDL_InitSubSystem(SDL_INIT_VIDEO) == 0;
 
@@ -47,17 +49,9 @@ SdlGlRenderer::~SdlGlRenderer()
     }
 }
 
-void SdlGlRenderer::BeginFrame()
-{
-    glViewport(0, 0, width, height);
-}
-
-void SdlGlRenderer::Update()
-{
-}
-
 void SdlGlRenderer::EndFrame()
 {
+    glViewport(0, 0, width, height);
     SDL_GL_SwapWindow(window);
 }
 

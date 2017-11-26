@@ -27,20 +27,7 @@ void App::Run()
             exit_requested |= event.type == SDL_QUIT;
         }
 
-        for (auto& module : modules)
-        {
-            module->BeginFrame();
-        }
-
-        for (auto& module : modules)
-        {
-            module->Update();
-        }
-
-        for (auto& module : std::reverse(modules))
-        {
-            module->EndFrame();
-        }
+        ExecuteTasks();
     }
 }
 
