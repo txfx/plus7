@@ -1,5 +1,6 @@
 set(SOURCE_FILES
     App.cpp
+    Modules/ImGui.cpp
     Modules/Gfx/Dummy/DummyRenderer.cpp
     Modules/Gfx/SdlGl/SdlGlRenderer.cpp
     Modules/Gfx/SdlGl/GlBlendState.cpp
@@ -11,13 +12,20 @@ set(SOURCE_FILES
     Modules/Gfx/SdlGl/GlTexture.cpp
     Modules/Gfx/SdlGl/GlVertexLayout.cpp
     Tasks/Pipeline.cpp)
-add_library(Plus7 STATIC ${SOURCE_FILES})
+
+set(IMGUI_DIR ../Libs/ImGui-1.52)
+set(IMGUI_SOURCE_FILES
+    ${IMGUI_DIR}/imgui.cpp
+    ${IMGUI_DIR}/imgui_demo.cpp
+    ${IMGUI_DIR}/imgui_draw.cpp)
+
+add_library(Plus7 STATIC ${SOURCE_FILES} ${IMGUI_SOURCE_FILES})
 
 find_package(OpenGL REQUIRED)
 find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
+include_directories(${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR} ${IMGUI_DIR})
 target_link_libraries(Plus7 ${SDL2_LIBRARIES} ${OPENGL_LIBRARIES})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic -Wextra -Werror")
 
-target_include_directories(Plus7 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR})
+target_include_directories(Plus7 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${SDL2_INCLUDE_DIRS} ${OPENGL_INCLUDE_DIR} ${IMGUI_DIR})
