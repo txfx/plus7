@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <functional>
-#include <memory>
 #include <vector>
 
 #include <Utils/NonCopyable.hpp>
@@ -28,7 +27,7 @@ using Dependencies = std::initializer_list<ID>;
 struct Task : public NonCopyable
 {
 private:
-    explicit Task(const Dependencies& _parents, const Prototype& _functor, const Dependencies& _children, ID _id)
+    Task(const Dependencies& _parents, const Prototype& _functor, const Dependencies& _children, ID _id)
         : functor(_functor)
         , id(_id)
         , parents(_parents)

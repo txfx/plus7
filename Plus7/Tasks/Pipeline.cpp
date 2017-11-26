@@ -50,22 +50,22 @@ ID Pipeline::CreateTask(const Dependencies& _parents, const Prototype& _functor,
 
 ID Pipeline::CreateTask(const Dependencies& _parents, const Prototype& _functor, const Dependencies& _children)
 {
-    auto task = new Task(_parents, _functor, _children, ID(tasks.size()));
-    tasks.emplace_back(task);
+    Task task = { _parents, _functor, _children, ID(tasks.size()) };
     for (auto parent : _parents)
     {
-        tasks[parent.value]->children.push_back(task->id);
+        tasks[parent.value].children.push_back(task.id);
     }
     for (auto child : _children)
     {
-        tasks[child.value]->parents.push_back(task->id);
+        tasks[child.value].parents.push_back(task.id);
     }
-    return task->id;
+    tasks.emplace_back(std::move(task));
+    return tasks.back().id;
 }
 
 void Pipeline::ExecuteTasks() const
 {
-    std::vector<Task*> todo;
+    std::vector<const Task*> todo;
     todo.reserve(tasks.size());
 
     std::vector<uint16_t> dependencies;
@@ -73,10 +73,10 @@ void Pipeline::ExecuteTasks() const
 
     for (uint16_t i = 0; i < tasks.size(); ++i)
     {
-        const uint16_t nbParents = tasks[i]->parents.size();
+        const uint16_t nbParents = tasks[i].parents.size();
         if (nbParents == 0)
         {
-            todo.push_back(tasks[i].get());
+            todo.push_back(&tasks[i]);
         }
         dependencies[i] = nbParents;
     }
@@ -91,7 +91,7 @@ void Pipeline::ExecuteTasks() const
             --dependencies[id.value];
             if (dependencies[id.value] == 0)
             {
-                todo.push_back(tasks[id.value].get());
+                todo.push_back(&tasks[id.value]);
             }
         }
     }

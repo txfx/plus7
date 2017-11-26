@@ -11,8 +11,6 @@
 namespace p7 {
 namespace tasks {
 
-using TaskList = std::vector<std::unique_ptr<Task>>;
-
 struct Pipeline : public NonCopyable
 {
     ~Pipeline();
@@ -31,6 +29,7 @@ protected:
     void ExecuteTasks() const;
 
 private:
+    using TaskList = std::vector<Task>;
     TaskList tasks;
 };
 
