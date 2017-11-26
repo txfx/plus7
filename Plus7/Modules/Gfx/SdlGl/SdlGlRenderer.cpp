@@ -47,10 +47,17 @@ SdlGlRenderer::~SdlGlRenderer()
     }
 }
 
-void SdlGlRenderer::Update()
+void SdlGlRenderer::BeginFrame()
 {
     glViewport(0, 0, width, height);
-    GetCommandBuffer().Clear(1, 0, 0, 1);
+}
+
+void SdlGlRenderer::Update()
+{
+}
+
+void SdlGlRenderer::EndFrame()
+{
     SDL_GL_SwapWindow(window);
 }
 

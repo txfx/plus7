@@ -18,7 +18,9 @@ public:
     SdlGlRenderer(const char* _name, int _w, int _h, App& _app);
     ~SdlGlRenderer() override;
 
+    void BeginFrame() override;
     void Update() override;
+    void EndFrame() override;
 
     inline CommandBuffer& GetCommandBuffer() { return commandBuffer; }
 

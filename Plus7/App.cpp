@@ -1,6 +1,7 @@
 #include "App.hpp"
 
 #include <SDL.h>
+#include <Utils/ReverseIterator.hpp>
 
 namespace p7 {
 
@@ -28,10 +29,18 @@ void App::Run()
 
         for (auto& module : modules)
         {
+            module->BeginFrame();
+        }
+
+        for (auto& module : modules)
+        {
             module->Update();
         }
 
-        SDL_Delay(30);
+        for (auto& module : std::reverse(modules))
+        {
+            module->EndFrame();
+        }
     }
 }
 
