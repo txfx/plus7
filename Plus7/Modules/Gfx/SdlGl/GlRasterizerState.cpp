@@ -50,6 +50,7 @@ GlRasterizerState::GlRasterizerState(const RasterizerProperties& _properties)
     , cullmode(ToGl(_properties.cullmode))
     , frontface(ToGl(_properties.frontface))
     , cull(_properties.cullmode != CullMode::None)
+    , scissor(_properties.scissor)
 {}
 
 void GlRasterizerState::Bind() const
@@ -64,7 +65,17 @@ void GlRasterizerState::Bind() const
     {
         glDisable(GL_CULL_FACE);
     }
+
     glPolygonMode(GL_FRONT_AND_BACK, fillmode);
+
+    if (scissor)
+    {
+        glEnable(GL_SCISSOR_TEST);
+    }
+    else
+    {
+        glDisable(GL_SCISSOR_TEST);
+    }
 }
 
 } // namespace gfx

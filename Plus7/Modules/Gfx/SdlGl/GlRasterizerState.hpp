@@ -19,6 +19,7 @@ private:
     const GLenum cullmode;
     const GLenum frontface;
     const bool   cull;
+    const bool   scissor;
 };
 } // namespace gfx
 } // namespace p7

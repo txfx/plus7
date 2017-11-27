@@ -9,7 +9,7 @@ namespace gfx {
 namespace {
 constexpr BlendProperties      blendProps{ BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add };
 constexpr DepthProperties      depthProps;
-constexpr RasterizerProperties rasterizerProps{ PolygonMode::Fill, CullMode::None, FrontFace::CounterClockWise };
+constexpr RasterizerProperties rasterizerProps{ PolygonMode::Fill, CullMode::None, FrontFace::CounterClockWise, true };
 
 constexpr const char* vertex_shader = R"(
 #version 330
@@ -82,7 +82,6 @@ void ImGui::BeginFrame()
     ImGuiIO& io    = ::ImGui::GetIO();
     io.DisplaySize = ImVec2(renderer.GetWidth(), renderer.GetHeight());
 
-    renderer.GetCommandBuffer().Clear(0.2, 0.1, 0);
 
     ::ImGui::NewFrame();
 }

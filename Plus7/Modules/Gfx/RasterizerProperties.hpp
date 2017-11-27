@@ -28,6 +28,7 @@ struct RasterizerProperties
     PolygonMode fillmode  = PolygonMode::Fill;
     CullMode    cullmode  = CullMode::Back;
     FrontFace   frontface = FrontFace::CounterClockWise;
+    bool        scissor   = false;
 };
 } // namespace gfx
 } // namespace p7

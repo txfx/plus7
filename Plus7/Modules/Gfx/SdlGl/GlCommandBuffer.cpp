@@ -12,7 +12,12 @@ void GlCommandBuffer::Clear(float _r, float _g, float _b, float _a)
 }
 
 void GlCommandBuffer::SetViewport(float /* _x */, float /* _y */, float /* _w */, float /* _h */) {}
-void GlCommandBuffer::SetScissor(float /* _x */, float /* _y */, float /* _w */, float /* _h */) {}
+
+void GlCommandBuffer::SetScissor(float _x, float _y, float _w, float _h)
+{
+    glScissor(_x, _y, _w, _h);
+}
+
 void GlCommandBuffer::BindIndexBuffer(const BufferPtr& _buffer, uint32_t _offset, uint32_t _size)
 {
     P7_ASSERT(_offset + _size <= _buffer->GetSize(), "Invalid offset or size");
