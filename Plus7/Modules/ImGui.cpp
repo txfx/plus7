@@ -7,7 +7,7 @@ namespace p7 {
 namespace gfx {
 
 namespace {
-constexpr BlendProperties      blendProps{ BlendFactor::SrcAlpha, BlendFactor::OneMinusSrc1Alpha, BlendOp::Add };
+constexpr BlendProperties      blendProps{ BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add };
 constexpr DepthProperties      depthProps;
 constexpr RasterizerProperties rasterizerProps{ PolygonMode::Fill, CullMode::None, FrontFace::CounterClockWise };
 
