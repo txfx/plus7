@@ -1,17 +1,18 @@
+sudo: required
+
+services:
+  - docker
+
 language: cpp
 
-before_script:
-  - hg clone https://hg.libsdl.org/SDL -r release-2.0.8 SDL
-  - cd SDL
-  - mkdir build
-  - cd build
-  - ../configure
-  - make
-  - sudo make install
-  - cd ../..
+before_install:
+  - docker run -d --name ubuntu-bionic -v $(pwd):/travis ubuntu:18.04 tail -f /dev/null
+
+install:
+  - docker exec -t ubuntu-bionic bash -c "apt-get update && apt-get install -y libsdl2-dev"
 
 script:
-  - mkdir -p build
-  - cd build
-  - cmake ..
-  - make
+  - docker exec -t ubuntu-bionic bash -c "cd /travis && mkdir -p build && cd build && cmake .. && make"
+
+notifications:
+    email: false
