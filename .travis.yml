@@ -1,8 +1,7 @@
 language: cpp
-dist: bionic
+dist: artful
 
 before_install:
-  - sudo add-apt-repository universe
   - sudo apt-get update -qq
   - sudo apt-get install -y libsdl2-dev libegl1-mesa-dev libgles2-mesa-dev
 
