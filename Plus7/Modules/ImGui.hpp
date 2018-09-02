@@ -15,8 +15,8 @@ struct ImGui : public Module
 public:
     explicit ImGui(App& _app);
 
-    tasks::ID GetBeginFrameTask() const { return beginFrameTask; }
-    tasks::ID GetEndFrameTask() const { return endFrameTask; }
+    tasks::ID<uint64_t> GetBeginFrameTask() const { return beginFrameTask; }
+    tasks::ID<void>     GetEndFrameTask() const { return endFrameTask; }
 
 private:
     void BeginFrame();
@@ -42,8 +42,8 @@ private:
     TexturePtr font;
 
     // Tasks
-    tasks::ID beginFrameTask;
-    tasks::ID endFrameTask;
+    tasks::ID<uint64_t> beginFrameTask;
+    tasks::ID<void>     endFrameTask;
 };
 } // namespace gfx
 } // namespace p7

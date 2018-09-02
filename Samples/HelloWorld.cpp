@@ -13,18 +13,19 @@ int main()
     using p7::App;
     using p7::gfx::ImGui;
     using p7::gfx::Renderer;
+    using p7::tasks::after;
+    using p7::tasks::before;
 
     App   helloWorldApp;
     auto& renderer = helloWorldApp.LoadModule<Renderer>("Hello World", 1280, 720);
     auto& imgui    = helloWorldApp.LoadModule<ImGui>();
 
-    auto test = helloWorldApp.CreateTask(
-        imgui.GetBeginFrameTask(),
-        [&renderer]() {
+    helloWorldApp.CreateTask(
+        [&renderer](uint64_t _frame) {
             static float  f           = 0.0f;
             static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-            ::ImGui::Text("Hello, world!");
+            ::ImGui::Text("Hello, world! %lu", _frame);
             ::ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
             ::ImGui::ColorEdit3("clear color", (float*)&clear_color);
             ::ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ::ImGui::GetIO().Framerate, ::ImGui::GetIO().Framerate);
@@ -36,7 +37,9 @@ int main()
             renderer.GetCommandBuffer().BindRasterizerState(defaultState);
             renderer.GetCommandBuffer().Clear(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         },
-        imgui.GetEndFrameTask());
+        after(imgui.GetBeginFrameTask()),
+        before(imgui.GetEndFrameTask()));
+
 
     helloWorldApp.Run();
     std::cout << "Hello World" << std::endl;

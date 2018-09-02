@@ -62,8 +62,19 @@ ImGui::ImGui(App& _app)
     , rasterizerState(rasterizerProps)
     , shader(vertex_shader, pixel_shader)
     , vtxLayout(vtxLayoutProperties)
-    , beginFrameTask(_app.CreateTask([&]() { this->BeginFrame(); }))
-    , endFrameTask(_app.CreateTask(beginFrameTask, [&]() { this->EndFrame(); }, renderer.GetDisplayTask()))
+    , beginFrameTask(
+          _app.CreateTask([&]() {
+              this->BeginFrame();
+              static uint64_t frame = 0;
+              return frame++;
+          }))
+    , endFrameTask(
+          _app.CreateTask(
+              [&](uint64_t) {
+                  this->EndFrame();
+              },
+              tasks::after(beginFrameTask),
+              tasks::before(renderer.GetDisplayTask())))
 {
     ImGuiIO& io = ::ImGui::GetIO();
 
