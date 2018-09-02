@@ -1,4 +1,5 @@
 language: cpp
+dist: xenial
 
 before_install:
   - sudo apt-get update -qq
