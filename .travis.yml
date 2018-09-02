@@ -1,13 +1,13 @@
 language: cpp
-dist: xenial
-addons:
-  apt:
-    sources:
-    - universe
-    packages:
-    - libsdl2-dev
-    - libegl1-mesa-dev
-    - libgles2-mesa-dev
+
+before_script:
+  - hg clone https://hg.libsdl.org/SDL -r release-2.0.8 SDL
+  - cd SDL
+  - mkdir build
+  - cd build
+  - ../configure
+  - make
+  - sudo make install
 
 script:
   - mkdir -p build
