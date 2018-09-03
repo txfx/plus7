@@ -1,5 +1,7 @@
 #include "GlBuffer.hpp"
 
+#include <Utils/Assert.hpp>
+
 namespace p7 {
 namespace gfx {
 
@@ -14,6 +16,9 @@ GLenum ToGl(BufferType _type)
         return GL_ELEMENT_ARRAY_BUFFER;
     case BufferType::Constant:
         return GL_UNIFORM_BUFFER;
+    default:
+        P7_ASSERT(false, "Unknown GL type %d", _type);
+        return -1;
     }
 }
 } // namespace

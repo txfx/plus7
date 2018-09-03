@@ -1,5 +1,7 @@
 #include "GlRasterizerState.hpp"
 
+#include <Utils/Assert.hpp>
+
 namespace p7 {
 namespace gfx {
 
@@ -14,6 +16,9 @@ GLenum ToGl(PolygonMode _mode)
         return GL_LINE;
     case PolygonMode::Point:
         return GL_POINT;
+    default:
+        P7_ASSERT(false, "Unknown GL type %d", _mode);
+        return -1;
     }
 }
 
@@ -29,6 +34,9 @@ GLenum ToGl(CullMode _mode)
         return GL_BACK;
     case CullMode::Front_And_Back:
         return GL_FRONT_AND_BACK;
+    default:
+        P7_ASSERT(false, "Unknown GL type %d", _mode);
+        return -1;
     }
 }
 
@@ -40,6 +48,9 @@ GLenum ToGl(FrontFace _face)
         return GL_CW;
     case FrontFace::CounterClockWise:
         return GL_CCW;
+    default:
+        P7_ASSERT(false, "Unknown GL type %d", _mode);
+        return -1;
     }
 }
 
