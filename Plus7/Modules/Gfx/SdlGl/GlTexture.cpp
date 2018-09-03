@@ -1,5 +1,7 @@
 #include "GlTexture.hpp"
 
+#include <Utils/Assert.hpp>
+
 namespace p7 {
 namespace gfx {
 
@@ -10,6 +12,9 @@ GLenum ToGl(PixelFormat _format)
     {
     case PixelFormat::R8G8B8A8_UNORM:
         return GL_RGBA8;
+    default:
+        P7_ASSERT(false, "Unknown GL type %d", _type);
+        return -1;
     }
 }
 

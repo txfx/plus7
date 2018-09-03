@@ -1,5 +1,7 @@
 #include "GlBlendState.hpp"
 
+#include <Utils/Assert.hpp>
+
 namespace p7 {
 namespace gfx {
 namespace {
@@ -45,6 +47,9 @@ GLenum ToGl(BlendFactor _mode)
         return GL_SRC1_ALPHA;
     case BlendFactor::OneMinusSrc1Alpha:
         return GL_ONE_MINUS_SRC1_ALPHA;
+    default:
+        P7_ASSERT(false, "Unknown GL mode %d", _mode);
+        return -1;
     }
 }
 
@@ -62,6 +67,9 @@ GLenum ToGl(BlendOp _mode)
         return GL_MIN;
     case BlendOp::Max:
         return GL_MAX;
+    default:
+        P7_ASSERT(false, "Unknown GL mode %d", _mode);
+        return -1;
     }
 }
 

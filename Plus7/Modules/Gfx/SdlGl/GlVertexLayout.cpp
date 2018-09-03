@@ -21,6 +21,9 @@ GLVertexAttribute ToGl(VertexAttribute::Type _type)
         return { GL_UNSIGNED_BYTE, 4, GL_TRUE };
     case VertexAttribute::Type::XYZW32F:
         return { GL_FLOAT, 4, GL_FALSE };
+    default:
+        P7_ASSERT(false, "Unknown GL Type %d", _type);
+        return { GL_FLOAT, 0, GL_FALSE };
     }
 }
 

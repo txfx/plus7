@@ -1,5 +1,7 @@
 #include "GlDepthState.hpp"
 
+#include <Utils/Assert.hpp>
+
 namespace p7 {
 namespace gfx {
 
@@ -24,6 +26,9 @@ GLenum ToGl(DepthCompare _mode)
         return GL_GEQUAL;
     case DepthCompare::Always:
         return GL_ALWAYS;
+    default:
+        P7_ASSERT(false, "Unknown GL mode %d", _mode);
+        return -1;
     }
 }
 } // namespace
