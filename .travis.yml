@@ -14,7 +14,7 @@ install:
     cd SDL;
     mkdir build;
     cd build;
-    ../configure;
+    ../configure --prefix=/usr;
     make;
     sudo make install"
 
