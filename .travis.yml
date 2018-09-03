@@ -9,7 +9,7 @@ before_install:
   - docker run -d --name ubuntu-bionic -v $(pwd):/travis ubuntu:18.04 tail -f /dev/null
 
 install:
-  - docker exec -t ubuntu-bionic bash -c "apt-get update && apt-get install -y cmake sudo mercurial g++;
+  - docker exec -t ubuntu-bionic bash -c "apt-get update && apt-get install -y cmake sudo mercurial g++ libgl1-mesa-dev libgl1-mesa-glx;
     hg clone https://hg.libsdl.org/SDL SDL;
     cd SDL;
     mkdir build;
