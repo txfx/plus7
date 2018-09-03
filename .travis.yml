@@ -19,7 +19,13 @@ install:
     sudo make install"
 
 script:
-  - docker exec -t ubuntu-bionic bash -c "cd /travis && mkdir -p build && cd build && cmake .. && make"
+  - docker exec -t ubuntu-bionic bash -c "export CC=gcc;
+    export CXX=g++;
+    cd /travis;
+    mkdir -p build;
+    cd build;
+    cmake ..;
+    make"
 
 notifications:
     email: false
