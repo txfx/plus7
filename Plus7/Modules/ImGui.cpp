@@ -75,6 +75,7 @@ ImGui::ImGui(App& _app)
               },
               tasks::after(beginFrameTask),
               tasks::before(renderer.GetDisplayTask())))
+    , context(::ImGui::CreateContext())
 {
     ImGuiIO& io = ::ImGui::GetIO();
 
@@ -86,6 +87,11 @@ ImGui::ImGui(App& _app)
     io.Fonts->TexID = &font;
 
     static_assert(sizeof(ImDrawVert) == sizeof(ImVec2) * 2 + sizeof(ImU32), "");
+}
+
+ImGui::~ImGui()
+{
+    ::ImGui::DestroyContext(context);
 }
 
 void ImGui::BeginFrame()

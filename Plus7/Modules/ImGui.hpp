@@ -6,6 +6,7 @@
 #include <Tasks/Task.hpp>
 
 struct ImDrawData;
+struct ImGuiContext;
 
 namespace p7 {
 namespace gfx {
@@ -14,6 +15,7 @@ struct ImGui : public Module
 {
 public:
     explicit ImGui(App& _app);
+    ~ImGui() override;
 
     tasks::ID<uint64_t> GetBeginFrameTask() const { return beginFrameTask; }
     tasks::ID<void>     GetEndFrameTask() const { return endFrameTask; }
@@ -44,6 +46,9 @@ private:
     // Tasks
     tasks::ID<uint64_t> beginFrameTask;
     tasks::ID<void>     endFrameTask;
+
+    // ImGui
+    ImGuiContext* context;
 };
 } // namespace gfx
 } // namespace p7

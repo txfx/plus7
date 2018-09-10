@@ -13,11 +13,12 @@ set(SOURCE_FILES
     Modules/Gfx/SdlGl/GlVertexLayout.cpp
     Tasks/Pipeline.cpp)
 
-set(IMGUI_DIR ../Libs/ImGui-1.52)
+set(IMGUI_DIR ../Libs/ImGui-1.65)
 set(IMGUI_SOURCE_FILES
     ${IMGUI_DIR}/imgui.cpp
     ${IMGUI_DIR}/imgui_demo.cpp
-    ${IMGUI_DIR}/imgui_draw.cpp)
+    ${IMGUI_DIR}/imgui_draw.cpp
+    ${IMGUI_DIR}/imgui_widgets.cpp)
 
 add_library(Imgui STATIC ${IMGUI_SOURCE_FILES})
 
