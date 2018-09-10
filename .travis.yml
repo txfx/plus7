@@ -28,4 +28,4 @@ script:
     make"
 
 notifications:
-    email: false
+    email: true
