@@ -50,7 +50,7 @@ struct Pipeline : public NonCopyable
             make_id_sequence<sizeof...(Ts)>,
             F>(_functor);
 
-        return RegisterTask<decltype(_functor(std::declval<Ts>()...))>(task, _parents.ids, NoDependecies{});
+        return RegisterTask<decltype(_functor(std::declval<Ts>()...))>(task, _parents.ids, NoDependencies{});
     }
 
     // n parents, 0 child
@@ -63,7 +63,7 @@ struct Pipeline : public NonCopyable
             make_id_sequence<sizeof...(Ts)>,
             F>(_functor);
 
-        return RegisterTask<decltype(_functor())>(task, _parents.ids, NoDependecies{});
+        return RegisterTask<decltype(_functor())>(task, _parents.ids, NoDependencies{});
     }
 
     // 0 parent, n children
@@ -76,7 +76,7 @@ struct Pipeline : public NonCopyable
             make_id_sequence<0>,
             F>(_functor);
 
-        return RegisterTask<decltype(_functor())>(task, NoDependecies{}, _children.ids);
+        return RegisterTask<decltype(_functor())>(task, NoDependencies{}, _children.ids);
     }
 
     // 0 parent, 0 child
@@ -89,7 +89,7 @@ struct Pipeline : public NonCopyable
             make_id_sequence<0>,
             F>(_functor);
 
-        return RegisterTask<decltype(_functor())>(task, NoDependecies{}, NoDependecies{});
+        return RegisterTask<decltype(_functor())>(task, NoDependencies{}, NoDependencies{});
     }
 
 protected:
@@ -97,8 +97,8 @@ protected:
 
 private:
     template <std::size_t N>
-    using Dependencies  = std::array<Task::InternalId, N>;
-    using NoDependecies = Dependencies<0>;
+    using Dependencies   = std::array<Task::InternalId, N>;
+    using NoDependencies = Dependencies<0>;
 
     template <typename T, std::size_t NParents, std::size_t NChildren>
     ID<T> RegisterTask(Task* _task, const Dependencies<NParents>& _parents, const Dependencies<NChildren>& _children)
