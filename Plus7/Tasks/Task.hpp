@@ -107,7 +107,14 @@ private:
     {
         R* ret = reinterpret_cast<R*>(&_data[_offsets[_returnId]]);
 
-        *ret = functor(*reinterpret_cast<Ts*>(&_data[_offsets[parents[IDs]]])...);
+        if constexpr ((std::is_same<void, Ts>::value && ...))
+        {
+            *ret = functor();
+        }
+        else
+        {
+            *ret = functor(*reinterpret_cast<Ts*>(&_data[_offsets[parents[IDs]]])...);
+        }
 
         return sizeof(R);
     }
