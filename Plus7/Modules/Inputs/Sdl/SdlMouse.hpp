@@ -3,7 +3,7 @@
 #include <Module.hpp>
 #include <Tasks/Task.hpp>
 
-#include "../MouseWheelState.hpp"
+#include <Modules/Inputs/MouseState.hpp>
 
 namespace p7::inputs {
 
