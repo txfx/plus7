@@ -21,15 +21,16 @@ public:
     tasks::ID<void>     GetEndFrameTask() const { return endFrameTask; }
 
 private:
-    uint64_t BeginFrame(const inputs::MouseState& state);
+    uint64_t BeginFrame(const inputs::MouseState& mouseState, const inputs::KeyboardState& keyboardState);
     void     EndFrame();
 
     void DrawLists(ImDrawData* draw_data);
 
 private:
     // Modules dependencies
-    inputs::Mouse& mouse;
-    Renderer&      renderer;
+    inputs::Mouse&    mouse;
+    inputs::Keyboard& keyboard;
+    Renderer&         renderer;
 
     // render states
     BlendState      blendState;

@@ -1,6 +1,9 @@
 #include "ImGui.hpp"
 
 #include <App.hpp>
+#include <SDL.h>
+#include <Utils/Assert.hpp>
+#include <cstring>
 #include <imgui.h>
 
 namespace p7::gfx {
@@ -56,6 +59,7 @@ constexpr VertexLayoutProperties vtxLayoutProperties = {
 ImGui::ImGui(App& _app)
     : Module(_app)
     , mouse(app.GetDependency<inputs::Mouse>())
+    , keyboard(app.GetDependency<inputs::Keyboard>())
     , renderer(app.GetDependency<Renderer>())
     , blendState(blendProps)
     , depthState(depthProps)
@@ -64,8 +68,10 @@ ImGui::ImGui(App& _app)
     , vtxLayout(vtxLayoutProperties)
     , beginFrameTask(
           _app.CreateTask(
-              [&](const auto& state) { return this->BeginFrame(state); },
-              tasks::after(mouse.GetStateTask())))
+              [&](const auto& mouseState, const auto& keyboardState) {
+                  return this->BeginFrame(mouseState, keyboardState);
+              },
+              tasks::after(mouse.GetStateTask(), keyboard.GetStateTask())))
     , endFrameTask(
           _app.CreateTask(
               [&](uint64_t) { this->EndFrame(); },
@@ -82,7 +88,30 @@ ImGui::ImGui(App& _app)
 
     io.Fonts->TexID = &font;
 
-    static_assert(sizeof(ImDrawVert) == sizeof(ImVec2) * 2 + sizeof(ImU32), "");
+    static_assert(sizeof(ImDrawVert) == sizeof(ImVec2) * 2 + sizeof(ImU32));
+
+    // Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
+    io.KeyMap[ImGuiKey_Tab]        = SDL_SCANCODE_TAB;
+    io.KeyMap[ImGuiKey_LeftArrow]  = SDL_SCANCODE_LEFT;
+    io.KeyMap[ImGuiKey_RightArrow] = SDL_SCANCODE_RIGHT;
+    io.KeyMap[ImGuiKey_UpArrow]    = SDL_SCANCODE_UP;
+    io.KeyMap[ImGuiKey_DownArrow]  = SDL_SCANCODE_DOWN;
+    io.KeyMap[ImGuiKey_PageUp]     = SDL_SCANCODE_PAGEUP;
+    io.KeyMap[ImGuiKey_PageDown]   = SDL_SCANCODE_PAGEDOWN;
+    io.KeyMap[ImGuiKey_Home]       = SDL_SCANCODE_HOME;
+    io.KeyMap[ImGuiKey_End]        = SDL_SCANCODE_END;
+    io.KeyMap[ImGuiKey_Insert]     = SDL_SCANCODE_INSERT;
+    io.KeyMap[ImGuiKey_Delete]     = SDL_SCANCODE_DELETE;
+    io.KeyMap[ImGuiKey_Backspace]  = SDL_SCANCODE_BACKSPACE;
+    io.KeyMap[ImGuiKey_Space]      = SDL_SCANCODE_SPACE;
+    io.KeyMap[ImGuiKey_Enter]      = SDL_SCANCODE_RETURN;
+    io.KeyMap[ImGuiKey_Escape]     = SDL_SCANCODE_ESCAPE;
+    io.KeyMap[ImGuiKey_A]          = SDL_SCANCODE_A;
+    io.KeyMap[ImGuiKey_C]          = SDL_SCANCODE_C;
+    io.KeyMap[ImGuiKey_V]          = SDL_SCANCODE_V;
+    io.KeyMap[ImGuiKey_X]          = SDL_SCANCODE_X;
+    io.KeyMap[ImGuiKey_Y]          = SDL_SCANCODE_Y;
+    io.KeyMap[ImGuiKey_Z]          = SDL_SCANCODE_Z;
 }
 
 ImGui::~ImGui()
@@ -90,19 +119,35 @@ ImGui::~ImGui()
     ::ImGui::DestroyContext(context);
 }
 
-uint64_t ImGui::BeginFrame(const inputs::MouseState& state)
+uint64_t ImGui::BeginFrame(const inputs::MouseState& mouseState, const inputs::KeyboardState& keyboardState)
 {
     ImGuiIO& io    = ::ImGui::GetIO();
     io.DisplaySize = ImVec2(renderer.GetWidth(), renderer.GetHeight());
 
-    io.MousePos = ImVec2(state.pos.x, state.pos.y);
+    // mouse
+    io.MousePos = ImVec2(mouseState.pos.x, mouseState.pos.y);
 
-    io.MouseDown[0] = state.buttons[0];
-    io.MouseDown[1] = state.buttons[1];
-    io.MouseDown[2] = state.buttons[2];
+    io.MouseDown[0] = mouseState.buttons[0];
+    io.MouseDown[1] = mouseState.buttons[1];
+    io.MouseDown[2] = mouseState.buttons[2];
 
-    io.MouseWheel  = state.wheel.vertical;
-    io.MouseWheelH = state.wheel.horizontal;
+    io.MouseWheel  = mouseState.wheel.vertical;
+    io.MouseWheelH = mouseState.wheel.horizontal;
+
+    // keyboard
+    io.ClearInputCharacters();
+    io.AddInputCharactersUTF8(keyboardState.text.data());
+
+    static_assert(sizeof(io.KeysDown) >= sizeof(keyboardState.keysDown));
+    std::memcpy(io.KeysDown, keyboardState.keysDown.data(), sizeof(keyboardState.keysDown));
+    io.KeyShift = keyboardState.shiftMod;
+    io.KeyCtrl  = keyboardState.ctrlMod;
+    io.KeyAlt   = keyboardState.altMod;
+    io.KeySuper = keyboardState.superMod;
+
+    /* remove */
+    SDL_ShowCursor(io.MouseDrawCursor ? 0 : 1);
+    /* end remove */
 
     ::ImGui::NewFrame();
 
