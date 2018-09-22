@@ -3,8 +3,7 @@
 #include <App.hpp>
 #include <imgui.h>
 
-namespace p7 {
-namespace gfx {
+namespace p7::gfx {
 
 namespace {
 constexpr BlendProperties      blendProps{ BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add };
@@ -56,6 +55,7 @@ constexpr VertexLayoutProperties vtxLayoutProperties = {
 
 ImGui::ImGui(App& _app)
     : Module(_app)
+    , mouse(app.GetDependency<inputs::Mouse>())
     , renderer(app.GetDependency<Renderer>())
     , blendState(blendProps)
     , depthState(depthProps)
@@ -63,16 +63,12 @@ ImGui::ImGui(App& _app)
     , shader(vertex_shader, pixel_shader)
     , vtxLayout(vtxLayoutProperties)
     , beginFrameTask(
-          _app.CreateTask([&]() {
-              this->BeginFrame();
-              static uint64_t frame = 0;
-              return frame++;
-          }))
+          _app.CreateTask(
+              [&](const auto& state) { return this->BeginFrame(state); },
+              tasks::after(mouse.GetStateTask())))
     , endFrameTask(
           _app.CreateTask(
-              [&](uint64_t) {
-                  this->EndFrame();
-              },
+              [&](uint64_t) { this->EndFrame(); },
               tasks::after(beginFrameTask),
               tasks::before(renderer.GetDisplayTask())))
     , context(::ImGui::CreateContext())
@@ -94,13 +90,23 @@ ImGui::~ImGui()
     ::ImGui::DestroyContext(context);
 }
 
-void ImGui::BeginFrame()
+uint64_t ImGui::BeginFrame(const inputs::MouseState& state)
 {
     ImGuiIO& io    = ::ImGui::GetIO();
     io.DisplaySize = ImVec2(renderer.GetWidth(), renderer.GetHeight());
 
+    io.MousePos = ImVec2(state.pos.x, state.pos.y);
+
+    io.MouseDown[0] = state.buttons[0];
+    io.MouseDown[1] = state.buttons[1];
+    io.MouseDown[2] = state.buttons[2];
+
+    io.MouseWheel  = state.wheel.vertical;
+    io.MouseWheelH = state.wheel.horizontal;
 
     ::ImGui::NewFrame();
+
+    return frame++;
 }
 
 void ImGui::EndFrame()
@@ -179,5 +185,4 @@ void ImGui::DrawLists(ImDrawData* draw_data)
     }
 }
 
-} // namespace gfx
-} // namespace p7
+} // namespace p7::gfx

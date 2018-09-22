@@ -11,6 +11,7 @@ set(SOURCE_FILES
     Modules/Gfx/SdlGl/GlShaderState.cpp
     Modules/Gfx/SdlGl/GlTexture.cpp
     Modules/Gfx/SdlGl/GlVertexLayout.cpp
+    Modules/Inputs/Sdl/SdlMouse.cpp
     Modules/Sdl/SdlApp.cpp
     Tasks/Pipeline.cpp)
 

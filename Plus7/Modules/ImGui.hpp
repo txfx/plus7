@@ -3,13 +3,13 @@
 #include "Module.hpp"
 
 #include <Modules/Gfx/Renderer.hpp>
+#include <Modules/Inputs/Inputs.hpp>
 #include <Tasks/Task.hpp>
 
 struct ImDrawData;
 struct ImGuiContext;
 
-namespace p7 {
-namespace gfx {
+namespace p7::gfx {
 
 struct ImGui : public Module
 {
@@ -21,13 +21,15 @@ public:
     tasks::ID<void>     GetEndFrameTask() const { return endFrameTask; }
 
 private:
-    void BeginFrame();
-    void EndFrame();
+    uint64_t BeginFrame(const inputs::MouseState& state);
+    void     EndFrame();
 
     void DrawLists(ImDrawData* draw_data);
 
 private:
-    Renderer& renderer;
+    // Modules dependencies
+    inputs::Mouse& mouse;
+    Renderer&      renderer;
 
     // render states
     BlendState      blendState;
@@ -49,6 +51,7 @@ private:
 
     // ImGui
     ImGuiContext* context;
+
+    uint64_t frame = 0;
 };
-} // namespace gfx
-} // namespace p7
+} // namespace p7::gfx
