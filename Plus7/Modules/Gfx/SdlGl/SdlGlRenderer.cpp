@@ -1,12 +1,12 @@
 #include "SdlGlRenderer.hpp"
 
 #include <App.hpp>
+#include <Modules/Sdl/SdlApp.hpp>
 #include <SDL.h>
 
 #include "gl_headers.h"
 
-namespace p7 {
-namespace gfx {
+namespace p7::gfx {
 
 SdlGlRenderer::SdlGlRenderer(App& _app)
     : SdlGlRenderer("", 0, 0, /* _visible*/ false, _app)
@@ -21,6 +21,7 @@ SdlGlRenderer::SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, A
     , width(_w)
     , height(_h)
     , displayTask(_app.CreateTask([&]() { this->EndFrame(); }))
+    , sdlApp(_app.GetDependency<SdlApp>())
 {
     initialized = SDL_InitSubSystem(SDL_INIT_VIDEO) == 0;
 
@@ -55,5 +56,4 @@ void SdlGlRenderer::EndFrame()
     SDL_GL_SwapWindow(window);
 }
 
-} // namespace gfx
-} // namespace p7
+} // namespace p7::gfx

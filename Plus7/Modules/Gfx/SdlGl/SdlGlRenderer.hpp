@@ -9,6 +9,9 @@ struct SDL_Window;
 using SDL_GLContext = void*;
 
 namespace p7 {
+
+class SdlApp;
+
 namespace gfx {
 
 struct SdlGlRenderer final : public Module, public DummyRenderer
@@ -23,7 +26,7 @@ public:
     uint32_t GetWidth() const override { return width; }
     uint32_t GetHeight() const override { return height; }
 
-    tasks::ID<void> GetDisplayTask() const { return displayTask; }
+    auto GetDisplayTask() const { return displayTask; }
 
 private:
     SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, App& _app);
@@ -37,6 +40,7 @@ private:
     SDL_GLContext   glcontext;
     GlCommandBuffer commandBuffer;
     tasks::ID<void> displayTask;
+    SdlApp&         sdlApp;
 };
 } // namespace gfx
 } // namespace p7
