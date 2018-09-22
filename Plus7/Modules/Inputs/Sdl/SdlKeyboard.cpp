@@ -43,7 +43,7 @@ KeyboardState SdlKeyboard::PollEvents()
 
     int  nbKeys    = 0;
     auto keysState = SDL_GetKeyboardState(&nbKeys);
-    P7_ASSERT(static_cast<uint>(nbKeys) <= state.keysDown.size());
+    P7_ASSERT(static_cast<uint>(nbKeys) <= state.keysDown.size(), "SDL_GetKeyboardState has returned too many keys");
     static_assert(sizeof(*keysState) == sizeof(*state.keysDown.data()));
     std::memcpy(state.keysDown.data(), keysState, nbKeys);
 

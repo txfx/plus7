@@ -96,7 +96,7 @@ struct TypedTask<R, std::tuple<Ts...>, id_sequence<IDs...>, F> : Task
 private:
     friend struct Pipeline;
 
-    TypedTask(F _functor)
+    explicit TypedTask(F _functor)
         : functor(_functor)
     {}
 
@@ -105,7 +105,7 @@ private:
         std::vector<uint8_t>&      _data,
         const std::vector<size_t>& _offsets) const override
     {
-        R* ret = reinterpret_cast<R*>(&_data[_offsets[_returnId]]);
+        auto ret = reinterpret_cast<R*>(&_data[_offsets[_returnId]]);
 
         if constexpr ((std::is_same<void, Ts>::value && ...))
         {
@@ -128,7 +128,7 @@ struct TypedTask<void, std::tuple<Ts...>, id_sequence<IDs...>, F> : Task
 private:
     friend struct Pipeline;
 
-    TypedTask(F _functor)
+    explicit TypedTask(F _functor)
         : functor(_functor)
     {}
 
