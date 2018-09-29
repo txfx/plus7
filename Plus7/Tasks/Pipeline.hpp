@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-#include "Task.hpp"
+#include "TypedTask.hpp"
 #include <Utils/NonCopyable.hpp>
 
 namespace p7 {
