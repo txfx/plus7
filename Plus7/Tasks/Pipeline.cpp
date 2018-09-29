@@ -6,7 +6,7 @@ namespace p7::tasks {
 
 void Pipeline::ExecuteTasks() const
 {
-    std::vector<Task::InternalId> todo;
+    std::vector<InternalId> todo;
     todo.reserve(tasks.size());
 
     std::vector<uint16_t> dependencies;
@@ -18,9 +18,9 @@ void Pipeline::ExecuteTasks() const
     std::vector<uint8_t> returnValues;
     returnValues.resize(returnValuesSize);
 
-    for (uint16_t i = 0; i < tasks.size(); ++i)
+    for (InternalId i = 0; i < tasks.size(); ++i)
     {
-        const uint16_t nbParents = tasks[i]->parents.size();
+        const uint16_t nbParents = tasks[i]->GetParents().size();
         if (nbParents == 0)
         {
             todo.push_back(i);
@@ -37,7 +37,7 @@ void Pipeline::ExecuteTasks() const
 
         returnValuesOffset[taskId] = offset;
         offset += task->Call(taskId, returnValues, returnValuesOffset);
-        for (auto id : task->children)
+        for (auto id : task->GetChildren())
         {
             --dependencies[id];
             if (dependencies[id] == 0)

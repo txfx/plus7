@@ -6,6 +6,7 @@
 #include <utility>
 
 #include "Task.hpp"
+#include "TaskDependencies.hpp"
 
 namespace p7::tasks {
 
@@ -15,22 +16,24 @@ struct TypedTask : Task
 public:
     using TReturn = typename std::invoke_result<F, Ts...>::type;
 
-private:
-    friend struct Pipeline;
-    friend std::unique_ptr<TypedTask> std::make_unique<TypedTask>(F&);
-
-    template <uint16_t... Ids>
-    using id_sequence = std::integer_sequence<uint16_t, Ids...>;
-
-    template <uint16_t N>
-    using make_id_sequence = std::make_integer_sequence<uint16_t, N>;
-
-    explicit TypedTask(F _functor)
-        : functor(_functor)
+    explicit TypedTask(F _functor, TypedTaskDependencies<Ts...> _dependencies)
+        : Task(_dependencies)
+        , functor(_functor)
     {}
 
+private:
+    friend struct Pipeline;
+
+    using TIndex = uint16_t;
+
+    template <TIndex... Ids>
+    using id_sequence = std::integer_sequence<TIndex, Ids...>;
+
+    template <TIndex N>
+    using make_id_sequence = std::make_integer_sequence<TIndex, N>;
+
     size_t Call(
-        Task::InternalId           _returnId,
+        InternalId                 _returnId,
         std::vector<uint8_t>&      _data,
         const std::vector<size_t>& _offsets) const override
     {
@@ -38,11 +41,11 @@ private:
         return CallInternal(_returnId, _data, _offsets, seq{});
     }
 
-    template <uint16_t... IDs>
+    template <TIndex... IDs>
     size_t CallInternal(
-        [[maybe_unused]] Task::InternalId _returnId,
-        std::vector<uint8_t>&             _data,
-        const std::vector<size_t>&        _offsets,
+        [[maybe_unused]] InternalId _returnId,
+        std::vector<uint8_t>&       _data,
+        const std::vector<size_t>&  _offsets,
         id_sequence<IDs...>) const
     {
         constexpr bool has_arguments = ((!std::is_same<void, Ts>::value || ...));
@@ -57,7 +60,7 @@ private:
             }
             else
             {
-                *ret = functor(*reinterpret_cast<Ts*>(&_data[_offsets[parents[IDs]]])...);
+                *ret = functor(*reinterpret_cast<Ts*>(&_data[_offsets[GetParentID(IDs)]])...);
             }
             return sizeof(TReturn);
         }
@@ -69,10 +72,15 @@ private:
             }
             else
             {
-                functor(*reinterpret_cast<Ts*>(&_data[_offsets[parents[IDs]]])...);
+                functor(*reinterpret_cast<Ts*>(&_data[_offsets[GetParentID(IDs)]])...);
             }
             return 0;
         }
+    }
+
+    InternalId GetParentID(TIndex index) const
+    {
+        return dependencies.parents[index];
     }
 
     const F functor;

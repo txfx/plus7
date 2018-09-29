@@ -13,8 +13,6 @@ int main()
     using p7::App;
     using p7::gfx::ImGui;
     using p7::gfx::Renderer;
-    using p7::tasks::after;
-    using p7::tasks::before;
 
     App   helloWorldApp;
     auto& renderer = helloWorldApp.LoadModule<Renderer>("Hello World", 1280, 720);
@@ -37,8 +35,9 @@ int main()
             renderer.GetCommandBuffer().BindRasterizerState(defaultState);
             renderer.GetCommandBuffer().Clear(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         },
-        after(imgui.GetBeginFrameTask()),
-        before(imgui.GetEndFrameTask()));
+        consume(imgui.GetBeginFrameTask())
+            .run_before(imgui.GetEndFrameTask()));
+
 
 
     helloWorldApp.Run();

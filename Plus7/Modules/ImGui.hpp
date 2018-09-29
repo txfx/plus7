@@ -17,8 +17,8 @@ public:
     explicit ImGui(App& _app);
     ~ImGui() override;
 
-    tasks::ID<uint64_t> GetBeginFrameTask() const { return beginFrameTask; }
-    tasks::ID<void>     GetEndFrameTask() const { return endFrameTask; }
+    auto GetBeginFrameTask() const { return beginFrameTask; }
+    auto GetEndFrameTask() const { return endFrameTask; }
 
 private:
     uint64_t BeginFrame(const inputs::MouseState& mouseState, const inputs::KeyboardState& keyboardState);

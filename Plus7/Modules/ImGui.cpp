@@ -71,12 +71,12 @@ ImGui::ImGui(App& _app)
               [&](const auto& mouseState, const auto& keyboardState) {
                   return this->BeginFrame(mouseState, keyboardState);
               },
-              tasks::after(mouse.GetStateTask(), keyboard.GetStateTask())))
+              consume(mouse.GetStateTask(), keyboard.GetStateTask())))
     , endFrameTask(
           _app.CreateTask(
               [&](uint64_t) { this->EndFrame(); },
-              tasks::after(beginFrameTask),
-              tasks::before(renderer.GetDisplayTask())))
+              consume(beginFrameTask)
+                  .run_before(renderer.GetDisplayTask())))
     , context(::ImGui::CreateContext())
 {
     ImGuiIO& io = ::ImGui::GetIO();

@@ -12,9 +12,8 @@ SdlKeyboard::SdlKeyboard(App& _app)
     : Module(_app)
     , getStateTask(_app.CreateTask(
           [&]() { return this->PollEvents(); },
-          tasks::after(app.GetDependency<SdlApp>().GetMainTask())))
-{
-}
+          run_after(app.GetDependency<SdlApp>().GetMainTask())))
+{}
 
 KeyboardState SdlKeyboard::PollEvents()
 {
