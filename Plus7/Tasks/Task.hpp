@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <tuple>
 #include <type_traits>
 #include <utility>
@@ -89,8 +90,12 @@ using make_id_sequence = std::make_integer_sequence<uint16_t, N>;
 template <typename F, typename... Ts>
 struct TypedTask : Task
 {
+public:
+    using TReturn = typename std::invoke_result<F, Ts...>::type;
+
 private:
     friend struct Pipeline;
+    friend std::unique_ptr<TypedTask> std::make_unique<TypedTask>(F&);
 
     explicit TypedTask(F _functor)
         : functor(_functor)
@@ -112,7 +117,6 @@ private:
         const std::vector<size_t>&        _offsets,
         id_sequence<IDs...>) const
     {
-        using TReturn                = typename std::invoke_result<F, Ts...>::type;
         constexpr bool has_arguments = ((!std::is_same<void, Ts>::value || ...));
         constexpr bool has_return    = !(std::is_same<void, TReturn>::value);
 

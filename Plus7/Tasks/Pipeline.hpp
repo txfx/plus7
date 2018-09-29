@@ -19,18 +19,14 @@ struct Pipeline : public NonCopyable
     auto CreateTask(F _functor, After<Ts...> _parents, Before<Us...> _children) -> ID<decltype(_functor(std::declval<Ts>()...))>
     {
         static_assert(std::is_invocable<F, Ts...>::value);
-        auto task = new TypedTask<F, Ts...>(_functor);
-
-        return RegisterTask<decltype(_functor(std::declval<Ts>()...))>(task, _parents.ids, _children.ids);
+        return CreateTask<TypedTask<F, Ts...>>(_functor, _parents.ids, _children.ids);
     }
 
     // n parents, n children
     template <typename F, typename... Ts, typename... Us>
     auto CreateTask(F _functor, After<Ts...> _parents, Before<Us...> _children) -> ID<decltype(_functor())>
     {
-        auto task = new TypedTask<F>(_functor);
-
-        return RegisterTask<decltype(_functor())>(task, _parents.ids, _children.ids);
+        return CreateTask<TypedTask<F>>(_functor, _parents.ids, _children.ids);
     }
 
     // n parents, 0 child, receive parents return
@@ -38,36 +34,28 @@ struct Pipeline : public NonCopyable
     auto CreateTask(F _functor, After<Ts...> _parents) -> ID<decltype(_functor(std::declval<Ts>()...))>
     {
         static_assert(std::is_invocable<F, Ts...>::value);
-        auto task = new TypedTask<F, Ts...>(_functor);
-
-        return RegisterTask<decltype(_functor(std::declval<Ts>()...))>(task, _parents.ids, NoDependencies{});
+        return CreateTask<TypedTask<F, Ts...>>(_functor, _parents.ids, NoDependencies{});
     }
 
     // n parents, 0 child
     template <typename F, typename... Ts>
     auto CreateTask(F _functor, const After<Ts...>& _parents) -> ID<decltype(_functor())>
     {
-        auto task = new TypedTask<F>(_functor);
-
-        return RegisterTask<decltype(_functor())>(task, _parents.ids, NoDependencies{});
+        return CreateTask<TypedTask<F>>(_functor, _parents.ids, NoDependencies{});
     }
 
     // 0 parent, n children
     template <typename F, typename... Us>
     auto CreateTask(F _functor, const Before<Us...>& _children) -> ID<decltype(_functor())>
     {
-        auto task = new TypedTask<F>(_functor);
-
-        return RegisterTask<decltype(_functor())>(task, NoDependencies{}, _children.ids);
+        return CreateTask<TypedTask<F>>(_functor, NoDependencies{}, _children.ids);
     }
 
     // 0 parent, 0 child
     template <typename F>
     auto CreateTask(F _functor) -> ID<decltype(_functor())>
     {
-        auto task = new TypedTask<F>(_functor);
-
-        return RegisterTask<decltype(_functor())>(task, NoDependencies{}, NoDependencies{});
+        return CreateTask<TypedTask<F>>(_functor, NoDependencies{}, NoDependencies{});
     }
 
 protected:
@@ -78,32 +66,33 @@ private:
     using Dependencies   = std::array<Task::InternalId, N>;
     using NoDependencies = Dependencies<0>;
 
-    template <typename T, std::size_t NParents, std::size_t NChildren>
-    ID<T> RegisterTask(Task* _task, const Dependencies<NParents>& _parents, const Dependencies<NChildren>& _children)
+    template <typename TTask, typename F, std::size_t NParents, std::size_t NChildren>
+    auto CreateTask(F _functor, const Dependencies<NParents>& _parents, const Dependencies<NChildren>& _children)
     {
         Task::InternalId id = tasks.size();
-        tasks.emplace_back(_task);
+        tasks.emplace_back(std::make_unique<TTask>(_functor));
 
-        _task->parents.reserve(_task->parents.size() + _parents.size());
+        tasks.back()->parents.reserve(tasks.back()->parents.size() + _parents.size());
         for (auto parentId : _parents)
         {
-            _task->parents.push_back(parentId);
+            tasks.back()->parents.push_back(parentId);
             tasks[parentId]->children.push_back(id);
         }
 
-        _task->children.reserve(_task->children.size() + _children.size());
+        tasks.back()->children.reserve(tasks.back()->children.size() + _children.size());
         for (auto childId : _children)
         {
-            _task->children.push_back(childId);
+            tasks.back()->children.push_back(childId);
             tasks[childId]->parents.push_back(id);
         }
 
-        if constexpr (!std::is_same<void, T>::value)
+        using R = typename TTask::TReturn;
+        if constexpr (!std::is_same<void, R>::value)
         {
-            returnValuesSize += sizeof(T);
+            returnValuesSize += sizeof(R);
         }
 
-        return ID<T>(id);
+        return ID<R>(id);
     }
 
     std::vector<std::unique_ptr<Task>> tasks;
