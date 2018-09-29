@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <tuple>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -44,7 +45,7 @@ private:
     friend struct After;
     template <typename... Ts>
     friend struct Before;
-    template <typename R, typename Ts, typename IDs, typename F>
+    template <typename F, typename... Ts>
     friend struct TypedTask;
 
     std::vector<InternalId> parents;
@@ -85,13 +86,8 @@ using id_sequence = std::integer_sequence<uint16_t, Ids...>;
 template <uint16_t N>
 using make_id_sequence = std::make_integer_sequence<uint16_t, N>;
 
-template <typename R, typename Ts, typename IDs, typename F>
-struct TypedTask
-{
-};
-
-template <typename R, typename... Ts, uint16_t... IDs, typename F>
-struct TypedTask<R, std::tuple<Ts...>, id_sequence<IDs...>, F> : Task
+template <typename F, typename... Ts>
+struct TypedTask : Task
 {
 private:
     friend struct Pipeline;
@@ -105,47 +101,46 @@ private:
         std::vector<uint8_t>&      _data,
         const std::vector<size_t>& _offsets) const override
     {
-        auto ret = reinterpret_cast<R*>(&_data[_offsets[_returnId]]);
-
-        if constexpr ((std::is_same<void, Ts>::value && ...))
-        {
-            *ret = functor();
-        }
-        else
-        {
-            *ret = functor(*reinterpret_cast<Ts*>(&_data[_offsets[parents[IDs]]])...);
-        }
-
-        return sizeof(R);
+        using seq = make_id_sequence<sizeof...(Ts)>;
+        return CallInternal(_returnId, _data, _offsets, seq{});
     }
 
-    const F functor;
-};
-
-template <typename... Ts, uint16_t... IDs, typename F>
-struct TypedTask<void, std::tuple<Ts...>, id_sequence<IDs...>, F> : Task
-{
-private:
-    friend struct Pipeline;
-
-    explicit TypedTask(F _functor)
-        : functor(_functor)
-    {}
-
-    size_t Call(
-        Task::InternalId /* _returnId */,
-        std::vector<uint8_t>&      _data,
-        const std::vector<size_t>& _offsets) const override
+    template <uint16_t... IDs>
+    size_t CallInternal(
+        [[maybe_unused]] Task::InternalId _returnId,
+        std::vector<uint8_t>&             _data,
+        const std::vector<size_t>&        _offsets,
+        id_sequence<IDs...>) const
     {
-        if constexpr ((std::is_same<void, Ts>::value && ...))
+        using TReturn                = typename std::invoke_result<F, Ts...>::type;
+        constexpr bool has_arguments = ((!std::is_same<void, Ts>::value || ...));
+        constexpr bool has_return    = !(std::is_same<void, TReturn>::value);
+
+        if constexpr (has_return)
         {
-            functor();
+            auto ret = reinterpret_cast<TReturn*>(&_data[_offsets[_returnId]]);
+            if constexpr (!has_arguments)
+            {
+                *ret = functor();
+            }
+            else
+            {
+                *ret = functor(*reinterpret_cast<Ts*>(&_data[_offsets[parents[IDs]]])...);
+            }
+            return sizeof(TReturn);
         }
         else
         {
-            functor(*reinterpret_cast<Ts*>(&_data[_offsets[parents[IDs]]])...);
+            if constexpr (!has_arguments)
+            {
+                functor();
+            }
+            else
+            {
+                functor(*reinterpret_cast<Ts*>(&_data[_offsets[parents[IDs]]])...);
+            }
+            return 0;
         }
-        return 0;
     }
 
     const F functor;

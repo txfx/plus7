@@ -18,11 +18,8 @@ struct Pipeline : public NonCopyable
     template <typename F, typename... Ts, typename... Us>
     auto CreateTask(F _functor, After<Ts...> _parents, Before<Us...> _children) -> ID<decltype(_functor(std::declval<Ts>()...))>
     {
-        auto task = new TypedTask<
-            decltype(_functor(std::declval<Ts>()...)),
-            std::tuple<Ts...>,
-            make_id_sequence<sizeof...(Ts)>,
-            F>(_functor);
+        static_assert(std::is_invocable<F, Ts...>::value);
+        auto task = new TypedTask<F, Ts...>(_functor);
 
         return RegisterTask<decltype(_functor(std::declval<Ts>()...))>(task, _parents.ids, _children.ids);
     }
@@ -31,11 +28,7 @@ struct Pipeline : public NonCopyable
     template <typename F, typename... Ts, typename... Us>
     auto CreateTask(F _functor, After<Ts...> _parents, Before<Us...> _children) -> ID<decltype(_functor())>
     {
-        auto task = new TypedTask<
-            decltype(_functor()),
-            std::tuple<Ts...>,
-            make_id_sequence<sizeof...(Ts)>,
-            F>(_functor);
+        auto task = new TypedTask<F>(_functor);
 
         return RegisterTask<decltype(_functor())>(task, _parents.ids, _children.ids);
     }
@@ -44,11 +37,8 @@ struct Pipeline : public NonCopyable
     template <typename F, typename... Ts>
     auto CreateTask(F _functor, After<Ts...> _parents) -> ID<decltype(_functor(std::declval<Ts>()...))>
     {
-        auto task = new TypedTask<
-            decltype(_functor(std::declval<Ts>()...)),
-            std::tuple<Ts...>,
-            make_id_sequence<sizeof...(Ts)>,
-            F>(_functor);
+        static_assert(std::is_invocable<F, Ts...>::value);
+        auto task = new TypedTask<F, Ts...>(_functor);
 
         return RegisterTask<decltype(_functor(std::declval<Ts>()...))>(task, _parents.ids, NoDependencies{});
     }
@@ -57,11 +47,7 @@ struct Pipeline : public NonCopyable
     template <typename F, typename... Ts>
     auto CreateTask(F _functor, const After<Ts...>& _parents) -> ID<decltype(_functor())>
     {
-        auto task = new TypedTask<
-            decltype(_functor()),
-            std::tuple<>,
-            make_id_sequence<sizeof...(Ts)>,
-            F>(_functor);
+        auto task = new TypedTask<F>(_functor);
 
         return RegisterTask<decltype(_functor())>(task, _parents.ids, NoDependencies{});
     }
@@ -70,11 +56,7 @@ struct Pipeline : public NonCopyable
     template <typename F, typename... Us>
     auto CreateTask(F _functor, const Before<Us...>& _children) -> ID<decltype(_functor())>
     {
-        auto task = new TypedTask<
-            decltype(_functor()),
-            std::tuple<>,
-            make_id_sequence<0>,
-            F>(_functor);
+        auto task = new TypedTask<F>(_functor);
 
         return RegisterTask<decltype(_functor())>(task, NoDependencies{}, _children.ids);
     }
@@ -83,11 +65,7 @@ struct Pipeline : public NonCopyable
     template <typename F>
     auto CreateTask(F _functor) -> ID<decltype(_functor())>
     {
-        auto task = new TypedTask<
-            decltype(_functor()),
-            std::tuple<>,
-            make_id_sequence<0>,
-            F>(_functor);
+        auto task = new TypedTask<F>(_functor);
 
         return RegisterTask<decltype(_functor())>(task, NoDependencies{}, NoDependencies{});
     }
