@@ -6,8 +6,7 @@
 
 #include <Utils/NonCopyable.hpp>
 
-namespace p7 {
-namespace tasks {
+namespace p7::tasks {
 
 template <typename T>
 struct ID
@@ -78,5 +77,4 @@ Before<Ts...> before(ID<Ts>... _args)
     return Before<Ts...>{ _args... };
 }
 
-} // namespace tasks
-} // namespace p7
+} // namespace p7::tasks

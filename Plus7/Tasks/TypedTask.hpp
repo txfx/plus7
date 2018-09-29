@@ -7,8 +7,7 @@
 
 #include "Task.hpp"
 
-namespace p7 {
-namespace tasks {
+namespace p7::tasks {
 
 template <typename F, typename... Ts>
 struct TypedTask : Task
@@ -79,5 +78,4 @@ private:
     const F functor;
 };
 
-} // namespace tasks
-} // namespace p7
+} // namespace p7::tasks

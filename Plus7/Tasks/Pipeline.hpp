@@ -9,8 +9,7 @@
 #include "TypedTask.hpp"
 #include <Utils/NonCopyable.hpp>
 
-namespace p7 {
-namespace tasks {
+namespace p7::tasks {
 
 struct Pipeline : public NonCopyable
 {
@@ -100,5 +99,4 @@ private:
     size_t returnValuesSize = 0;
 };
 
-} // namespace tasks
-} // namespace p7
+} // namespace p7::tasks

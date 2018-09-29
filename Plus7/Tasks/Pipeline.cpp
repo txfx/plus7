@@ -2,8 +2,7 @@
 
 #include <Utils/Assert.hpp>
 
-namespace p7 {
-namespace tasks {
+namespace p7::tasks {
 
 void Pipeline::ExecuteTasks() const
 {
@@ -49,5 +48,4 @@ void Pipeline::ExecuteTasks() const
     }
 }
 
-} // namespace tasks
-} // namespace p7
+} // namespace p7::tasks
