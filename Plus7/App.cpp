@@ -2,10 +2,10 @@
 
 namespace p7 {
 
+using namespace p7::tasks;
+
 App::App()
-    : dummyTask(CreateTask([]() {}))
-{
-}
+{}
 
 App::~App()
 {

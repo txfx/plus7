@@ -22,13 +22,10 @@ public:
     template <typename T>
     T& GetDependency();
 
-    auto GetDummyTask() const { return dummyTask; }
     void RequestExit();
 
 private:
     bool exit_requested = false;
-
-    tasks::ID<void> dummyTask;
 
     std::vector<std::unique_ptr<Module>> modules;
 };
