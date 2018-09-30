@@ -15,7 +15,7 @@ void Pipeline::ExecuteTasks()
     std::vector<uint8_t> returnValues;
     returnValues.resize(returnValuesSize);
 
-    for (auto taskId : ::std::as_const(runningOrder))
+    for (auto taskId : ::std::as_const(executionOrder))
     {
         const auto& task = tasks[taskId];
         task->Call(taskId, returnValues, returnValuesOffset);
@@ -24,8 +24,8 @@ void Pipeline::ExecuteTasks()
 
 void Pipeline::ComputeExecutionOrder()
 {
-    runningOrder.clear();
-    runningOrder.reserve(tasks.size());
+    executionOrder.clear();
+    executionOrder.reserve(tasks.size());
     returnValuesOffset.resize(tasks.size());
 
     std::vector<uint16_t> dependencies;
@@ -36,7 +36,7 @@ void Pipeline::ComputeExecutionOrder()
         const uint16_t nbParents = tasks[id]->GetParents().size();
         if (nbParents == 0)
         {
-            runningOrder.push_back(id);
+            executionOrder.push_back(id);
         }
         dependencies[id] = nbParents;
     }
@@ -44,7 +44,7 @@ void Pipeline::ComputeExecutionOrder()
     size_t offset = 0;
     for (uint16_t done = 0; done < tasks.size(); done++)
     {
-        auto        taskId = runningOrder[done];
+        auto        taskId = executionOrder[done];
         const auto& task   = tasks[taskId];
 
         returnValuesOffset[taskId] = offset;
@@ -54,7 +54,7 @@ void Pipeline::ComputeExecutionOrder()
             --dependencies[id];
             if (dependencies[id] == 0)
             {
-                runningOrder.push_back(id);
+                executionOrder.push_back(id);
             }
         }
     }
