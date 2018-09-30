@@ -4,48 +4,61 @@
 
 namespace p7::tasks {
 
-void Pipeline::ExecuteTasks() const
+void Pipeline::ExecuteTasks()
 {
-    std::vector<InternalId> todo;
-    todo.reserve(tasks.size());
-
-    std::vector<uint16_t> dependencies;
-    dependencies.resize(tasks.size());
-
-    std::vector<size_t> returnValuesOffset;
-    returnValuesOffset.resize(tasks.size());
+    if (dirty)
+    {
+        dirty = false;
+        ComputeExecutionOrder();
+    }
 
     std::vector<uint8_t> returnValues;
     returnValues.resize(returnValuesSize);
 
-    for (InternalId i = 0; i < tasks.size(); ++i)
+    for (auto taskId : ::std::as_const(runningOrder))
     {
-        const uint16_t nbParents = tasks[i]->GetParents().size();
+        const auto& task = tasks[taskId];
+        task->Call(taskId, returnValues, returnValuesOffset);
+    }
+}
+
+void Pipeline::ComputeExecutionOrder()
+{
+    runningOrder.clear();
+    runningOrder.reserve(tasks.size());
+    returnValuesOffset.resize(tasks.size());
+
+    std::vector<uint16_t> dependencies;
+    dependencies.resize(tasks.size());
+
+    for (InternalId id = 0; id < tasks.size(); ++id)
+    {
+        const uint16_t nbParents = tasks[id]->GetParents().size();
         if (nbParents == 0)
         {
-            todo.push_back(i);
+            runningOrder.push_back(id);
         }
-        dependencies[i] = nbParents;
+        dependencies[id] = nbParents;
     }
 
     size_t offset = 0;
-    while (!todo.empty())
+    for (uint16_t done = 0; done < tasks.size(); done++)
     {
-        auto taskId = todo.back();
-        todo.pop_back();
-        const auto& task = tasks[taskId];
+        auto        taskId = runningOrder[done];
+        const auto& task   = tasks[taskId];
 
         returnValuesOffset[taskId] = offset;
-        offset += task->Call(taskId, returnValues, returnValuesOffset);
+        offset += task->GetReturnValueSize();
         for (auto id : task->GetChildren())
         {
             --dependencies[id];
             if (dependencies[id] == 0)
             {
-                todo.push_back(id);
+                runningOrder.push_back(id);
             }
         }
     }
+    returnValuesSize = offset;
 }
 
 } // namespace p7::tasks

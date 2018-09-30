@@ -32,7 +32,10 @@ private:
     template <TIndex N>
     using make_id_sequence = std::make_integer_sequence<TIndex, N>;
 
-    size_t Call(
+    static constexpr bool has_arguments = ((!std::is_same<void, Ts>::value || ...));
+    static constexpr bool has_return    = !(std::is_same<void, TReturn>::value);
+
+    void Call(
         InternalId                 _returnId,
         std::vector<uint8_t>&      _data,
         const std::vector<size_t>& _offsets) const override
@@ -42,15 +45,12 @@ private:
     }
 
     template <TIndex... IDs>
-    size_t CallInternal(
+    void CallInternal(
         [[maybe_unused]] InternalId _returnId,
         std::vector<uint8_t>&       _data,
         const std::vector<size_t>&  _offsets,
         id_sequence<IDs...>) const
     {
-        constexpr bool has_arguments = ((!std::is_same<void, Ts>::value || ...));
-        constexpr bool has_return    = !(std::is_same<void, TReturn>::value);
-
         if constexpr (has_return)
         {
             auto ret = reinterpret_cast<TReturn*>(&_data[_offsets[_returnId]]);
@@ -62,7 +62,6 @@ private:
             {
                 *ret = functor(*reinterpret_cast<Ts*>(&_data[_offsets[GetParentID(IDs)]])...);
             }
-            return sizeof(TReturn);
         }
         else
         {
@@ -74,13 +73,20 @@ private:
             {
                 functor(*reinterpret_cast<Ts*>(&_data[_offsets[GetParentID(IDs)]])...);
             }
-            return 0;
         }
     }
 
     InternalId GetParentID(TIndex index) const
     {
         return dependencies.parents[index];
+    }
+
+    size_t GetReturnValueSize() const override
+    {
+        if constexpr (has_return)
+            return sizeof(TReturn);
+        else
+            return 0;
     }
 
     const F functor;

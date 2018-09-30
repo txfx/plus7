@@ -23,10 +23,12 @@ struct Task : public NonCopyable
 private:
     friend struct Pipeline;
 
-    virtual size_t Call(
+    virtual void Call(
         InternalId                   _returnId,
         ::std::vector<uint8_t>&      _data,
         const ::std::vector<size_t>& _offsets) const = 0;
+
+    virtual size_t GetReturnValueSize() const = 0;
 
 protected:
     explicit Task(TaskDependencies _dependencies)
