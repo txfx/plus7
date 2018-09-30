@@ -4,9 +4,14 @@
 #include <SDL.h>
 
 namespace p7 {
+
+using namespace tasks;
+
 SdlApp::SdlApp(App& _app)
     : Module(_app)
-    , mainTask(_app.CreateTask([&]() { this->PollEvents(); }))
+    , mainTask(_app.CreateTask(
+          "SDL events"_name,
+          [&]() { this->PollEvents(); }))
 {
     SDL_Init(SDL_INIT_EVENTS | SDL_INIT_TIMER);
 }

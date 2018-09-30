@@ -14,6 +14,9 @@ struct Pipeline : public NonCopyable
     template <typename F, typename... Ts>
     auto CreateTask(F _functor, TypedTaskDependencies<Ts...> _dependencies = NoDependencies());
 
+    template <typename F, typename... Ts>
+    auto CreateTask(Name _name, F _functor, TypedTaskDependencies<Ts...> _dependencies = NoDependencies());
+
     const auto& GetTasks() const { return tasks; }
 
 protected:
@@ -34,13 +37,19 @@ private:
 template <typename F, typename... Ts>
 auto Pipeline::CreateTask(F _functor, TypedTaskDependencies<Ts...> _dependencies)
 {
+    return CreateTask("Anonymous"_name, _functor, _dependencies);
+}
+
+template <typename F, typename... Ts>
+auto Pipeline::CreateTask(Name _name, F _functor, TypedTaskDependencies<Ts...> _dependencies)
+{
     static_assert(::std::is_invocable<F, Ts...>::value,
         "Your functor is not callablee with the return values from the consume dependencies");
 
     using TTask = TypedTask<F, Ts...>;
 
     InternalId id = tasks.size();
-    tasks.emplace_back(std::make_unique<TTask>(_functor, _dependencies));
+    tasks.emplace_back(std::make_unique<TTask>(_name, _functor, _dependencies));
 
     for (auto parentId : tasks.back()->GetParents())
     {

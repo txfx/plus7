@@ -7,9 +7,13 @@
 #include <array>
 
 namespace p7::inputs {
+
+using namespace p7::tasks;
+
 SdlMouse::SdlMouse(App& _app)
     : Module(_app)
     , getStateTask(_app.CreateTask(
+          "SDL mouse"_name,
           [&]() { return this->PollEvents(); },
           run_after(app.GetDependency<SdlApp>().GetMainTask())))
 {}

@@ -16,8 +16,8 @@ struct TypedTask : Task
 public:
     using TReturn = typename std::invoke_result<F, Ts...>::type;
 
-    explicit TypedTask(F _functor, TypedTaskDependencies<Ts...> _dependencies)
-        : Task(_dependencies)
+    explicit TypedTask(Name _name, F _functor, TypedTaskDependencies<Ts...> _dependencies)
+        : Task(_name, _dependencies)
         , functor(_functor)
     {}
 

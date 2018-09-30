@@ -20,6 +20,8 @@ struct Task : public NonCopyable
     ::std::vector<InternalId>&       GetChildren() { return dependencies.children; }
     const ::std::vector<InternalId>& GetChildren() const { return dependencies.children; }
 
+    auto GetName() const { return name; }
+
 private:
     friend struct Pipeline;
 
@@ -31,11 +33,13 @@ private:
     virtual size_t GetReturnValueSize() const = 0;
 
 protected:
-    explicit Task(TaskDependencies _dependencies)
+    explicit Task(Name _name, TaskDependencies _dependencies)
         : dependencies(_dependencies)
+        , name(_name)
     {}
 
     TaskDependencies dependencies;
+    const Name       name;
 };
 
 } // namespace p7::tasks

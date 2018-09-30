@@ -13,12 +13,14 @@ int main()
     using p7::App;
     using p7::gfx::ImGui;
     using p7::gfx::Renderer;
+    using namespace p7::tasks;
 
     App   helloWorldApp;
     auto& renderer = helloWorldApp.LoadModule<Renderer>("Hello World", 1280, 720);
     auto& imgui    = helloWorldApp.LoadModule<ImGui>();
 
     helloWorldApp.CreateTask(
+        "Helloworld Sample"_name,
         [&renderer](uint64_t _frame) {
             static float  f           = 0.0f;
             static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);

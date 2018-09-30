@@ -56,6 +56,8 @@ constexpr VertexLayoutProperties vtxLayoutProperties = {
 
 } // namespace
 
+using namespace p7::tasks;
+
 ImGui::ImGui(App& _app)
     : Module(_app)
     , mouse(app.GetDependency<inputs::Mouse>())
@@ -68,12 +70,14 @@ ImGui::ImGui(App& _app)
     , vtxLayout(vtxLayoutProperties)
     , beginFrameTask(
           _app.CreateTask(
+              "ImGui begin frame"_name,
               [&](const auto& mouseState, const auto& keyboardState) {
                   return this->BeginFrame(mouseState, keyboardState);
               },
               consume(mouse.GetStateTask(), keyboard.GetStateTask())))
     , endFrameTask(
           _app.CreateTask(
+              "ImGui end frame"_name,
               [&](uint64_t) { this->EndFrame(); },
               consume(beginFrameTask)
                   .run_before(renderer.GetDisplayTask())))
