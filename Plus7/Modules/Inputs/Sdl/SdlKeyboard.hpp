@@ -5,9 +5,14 @@
 
 #include <Modules/Inputs/KeyboardState.hpp>
 
-namespace p7::inputs {
+namespace p7 {
 
-struct SdlKeyboard : public Module
+struct App;
+struct SdlApp;
+
+namespace inputs {
+
+struct SdlKeyboard : public ModuleWithDependencies<SdlApp>
 {
 public:
     explicit SdlKeyboard(App& _app);
@@ -21,4 +26,5 @@ private:
     tasks::ID<KeyboardState> getStateTask;
 };
 
-} // namespace p7::inputs
+} // namespace inputs
+} // namespace p7

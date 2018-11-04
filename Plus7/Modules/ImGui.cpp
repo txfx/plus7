@@ -9,9 +9,9 @@
 namespace p7::gfx {
 
 namespace {
-constexpr BlendProperties      blendProps{ BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add };
+constexpr BlendProperties      blendProps { BlendFactor::SrcAlpha, BlendFactor::OneMinusSrcAlpha, BlendOp::Add };
 constexpr DepthProperties      depthProps;
-constexpr RasterizerProperties rasterizerProps{ PolygonMode::Fill, CullMode::None, FrontFace::CounterClockWise, true };
+constexpr RasterizerProperties rasterizerProps { PolygonMode::Fill, CullMode::None, FrontFace::CounterClockWise, true };
 
 constexpr const char* vertex_shader = R"(
 #version 330
@@ -59,10 +59,7 @@ constexpr VertexLayoutProperties vtxLayoutProperties = {
 using namespace p7::tasks;
 
 ImGui::ImGui(App& _app)
-    : Module(_app)
-    , mouse(app.GetDependency<inputs::Mouse>())
-    , keyboard(app.GetDependency<inputs::Keyboard>())
-    , renderer(app.GetDependency<Renderer>())
+    : ModuleWithDependencies(_app)
     , blendState(blendProps)
     , depthState(depthProps)
     , rasterizerState(rasterizerProps)
@@ -74,13 +71,13 @@ ImGui::ImGui(App& _app)
               [&](const auto& mouseState, const auto& keyboardState) {
                   return this->BeginFrame(mouseState, keyboardState);
               },
-              consume(mouse.GetStateTask(), keyboard.GetStateTask())))
+              consume(Get<inputs::Mouse>().GetStateTask(), Get<inputs::Keyboard>().GetStateTask())))
     , endFrameTask(
           _app.CreateTask(
               "ImGui end frame"_name,
               [&](uint64_t) { this->EndFrame(); },
               consume(beginFrameTask)
-                  .run_before(renderer.GetDisplayTask())))
+                  .run_before(Get<Renderer>().GetDisplayTask())))
     , context(::ImGui::CreateContext())
 {
     ImGuiIO& io = ::ImGui::GetIO();
@@ -88,7 +85,7 @@ ImGui::ImGui(App& _app)
     unsigned char* pixels;
     int            width, height;
     io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
-    font = renderer.CreateTexture({ static_cast<uint32_t>(width), static_cast<uint32_t>(height) }, pixels);
+    font = Get<Renderer>().CreateTexture({ static_cast<uint32_t>(width), static_cast<uint32_t>(height) }, pixels);
 
     io.Fonts->TexID = &font;
 
@@ -125,8 +122,9 @@ ImGui::~ImGui()
 
 uint64_t ImGui::BeginFrame(const inputs::MouseState& mouseState, const inputs::KeyboardState& keyboardState)
 {
-    ImGuiIO& io    = ::ImGui::GetIO();
-    io.DisplaySize = ImVec2(renderer.GetWidth(), renderer.GetHeight());
+    auto&    renderer = Get<Renderer>();
+    ImGuiIO& io       = ::ImGui::GetIO();
+    io.DisplaySize    = ImVec2(renderer.GetWidth(), renderer.GetHeight());
 
     // mouse
     io.MousePos = ImVec2(mouseState.pos.x, mouseState.pos.y);
@@ -178,7 +176,8 @@ void ImGui::DrawLists(ImDrawData* draw_data)
 
     draw_data->ScaleClipRects(io.DisplayFramebufferScale);
 
-    auto& cb = renderer.GetCommandBuffer();
+    auto& renderer = Get<Renderer>();
+    auto& cb       = renderer.GetCommandBuffer();
 
     // Setup render state: alpha-blending enabled, no face culling, no depth testing, scissor enabled, polygon fill
     cb.BindBlendState(blendState);

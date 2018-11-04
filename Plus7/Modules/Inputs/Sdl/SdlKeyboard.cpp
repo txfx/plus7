@@ -12,11 +12,11 @@ namespace p7::inputs {
 using namespace p7::tasks;
 
 SdlKeyboard::SdlKeyboard(App& _app)
-    : Module(_app)
+    : ModuleWithDependencies(_app)
     , getStateTask(_app.CreateTask(
           "SDL Keyboard"_name,
           [&]() { return this->PollEvents(); },
-          run_after(app.GetDependency<SdlApp>().GetMainTask())))
+          run_after(Get<SdlApp>().GetMainTask())))
 {}
 
 KeyboardState SdlKeyboard::PollEvents()

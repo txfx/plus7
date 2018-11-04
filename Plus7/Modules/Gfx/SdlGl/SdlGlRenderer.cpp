@@ -19,11 +19,10 @@ SdlGlRenderer::SdlGlRenderer(const char* _name, int _w, int _h, App& _app)
 {}
 
 SdlGlRenderer::SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, App& _app)
-    : Module(_app)
+    : ModuleWithDependencies(_app)
     , width(_w)
     , height(_h)
     , displayTask(_app.CreateTask("GL EndFrame"_name, [&]() { this->EndFrame(); }))
-    , sdlApp(_app.GetDependency<SdlApp>())
 {
     initialized = SDL_InitSubSystem(SDL_INIT_VIDEO) == 0;
 

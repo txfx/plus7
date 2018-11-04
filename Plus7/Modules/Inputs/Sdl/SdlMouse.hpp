@@ -5,9 +5,14 @@
 
 #include <Modules/Inputs/MouseState.hpp>
 
-namespace p7::inputs {
+namespace p7 {
 
-struct SdlMouse : public Module
+struct App;
+struct SdlApp;
+
+namespace inputs {
+
+struct SdlMouse : public ModuleWithDependencies<SdlApp>
 {
 public:
     explicit SdlMouse(App& _app);
@@ -21,4 +26,5 @@ private:
     tasks::ID<MouseState> getStateTask;
 };
 
-} // namespace p7::inputs
+} // namespace inputs
+} // namespace p7

@@ -10,11 +10,12 @@ using SDL_GLContext = void*;
 
 namespace p7 {
 
-class SdlApp;
+struct App;
+struct SdlApp;
 
 namespace gfx {
 
-struct SdlGlRenderer final : public Module, public DummyRenderer
+struct SdlGlRenderer final : public ModuleWithDependencies<SdlApp>, public DummyRenderer
 {
 public:
     explicit SdlGlRenderer(App& _app);
@@ -40,7 +41,6 @@ private:
     SDL_GLContext   glcontext;
     GlCommandBuffer commandBuffer;
     tasks::ID<void> displayTask;
-    SdlApp&         sdlApp;
 };
 } // namespace gfx
 } // namespace p7

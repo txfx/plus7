@@ -6,6 +6,8 @@
 
 namespace p7 {
 
+struct App;
+
 struct SdlApp : public Module
 {
 public:

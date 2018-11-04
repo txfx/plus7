@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Module.hpp"
+#include "App.hpp"
 
 #include <Modules/Gfx/Renderer.hpp>
 #include <Modules/Inputs/Inputs.hpp>
@@ -11,7 +11,7 @@ struct ImGuiContext;
 
 namespace p7::gfx {
 
-struct ImGui : public Module
+struct ImGui : public ModuleWithDependencies<inputs::Mouse, inputs::Keyboard, Renderer>
 {
 public:
     explicit ImGui(App& _app);
@@ -27,11 +27,6 @@ private:
     void DrawLists(ImDrawData* draw_data);
 
 private:
-    // Modules dependencies
-    inputs::Mouse&    mouse;
-    inputs::Keyboard& keyboard;
-    Renderer&         renderer;
-
     // render states
     BlendState      blendState;
     DepthState      depthState;
