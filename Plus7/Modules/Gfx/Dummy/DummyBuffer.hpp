@@ -14,6 +14,8 @@ struct DummyBuffer : public NonCopyable
         : properties(_properties)
     {}
 
+    virtual ~DummyBuffer() = default;
+
     virtual uint32_t GetSize() const { return properties.size; }
 
     virtual void UpdateData(uint32_t /* _offset */, uint32_t /* _size */, const void* /* _data */) {}

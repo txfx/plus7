@@ -14,6 +14,8 @@ namespace gfx {
 struct DummyCommandBuffer
 {
 public:
+    virtual ~DummyCommandBuffer() = default;
+
     // clear
     virtual void Clear(float /* _r */, float /* _g */, float /* _b */, float /* _a */) {}
     inline void  Clear(float _r, float _g, float _b) { Clear(_r, _g, _b, 1.0f); }

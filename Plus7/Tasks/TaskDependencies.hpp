@@ -23,7 +23,7 @@ struct TypedTaskDependencies : TaskDependencies
     {
         static_assert(sizeof...(Ts) == 0, "You already have specified parent tasks to consume values from.");
 
-        return TypedTaskDependencies<Us...>{ parents, children }.run_after(args...);
+        return TypedTaskDependencies<Us...> { { parents, children } }.run_after(args...);
     }
 
     template <typename... Us>
@@ -43,7 +43,7 @@ struct TypedTaskDependencies : TaskDependencies
     }
 };
 
-inline auto NoDependencies() { return TypedTaskDependencies<>{}; }
+inline auto NoDependencies() { return TypedTaskDependencies<> {}; }
 
 template <typename... Ts>
 constexpr auto consume(ID<Ts>... args)
