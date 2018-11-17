@@ -5,7 +5,7 @@ add_library(Imgui STATIC ${IMGUI_SOURCE_FILES})
 file(GLOB_RECURSE SOURCE_FILES *.cpp *.hpp)
 add_library(Plus7 STATIC ${SOURCE_FILES})
 target_compile_features(Plus7 PUBLIC cxx_std_17)
-target_compile_options(Plus7 PRIVATE -Wall -Wpedantic -Wextra -Werror -Wnon-virtual-dtor -Wshadow -Wunused -Woverloaded-virtual -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wnull-dereference -Wuseless-cast -Wdouble-promotion)
+target_compile_options(Plus7 PRIVATE -Wall -Wpedantic -Wextra -Werror -Wnon-virtual-dtor -Wshadow -Wunused -Woverloaded-virtual -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wnull-dereference -Wuseless-cast -Wdouble-promotion -Wno-unknown-warning-option)
 
 set(OpenGL_GL_PREFERENCE LEGACY)
 find_package(OpenGL REQUIRED)
