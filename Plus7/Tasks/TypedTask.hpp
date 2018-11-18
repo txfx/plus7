@@ -11,7 +11,7 @@
 namespace p7::tasks {
 
 template <typename F, typename... Ts>
-struct TypedTask : Task
+struct TypedTask final : Task
 {
 public:
     using TReturn = typename std::invoke_result<F, Ts...>::type;
