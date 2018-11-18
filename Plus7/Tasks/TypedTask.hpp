@@ -41,7 +41,7 @@ private:
         const std::vector<size_t>& _offsets) const override
     {
         using seq = make_id_sequence<sizeof...(Ts)>;
-        return CallInternal(_returnId, _data, _offsets, seq{});
+        return CallInternal(_returnId, _data, _offsets, seq {});
     }
 
     template <TIndex... IDs>
@@ -60,7 +60,7 @@ private:
             }
             else
             {
-                *ret = functor(*reinterpret_cast<Ts*>(&_data[_offsets[GetParentID(IDs)]])...);
+                *ret = functor(*GetParameter<Ts>(IDs, _data, _offsets)...);
             }
         }
         else
@@ -71,14 +71,16 @@ private:
             }
             else
             {
-                functor(*reinterpret_cast<Ts*>(&_data[_offsets[GetParentID(IDs)]])...);
+                functor(*GetParameter<Ts>(IDs, _data, _offsets)...);
             }
         }
     }
 
-    InternalId GetParentID(TIndex index) const
+    template <typename T>
+    T* GetParameter(TIndex index, std::vector<uint8_t>& _data, const std::vector<size_t>& _offsets) const
     {
-        return dependencies.parents[index];
+        InternalId id = dependencies.parents[index];
+        return reinterpret_cast<T*>(&_data[_offsets[id]]);
     }
 
     size_t GetReturnValueSize() const override
