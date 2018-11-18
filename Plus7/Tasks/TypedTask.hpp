@@ -53,7 +53,7 @@ private:
     {
         if constexpr (has_return)
         {
-            auto ret = reinterpret_cast<TReturn*>(&_data[_offsets[_returnId]]);
+            auto ret = ObjectFromId<TReturn>(_returnId, _data, _offsets);
             if constexpr (!has_arguments)
             {
                 *ret = functor();
@@ -77,10 +77,16 @@ private:
     }
 
     template <typename T>
+    T* ObjectFromId(InternalId id, std::vector<uint8_t>& _data, const std::vector<size_t>& _offsets) const
+    {
+        return reinterpret_cast<T*>(&_data[_offsets[id]]);
+    }
+
+    template <typename T>
     T* GetParameter(TIndex index, std::vector<uint8_t>& _data, const std::vector<size_t>& _offsets) const
     {
-        InternalId id = dependencies.parents[index];
-        return reinterpret_cast<T*>(&_data[_offsets[id]]);
+        auto id = dependencies.parents[index];
+        return ObjectFromId<T>(id, _data, _offsets);
     }
 
     size_t GetReturnValueSize() const override
