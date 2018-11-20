@@ -37,7 +37,7 @@ struct Name
     const std::size_t size;
 
 private:
-    friend constexpr Name operator"" _name(char const* str, std::size_t);
+    friend constexpr Name operator"" _name(char const* str, std::size_t len);
 
     constexpr Name(const char* literal, std::size_t len)
         : value(literal)
