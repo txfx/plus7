@@ -23,7 +23,7 @@ private:
     KeyboardState PollEvents();
 
 private:
-    tasks::ID<KeyboardState> getStateTask;
+    tasks::TypedID<KeyboardState> getStateTask;
 };
 
 } // namespace inputs

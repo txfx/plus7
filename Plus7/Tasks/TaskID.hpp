@@ -4,22 +4,31 @@
 
 namespace p7::tasks {
 
-using InternalId = uint16_t;
-
-template <typename T>
 struct ID
 {
+    using type = uint16_t;
+
+    operator type() const { return value; }
+
 protected:
-    explicit ID(InternalId _id)
+    constexpr explicit ID(type _id)
         : value(_id)
+    {}
+    type value;
+};
+
+template <typename T>
+struct TypedID : public ID
+{
+protected:
+    explicit constexpr TypedID(ID::type _id)
+        : ID(_id)
     {}
 
 private:
     template <typename... Ts>
     friend struct TypedTaskDependencies;
     friend struct Pipeline;
-
-    const InternalId value;
 };
 
 struct Name

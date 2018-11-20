@@ -20,7 +20,7 @@ private:
     void PollEvents();
 
 private:
-    tasks::ID<void> mainTask;
+    tasks::TypedID<void> mainTask;
 };
 
 } // namespace p7

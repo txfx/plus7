@@ -9,7 +9,7 @@ namespace p7::tasks {
 
 struct TaskDependencies
 {
-    using vector = ::std::vector<InternalId>;
+    using vector = ::std::vector<ID>;
 
     vector parents;
     vector children;
@@ -19,7 +19,7 @@ template <typename... Ts>
 struct TypedTaskDependencies : TaskDependencies
 {
     template <typename... Us>
-    auto consume(ID<Us>... args) const
+    auto consume(TypedID<Us>... args) const
     {
         static_assert(sizeof...(Ts) == 0, "You already have specified parent tasks to consume values from.");
 
@@ -27,18 +27,18 @@ struct TypedTaskDependencies : TaskDependencies
     }
 
     template <typename... Us>
-    auto& run_before(ID<Us>... args)
+    auto& run_before(TypedID<Us>... args)
     {
         children.reserve(children.size() + sizeof...(Us));
-        children.insert(::std::end(children), { args.value... });
+        children.insert(::std::end(children), { args... });
         return *this;
     }
 
     template <typename... Us>
-    auto& run_after(ID<Us>... args)
+    auto& run_after(TypedID<Us>... args)
     {
         parents.reserve(parents.size() + sizeof...(Us));
-        parents.insert(::std::end(parents), { args.value... });
+        parents.insert(::std::end(parents), { args... });
         return *this;
     }
 };
@@ -46,19 +46,19 @@ struct TypedTaskDependencies : TaskDependencies
 inline auto NoDependencies() { return TypedTaskDependencies<> {}; }
 
 template <typename... Ts>
-constexpr auto consume(ID<Ts>... args)
+constexpr auto consume(TypedID<Ts>... args)
 {
     return NoDependencies().consume(args...);
 }
 
 template <typename... Ts>
-constexpr auto run_before(ID<Ts>... args)
+constexpr auto run_before(TypedID<Ts>... args)
 {
     return NoDependencies().run_before(args...);
 }
 
 template <typename... Ts>
-constexpr auto run_after(ID<Ts>... args)
+constexpr auto run_after(TypedID<Ts>... args)
 {
     return NoDependencies().run_after(args...);
 }

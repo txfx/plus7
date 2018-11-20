@@ -31,14 +31,15 @@ void Pipeline::ComputeExecutionOrder()
     std::vector<uint16_t> dependencies;
     dependencies.resize(tasks.size());
 
-    for (InternalId id = 0; id < tasks.size(); ++id)
+    //for (ID::type id = 0; id < tasks.size(); ++id)
+    for (auto& task : std::as_const(tasks))
     {
-        const uint16_t nbParents = tasks[id]->GetParents().size();
+        const uint16_t nbParents = task->GetParents().size();
         if (nbParents == 0)
         {
-            executionOrder.push_back(id);
+            executionOrder.emplace_back(task->GetID());
         }
-        dependencies[id] = nbParents;
+        dependencies[task->GetID()] = nbParents;
     }
 
     size_t offset = 0;

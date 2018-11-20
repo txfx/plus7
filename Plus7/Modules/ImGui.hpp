@@ -42,8 +42,8 @@ private:
     TexturePtr font;
 
     // Tasks
-    tasks::ID<uint64_t> beginFrameTask;
-    tasks::ID<void>     endFrameTask;
+    tasks::TypedID<uint64_t> beginFrameTask;
+    tasks::TypedID<void>     endFrameTask;
 
     // ImGui
     ImGuiContext* context;

@@ -30,8 +30,8 @@ private:
     bool   dirty            = true;
     size_t returnValuesSize = 0;
 
-    std::vector<InternalId> executionOrder;
-    std::vector<size_t>     returnValuesOffset;
+    std::vector<ID>     executionOrder;
+    std::vector<size_t> returnValuesOffset;
 };
 
 template <typename F, typename... Ts>
@@ -48,22 +48,22 @@ auto Pipeline::CreateTask(Name _name, F _functor, TypedTaskDependencies<Ts...> _
 
     using TTask = TypedTask<F, Ts...>;
 
-    InternalId id = tasks.size();
-    tasks.emplace_back(std::make_unique<TTask>(_name, _functor, _dependencies));
+    TypedID<typename TTask::TReturn> id { static_cast<ID::type>(tasks.size()) };
+    tasks.emplace_back(std::make_unique<TTask>(id, _name, _functor, _dependencies));
 
     for (auto parentId : tasks.back()->GetParents())
     {
-        tasks[parentId]->GetChildren().push_back(id);
+        tasks[parentId]->GetChildren().emplace_back(id);
     }
 
     for (auto childId : tasks.back()->GetChildren())
     {
-        tasks[childId]->GetParents().push_back(id);
+        tasks[childId]->GetParents().emplace_back(id);
     }
 
     dirty = true;
 
-    return ID<typename TTask::TReturn>(id);
+    return id;
 }
 
 } // namespace p7::tasks

@@ -23,7 +23,7 @@ private:
     MouseState PollEvents();
 
 private:
-    tasks::ID<MouseState> getStateTask;
+    tasks::TypedID<MouseState> getStateTask;
 };
 
 } // namespace inputs

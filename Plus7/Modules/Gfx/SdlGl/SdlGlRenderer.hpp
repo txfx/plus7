@@ -34,13 +34,13 @@ private:
     void EndFrame();
 
 private:
-    int             width;
-    int             height;
-    bool            initialized;
-    SDL_Window*     window;
-    SDL_GLContext   glcontext;
-    GlCommandBuffer commandBuffer;
-    tasks::ID<void> displayTask;
+    int                  width;
+    int                  height;
+    bool                 initialized;
+    SDL_Window*          window;
+    SDL_GLContext        glcontext;
+    GlCommandBuffer      commandBuffer;
+    tasks::TypedID<void> displayTask;
 };
 } // namespace gfx
 } // namespace p7
