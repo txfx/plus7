@@ -15,7 +15,7 @@ struct ModuleRepository;
 struct Module : public NonCopyable
 {
 public:
-    Module(App& _app)
+    explicit Module(App& _app)
         : app(_app)
     {}
     virtual ~Module() = default;
