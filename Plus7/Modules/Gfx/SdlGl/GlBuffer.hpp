@@ -10,7 +10,7 @@ namespace gfx {
 struct GlBuffer final : public DummyBuffer
 {
     GlBuffer(const BufferProperties& _properties, const void* _data);
-    ~GlBuffer();
+    ~GlBuffer() override;
 
     void UpdateData(uint32_t _offset, uint32_t _size, const void* _data) override;
 
