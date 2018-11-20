@@ -37,7 +37,7 @@ protected:
     explicit Task(ID _id, Name _name, TaskDependencies _dependencies)
         : id(_id)
         , name(_name)
-        , dependencies(_dependencies)
+        , dependencies(std::move(_dependencies))
     {}
 
     const ID         id;
