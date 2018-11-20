@@ -92,9 +92,13 @@ private:
     size_t GetReturnValueSize() const override
     {
         if constexpr (has_return)
+        {
             return sizeof(TReturn);
+        }
         else
+        {
             return 0;
+        }
     }
 
     const F functor;
