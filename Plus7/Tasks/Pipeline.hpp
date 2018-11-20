@@ -11,11 +11,17 @@ namespace p7::tasks {
 
 struct Pipeline : public NonCopyable
 {
-    template <typename F, typename... Ts>
-    auto CreateTask(F _functor, TypedTaskDependencies<Ts...> _dependencies = NoDependencies());
+    template <typename F>
+    auto CreateTask(F _functor);
 
     template <typename F, typename... Ts>
-    auto CreateTask(Name _name, F _functor, TypedTaskDependencies<Ts...> _dependencies = NoDependencies());
+    auto CreateTask(F _functor, TypedTaskDependencies<Ts...> _dependencies);
+
+    template <typename F>
+    auto CreateTask(Name _name, F _functor);
+
+    template <typename F, typename... Ts>
+    auto CreateTask(Name _name, F _functor, TypedTaskDependencies<Ts...> _dependencies);
 
     const auto& GetTasks() const { return tasks; }
 
@@ -34,10 +40,22 @@ private:
     std::vector<size_t> returnValuesOffset;
 };
 
+template <typename F>
+auto Pipeline::CreateTask(F _functor)
+{
+    return CreateTask("Anonymous"_name, _functor, NoDependencies());
+}
+
 template <typename F, typename... Ts>
 auto Pipeline::CreateTask(F _functor, TypedTaskDependencies<Ts...> _dependencies)
 {
     return CreateTask("Anonymous"_name, _functor, _dependencies);
+}
+
+template <typename F>
+auto Pipeline::CreateTask(Name _name, F _functor)
+{
+    return CreateTask(_name, _functor, NoDependencies());
 }
 
 template <typename F, typename... Ts>
