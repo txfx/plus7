@@ -27,20 +27,19 @@ public:
     uint32_t GetWidth() const override { return width; }
     uint32_t GetHeight() const override { return height; }
 
-    auto GetDisplayTask() const { return displayTask; }
+    const tasks::TypedID<void> displayTask;
 
 private:
     SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, App& _app);
     void EndFrame();
 
 private:
-    int                  width;
-    int                  height;
-    bool                 initialized;
-    SDL_Window*          window;
-    SDL_GLContext        glcontext;
-    GlCommandBuffer      commandBuffer;
-    tasks::TypedID<void> displayTask;
+    int             width;
+    int             height;
+    bool            initialized;
+    SDL_Window*     window;
+    SDL_GLContext   glcontext;
+    GlCommandBuffer commandBuffer;
 };
 } // namespace gfx
 } // namespace p7

@@ -72,7 +72,7 @@ ImGui::ImGui(App& _app)
               "ImGui end frame"_name,
               [&](uint64_t) { this->EndFrame(); },
               consume(beginFrameTask)
-                  .run_before(Get<Renderer>().GetDisplayTask())))
+                  .run_before(Get<Renderer>().displayTask)))
     , blendState(blendProps)
     , depthState(depthProps)
     , rasterizerState(rasterizerProps)
