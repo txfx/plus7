@@ -17,7 +17,7 @@ struct SdlMouse : public ModuleWithDependencies<SdlApp>
 public:
     explicit SdlMouse(App& _app);
 
-    const tasks::TypedID<MouseState> getStateTask;
+    const tasks::TypedID<MouseState> updateTask;
 
 private:
     MouseState PollEvents();

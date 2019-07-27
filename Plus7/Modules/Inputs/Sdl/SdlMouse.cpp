@@ -12,7 +12,7 @@ using namespace p7::tasks;
 
 SdlMouse::SdlMouse(App& _app)
     : ModuleWithDependencies(_app)
-    , getStateTask(_app.CreateTask(
+    , updateTask(_app.CreateTask(
           "SDL mouse"_name,
           [&]() { return this->PollEvents(); },
           run_after(GetModule<SdlApp>().mainTask)))

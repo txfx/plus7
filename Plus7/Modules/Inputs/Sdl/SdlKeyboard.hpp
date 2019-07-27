@@ -17,7 +17,7 @@ struct SdlKeyboard : public ModuleWithDependencies<SdlApp>
 public:
     explicit SdlKeyboard(App& _app);
 
-    const tasks::TypedID<KeyboardState> getStateTask;
+    const tasks::TypedID<KeyboardState> updateTask;
 
 private:
     KeyboardState PollEvents();
