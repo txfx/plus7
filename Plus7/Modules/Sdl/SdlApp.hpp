@@ -14,13 +14,10 @@ public:
     explicit SdlApp(App& _app);
     ~SdlApp() override;
 
-    auto GetMainTask() const { return mainTask; }
+    const tasks::TypedID<void> mainTask;
 
 private:
     void PollEvents();
-
-private:
-    tasks::TypedID<void> mainTask;
 };
 
 } // namespace p7
