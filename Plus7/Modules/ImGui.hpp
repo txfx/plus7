@@ -17,8 +17,9 @@ public:
     explicit ImGui(App& _app);
     ~ImGui() override;
 
-    auto GetBeginFrameTask() const { return beginFrameTask; }
-    auto GetEndFrameTask() const { return endFrameTask; }
+    // Tasks
+    const tasks::TypedID<uint64_t> beginFrameTask;
+    const tasks::TypedID<void>     endFrameTask;
 
 private:
     uint64_t BeginFrame(const inputs::MouseState& mouseState, const inputs::KeyboardState& keyboardState);
@@ -40,10 +41,6 @@ private:
 
     // Font
     TexturePtr font;
-
-    // Tasks
-    tasks::TypedID<uint64_t> beginFrameTask;
-    tasks::TypedID<void>     endFrameTask;
 
     // ImGui
     ImGuiContext* context;

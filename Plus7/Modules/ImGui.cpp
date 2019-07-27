@@ -60,11 +60,6 @@ using namespace p7::tasks;
 
 ImGui::ImGui(App& _app)
     : ModuleWithDependencies(_app)
-    , blendState(blendProps)
-    , depthState(depthProps)
-    , rasterizerState(rasterizerProps)
-    , shader(vertex_shader, pixel_shader)
-    , vtxLayout(vtxLayoutProperties)
     , beginFrameTask(
           _app.CreateTask(
               "ImGui begin frame"_name,
@@ -78,6 +73,11 @@ ImGui::ImGui(App& _app)
               [&](uint64_t) { this->EndFrame(); },
               consume(beginFrameTask)
                   .run_before(Get<Renderer>().GetDisplayTask())))
+    , blendState(blendProps)
+    , depthState(depthProps)
+    , rasterizerState(rasterizerProps)
+    , shader(vertex_shader, pixel_shader)
+    , vtxLayout(vtxLayoutProperties)
     , context(::ImGui::CreateContext())
 {
     ImGuiIO& io = ::ImGui::GetIO();

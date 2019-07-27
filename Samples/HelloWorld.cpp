@@ -37,10 +37,8 @@ int main()
             renderer.GetCommandBuffer().BindRasterizerState(defaultState);
             renderer.GetCommandBuffer().Clear(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         },
-        consume(imgui.GetBeginFrameTask())
-            .run_before(imgui.GetEndFrameTask()));
-
-
+        consume(imgui.beginFrameTask)
+            .run_before(imgui.endFrameTask));
 
     helloWorldApp.Run();
     std::cout << "Hello World" << std::endl;
