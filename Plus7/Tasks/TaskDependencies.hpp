@@ -19,15 +19,15 @@ template <typename... Ts>
 struct TypedTaskDependencies : TaskDependencies
 {
     template <typename... Us>
-    auto consume(TypedID<Us>... args) const
+    auto consumes(TypedID<Us>... args) const
     {
         static_assert(sizeof...(Ts) == 0, "You already have specified parent tasks to consume values from.");
 
-        return TypedTaskDependencies<Us...> { { parents, children } }.run_after(args...);
+        return TypedTaskDependencies<Us...> { { parents, children } }.needs(args...);
     }
 
     template <typename... Us>
-    auto& run_before(TypedID<Us>... args)
+    auto& triggers(TypedID<Us>... args)
     {
         children.reserve(children.size() + sizeof...(Us));
         children.insert(::std::end(children), { args... });
@@ -35,7 +35,7 @@ struct TypedTaskDependencies : TaskDependencies
     }
 
     template <typename... Us>
-    auto& run_after(TypedID<Us>... args)
+    auto& needs(TypedID<Us>... args)
     {
         parents.reserve(parents.size() + sizeof...(Us));
         parents.insert(::std::end(parents), { args... });
@@ -46,21 +46,21 @@ struct TypedTaskDependencies : TaskDependencies
 inline auto NoDependencies() { return TypedTaskDependencies<> {}; }
 
 template <typename... Ts>
-constexpr auto consume(TypedID<Ts>... args)
+constexpr auto consumes(TypedID<Ts>... args)
 {
-    return NoDependencies().consume(args...);
+    return NoDependencies().consumes(args...);
 }
 
 template <typename... Ts>
-constexpr auto run_before(TypedID<Ts>... args)
+constexpr auto triggers(TypedID<Ts>... args)
 {
-    return NoDependencies().run_before(args...);
+    return NoDependencies().triggers(args...);
 }
 
 template <typename... Ts>
-constexpr auto run_after(TypedID<Ts>... args)
+constexpr auto needs(TypedID<Ts>... args)
 {
-    return NoDependencies().run_after(args...);
+    return NoDependencies().needs(args...);
 }
 
 } // namespace p7::tasks
