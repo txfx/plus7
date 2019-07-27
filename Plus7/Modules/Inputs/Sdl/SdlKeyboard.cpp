@@ -15,8 +15,8 @@ SdlKeyboard::SdlKeyboard(App& _app)
     : ModuleWithDependencies(_app)
     , updateTask(_app.AddTask(
           "SDL Keyboard"_name,
-          [&]() { return this->PollEvents(); },
-          needs(GetModule<SdlApp>().mainTask)))
+          needs(GetModule<SdlApp>().mainTask),
+          [&]() { return this->PollEvents(); }))
 {}
 
 KeyboardState SdlKeyboard::PollEvents()

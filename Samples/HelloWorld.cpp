@@ -21,6 +21,7 @@ int main()
 
     helloWorldApp.AddTask(
         "Helloworld Sample"_name,
+        consumes(imgui.beginFrameTask).triggers(imgui.endFrameTask),
         [&renderer](uint64_t _frame) {
             static float  f           = 0.0f;
             static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -36,8 +37,7 @@ int main()
             static RasterizerState defaultState({});
             renderer.GetCommandBuffer().BindRasterizerState(defaultState);
             renderer.GetCommandBuffer().Clear(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
-        },
-        consumes(imgui.beginFrameTask).triggers(imgui.endFrameTask));
+        });
 
     helloWorldApp.Run();
     std::cout << "Hello World" << std::endl;
