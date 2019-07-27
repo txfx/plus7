@@ -66,13 +66,13 @@ ImGui::ImGui(App& _app)
               [&](const auto& mouseState, const auto& keyboardState) {
                   return this->BeginFrame(mouseState, keyboardState);
               },
-              consume(Get<inputs::Mouse>().getStateTask, Get<inputs::Keyboard>().getStateTask)))
+              consume(GetModule<inputs::Mouse>().getStateTask, GetModule<inputs::Keyboard>().getStateTask)))
     , endFrameTask(
           _app.CreateTask(
               "ImGui end frame"_name,
               [&](uint64_t) { this->EndFrame(); },
               consume(beginFrameTask)
-                  .run_before(Get<Renderer>().displayTask)))
+                  .run_before(GetModule<Renderer>().displayTask)))
     , blendState(blendProps)
     , depthState(depthProps)
     , rasterizerState(rasterizerProps)
@@ -85,7 +85,7 @@ ImGui::ImGui(App& _app)
     unsigned char* pixels;
     int            width, height;
     io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
-    font = Get<Renderer>().CreateTexture({ static_cast<uint32_t>(width), static_cast<uint32_t>(height) }, pixels);
+    font = GetModule<Renderer>().CreateTexture({ static_cast<uint32_t>(width), static_cast<uint32_t>(height) }, pixels);
 
     io.Fonts->TexID = &font;
 
@@ -122,7 +122,7 @@ ImGui::~ImGui()
 
 uint64_t ImGui::BeginFrame(const inputs::MouseState& mouseState, const inputs::KeyboardState& keyboardState)
 {
-    auto&    renderer = Get<Renderer>();
+    auto&    renderer = GetModule<Renderer>();
     ImGuiIO& io       = ::ImGui::GetIO();
     io.DisplaySize    = ImVec2(renderer.GetWidth(), renderer.GetHeight());
 
@@ -176,7 +176,7 @@ void ImGui::DrawLists(ImDrawData* draw_data)
 
     draw_data->ScaleClipRects(io.DisplayFramebufferScale);
 
-    auto& renderer = Get<Renderer>();
+    auto& renderer = GetModule<Renderer>();
     auto& cb       = renderer.GetCommandBuffer();
 
     // Setup render state: alpha-blending enabled, no face culling, no depth testing, scissor enabled, polygon fill

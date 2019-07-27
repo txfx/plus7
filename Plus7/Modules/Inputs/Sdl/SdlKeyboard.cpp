@@ -16,7 +16,7 @@ SdlKeyboard::SdlKeyboard(App& _app)
     , getStateTask(_app.CreateTask(
           "SDL Keyboard"_name,
           [&]() { return this->PollEvents(); },
-          run_after(Get<SdlApp>().mainTask)))
+          run_after(GetModule<SdlApp>().mainTask)))
 {}
 
 KeyboardState SdlKeyboard::PollEvents()

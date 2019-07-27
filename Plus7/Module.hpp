@@ -34,7 +34,7 @@ public:
 
 protected:
     template <typename T>
-    constexpr T& Get() const { return std::get<T&>(dependencies); }
+    constexpr T& GetModule() const { return std::get<T&>(dependencies); }
 
 private:
     template <typename T>
