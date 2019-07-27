@@ -202,8 +202,8 @@ void ImGui::DrawLists(ImDrawData* draw_data)
 
     for (int n = 0; n < draw_data->CmdListsCount; n++)
     {
-        const ImDrawList* cmd_list          = draw_data->CmdLists[n];
-        int               idx_buffer_offset = 0;
+        const auto* cmd_list          = draw_data->CmdLists[n];
+        int         idx_buffer_offset = 0;
 
         auto vertex = renderer.CreateTempBuffer(
             { BufferType::Vertex, static_cast<uint32_t>(cmd_list->VtxBuffer.Size * sizeof(ImDrawVert)) },
