@@ -20,7 +20,7 @@ SdlGlRenderer::SdlGlRenderer(const char* _name, int _w, int _h, App& _app)
 
 SdlGlRenderer::SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, App& _app)
     : ModuleWithDependencies(_app)
-    , displayTask(_app.CreateTask("GL EndFrame"_name, [&]() { this->EndFrame(); }))
+    , displayTask(_app.AddTask("GL EndFrame"_name, [&]() { this->EndFrame(); }))
     , width(_w)
     , height(_h)
 {

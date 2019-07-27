@@ -19,7 +19,7 @@ int main()
     auto& renderer = helloWorldApp.LoadModule<Renderer>("Hello World", 1280, 720);
     auto& imgui    = helloWorldApp.LoadModule<ImGui>();
 
-    helloWorldApp.CreateTask(
+    helloWorldApp.AddTask(
         "Helloworld Sample"_name,
         [&renderer](uint64_t _frame) {
             static float  f           = 0.0f;

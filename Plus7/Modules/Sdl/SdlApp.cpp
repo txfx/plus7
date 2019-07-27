@@ -9,7 +9,7 @@ using namespace tasks;
 
 SdlApp::SdlApp(App& _app)
     : Module(_app)
-    , mainTask(_app.CreateTask(
+    , mainTask(_app.AddTask(
           "SDL events"_name,
           [&]() { this->PollEvents(); }))
 {

@@ -61,14 +61,14 @@ using namespace p7::tasks;
 ImGui::ImGui(App& _app)
     : ModuleWithDependencies(_app)
     , beginFrameTask(
-          _app.CreateTask(
+          _app.AddTask(
               "ImGui begin frame"_name,
               [&](const auto& mouseState, const auto& keyboardState) {
                   return this->BeginFrame(mouseState, keyboardState);
               },
               consumes(GetModule<inputs::Mouse>().updateTask, GetModule<inputs::Keyboard>().updateTask)))
     , endFrameTask(
-          _app.CreateTask(
+          _app.AddTask(
               "ImGui end frame"_name,
               [&](uint64_t) { this->EndFrame(); },
               consumes(beginFrameTask).triggers(GetModule<Renderer>().displayTask)))

@@ -13,7 +13,7 @@ using namespace p7::tasks;
 
 SdlKeyboard::SdlKeyboard(App& _app)
     : ModuleWithDependencies(_app)
-    , updateTask(_app.CreateTask(
+    , updateTask(_app.AddTask(
           "SDL Keyboard"_name,
           [&]() { return this->PollEvents(); },
           needs(GetModule<SdlApp>().mainTask)))

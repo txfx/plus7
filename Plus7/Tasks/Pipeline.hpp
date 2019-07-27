@@ -12,16 +12,16 @@ namespace p7::tasks {
 struct Pipeline : public NonCopyable
 {
     template <typename F>
-    auto CreateTask(F _functor);
+    auto AddTask(F _functor);
 
     template <typename F, typename... Ts>
-    auto CreateTask(F _functor, TypedTaskDependencies<Ts...> _dependencies);
+    auto AddTask(F _functor, TypedTaskDependencies<Ts...> _dependencies);
 
     template <typename F>
-    auto CreateTask(Name _name, F _functor);
+    auto AddTask(Name _name, F _functor);
 
     template <typename F, typename... Ts>
-    auto CreateTask(Name _name, F _functor, TypedTaskDependencies<Ts...> _dependencies);
+    auto AddTask(Name _name, F _functor, TypedTaskDependencies<Ts...> _dependencies);
 
     const auto& GetTasks() const { return tasks; }
 
@@ -41,25 +41,25 @@ private:
 };
 
 template <typename F>
-auto Pipeline::CreateTask(F _functor)
+auto Pipeline::AddTask(F _functor)
 {
-    return CreateTask("Anonymous"_name, _functor, NoDependencies());
+    return AddTask("Anonymous"_name, _functor, NoDependencies());
 }
 
 template <typename F, typename... Ts>
-auto Pipeline::CreateTask(F _functor, TypedTaskDependencies<Ts...> _dependencies)
+auto Pipeline::AddTask(F _functor, TypedTaskDependencies<Ts...> _dependencies)
 {
-    return CreateTask("Anonymous"_name, _functor, _dependencies);
+    return AddTask("Anonymous"_name, _functor, _dependencies);
 }
 
 template <typename F>
-auto Pipeline::CreateTask(Name _name, F _functor)
+auto Pipeline::AddTask(Name _name, F _functor)
 {
-    return CreateTask(_name, _functor, NoDependencies());
+    return AddTask(_name, _functor, NoDependencies());
 }
 
 template <typename F, typename... Ts>
-auto Pipeline::CreateTask(Name _name, F _functor, TypedTaskDependencies<Ts...> _dependencies)
+auto Pipeline::AddTask(Name _name, F _functor, TypedTaskDependencies<Ts...> _dependencies)
 {
     static_assert(::std::is_invocable<F, Ts...>::value,
         "Your functor is not callablee with the return values from the consume dependencies");
