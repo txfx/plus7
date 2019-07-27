@@ -17,13 +17,10 @@ struct SdlKeyboard : public ModuleWithDependencies<SdlApp>
 public:
     explicit SdlKeyboard(App& _app);
 
-    auto GetStateTask() const { return getStateTask; }
+    const tasks::TypedID<KeyboardState> getStateTask;
 
 private:
     KeyboardState PollEvents();
-
-private:
-    tasks::TypedID<KeyboardState> getStateTask;
 };
 
 } // namespace inputs

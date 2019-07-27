@@ -66,7 +66,7 @@ ImGui::ImGui(App& _app)
               [&](const auto& mouseState, const auto& keyboardState) {
                   return this->BeginFrame(mouseState, keyboardState);
               },
-              consume(Get<inputs::Mouse>().GetStateTask(), Get<inputs::Keyboard>().GetStateTask())))
+              consume(Get<inputs::Mouse>().GetStateTask(), Get<inputs::Keyboard>().getStateTask)))
     , endFrameTask(
           _app.CreateTask(
               "ImGui end frame"_name,
