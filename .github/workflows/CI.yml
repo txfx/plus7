@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
+    - name: Install dependencies
+      run: |
+        sudo apt install libgl1-mesa-dev libgl1-mesa-glx
     - name: build
       run: |
         mkdir -p build
