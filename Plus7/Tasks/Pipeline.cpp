@@ -28,13 +28,13 @@ void Pipeline::ComputeExecutionOrder()
     executionOrder.reserve(tasks.size());
     returnValuesOffset.resize(tasks.size());
 
-    std::vector<uint16_t> dependencies;
+    std::vector<std::size_t> dependencies;
     dependencies.resize(tasks.size());
 
     //for (ID::type id = 0; id < tasks.size(); ++id)
     for (auto& task : std::as_const(tasks))
     {
-        const uint16_t nbParents = task->GetParents().size();
+        const auto nbParents = task->GetParents().size();
         if (nbParents == 0)
         {
             executionOrder.emplace_back(task->GetID());
