@@ -20,13 +20,14 @@ jobs:
         sudo apt-get install -y libgl1-mesa-dev libgl1-mesa-glx cmake
         echo $PATH
         whereis cmake
+        which cmake
         sudo apt show cmake
         dpkg-query -L cmake
         apt-cache policy cmake
         cmake --version
+        /usr/bin/cmake --version
     - name: build
       run: |
-        cmake --version
         mkdir -p build
         cd build
         cmake ..
