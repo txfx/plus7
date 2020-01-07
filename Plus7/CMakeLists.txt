@@ -1,6 +1,6 @@
-set(IMGUI_DIR ../Libs/ImGui-1.65)
-file(GLOB IMGUI_SOURCE_FILES ${IMGUI_DIR}/*.cpp)
-add_library(Imgui STATIC ${IMGUI_SOURCE_FILES})
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
 file(GLOB_RECURSE SOURCE_FILES *.cpp *.hpp)
 add_library(Plus7 STATIC ${SOURCE_FILES})
@@ -9,8 +9,7 @@ target_compile_options(Plus7 PRIVATE -Wall -Wpedantic -Wextra -Werror -Wnon-virt
 
 set(OpenGL_GL_PREFERENCE LEGACY)
 find_package(OpenGL REQUIRED)
-find_package(SDL2 REQUIRED)
-include_directories(${OPENGL_INCLUDE_DIR} ${IMGUI_DIR})
-target_link_libraries(Plus7 PUBLIC SDL2::SDL2 ${OPENGL_LIBRARIES} Imgui)
+include_directories(${OPENGL_INCLUDE_DIR})
+target_link_libraries(Plus7 PUBLIC SDL2 ${OPENGL_LIBRARIES} Imgui)
 
-target_include_directories(Plus7 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${OPENGL_INCLUDE_DIR} ${IMGUI_DIR})
+target_include_directories(Plus7 PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${OPENGL_INCLUDE_DIR} Imgui)
