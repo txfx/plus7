@@ -21,6 +21,7 @@ jobs:
         echo $PATH
         whereis cmake
         sudo apt show cmake
+        dpkg-query -L cmake
     - name: build
       run: |
         mkdir -p build
