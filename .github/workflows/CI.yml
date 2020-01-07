@@ -23,8 +23,10 @@ jobs:
         sudo apt show cmake
         dpkg-query -L cmake
         apt-cache policy cmake
+        cmake --version
     - name: build
       run: |
+        cmake --version
         mkdir -p build
         cd build
         cmake ..
