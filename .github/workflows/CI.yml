@@ -18,6 +18,9 @@ jobs:
         sudo apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
         sudo apt-get update
         sudo apt-get install -y libgl1-mesa-dev libgl1-mesa-glx cmake
+        echo $PATH
+        whereis cmake
+        sudo apt show cmake
     - name: build
       run: |
         mkdir -p build
