@@ -15,15 +15,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libgl1-mesa-dev libgl1-mesa-glx
-    - name: Build SDL2
-      run: |
-        hg clone https://hg.libsdl.org/SDL SDL
-        cd SDL
-        mkdir build
-        cd build
-        cmake .. -DCMAKE_INSTALL_PREFIX=/usr
-        make
-        sudo make install
     - name: build
       run: |
         mkdir -p build
