@@ -18,13 +18,13 @@ void GlCommandBuffer::SetScissor(float _x, float _y, float _w, float _h)
     glScissor(_x, _y, _w, _h);
 }
 
-void GlCommandBuffer::BindIndexBuffer(const BufferPtr& _buffer, uint32_t _offset, uint32_t _size)
+void GlCommandBuffer::BindIndexBuffer(const BufferPtr& _buffer, [[maybe_unused]] uint32_t _offset, [[maybe_unused]] uint32_t _size)
 {
     P7_ASSERT(_offset + _size <= _buffer->GetSize(), "Invalid offset or size");
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _buffer->GetGlId());
 }
 
-void GlCommandBuffer::BindVertexBuffer(const BufferPtr& _buffer, uint32_t _offset, uint32_t _size, uint8_t _binding)
+void GlCommandBuffer::BindVertexBuffer(const BufferPtr& _buffer, uint32_t _offset, [[maybe_unused]] uint32_t _size, uint8_t _binding)
 {
     P7_ASSERT(_offset + _size <= _buffer->GetSize(), "Invalid offset or size");
     glBindVertexBuffer(_binding, _buffer->GetGlId(), _offset, vertexLayoutStride);
