@@ -22,6 +22,7 @@ jobs:
         whereis cmake
         sudo apt show cmake
         dpkg-query -L cmake
+        apt-cache policy cmake
     - name: build
       run: |
         mkdir -p build
