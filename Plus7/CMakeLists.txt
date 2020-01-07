@@ -5,7 +5,13 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 file(GLOB_RECURSE SOURCE_FILES *.cpp *.hpp)
 add_library(Plus7 STATIC ${SOURCE_FILES})
 target_compile_features(Plus7 PUBLIC cxx_std_17)
-target_compile_options(Plus7 PRIVATE -Wall -Wpedantic -Wextra -Werror -Wnon-virtual-dtor -Wshadow -Wunused -Woverloaded-virtual -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wnull-dereference -Wuseless-cast -Wdouble-promotion -Wno-unknown-warning-option)
+target_compile_options(Plus7 PRIVATE
+    $<$<COMPILE_LANG_AND_ID:CXX,AppleClang,Clang,GNU>:
+        -Wall -Wpedantic -Wextra -Werror -Wnon-virtual-dtor -Wshadow -Wunused -Woverloaded-virtual -Wmisleading-indentation -Wduplicated-cond -Wduplicated-branches -Wlogical-op -Wnull-dereference -Wuseless-cast -Wdouble-promotion -Wno-unknown-warning-option
+    >
+    $<$<COMPILE_LANG_AND_ID:CXX,MSVC>:
+        /W3 /WX
+    >)
 
 set(OpenGL_GL_PREFERENCE LEGACY)
 find_package(OpenGL REQUIRED)
