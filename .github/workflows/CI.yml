@@ -23,3 +23,14 @@ jobs:
         cd build
         /usr/bin/cmake ..
         make
+
+  windows:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: build
+      run: |
+        mkdir -p build
+        cd build
+        /usr/bin/cmake ..
+        make
