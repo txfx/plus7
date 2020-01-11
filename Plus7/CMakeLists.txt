@@ -2,7 +2,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-file(GLOB_RECURSE SOURCE_FILES *.cpp *.hpp)
+file(GLOB_RECURSE SOURCE_FILES *.c *.cpp *.hpp)
 add_library(Plus7 STATIC ${SOURCE_FILES})
 target_compile_features(Plus7 PUBLIC cxx_std_17)
 target_compile_options(Plus7 PRIVATE
