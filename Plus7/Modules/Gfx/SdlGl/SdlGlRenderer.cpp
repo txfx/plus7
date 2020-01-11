@@ -39,6 +39,8 @@ SdlGlRenderer::SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, A
     //Create window
     window    = SDL_CreateWindow(_name, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
     glcontext = SDL_GL_CreateContext(window);
+
+    gladLoadGLLoader(SDL_GL_GetProcAddress);
 }
 
 SdlGlRenderer::~SdlGlRenderer()
