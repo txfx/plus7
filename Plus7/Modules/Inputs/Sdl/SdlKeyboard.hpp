@@ -20,7 +20,7 @@ public:
     const tasks::TypedID<KeyboardState> updateTask;
 
 private:
-    KeyboardState PollEvents();
+    static KeyboardState PollEvents();
 };
 
 } // namespace inputs

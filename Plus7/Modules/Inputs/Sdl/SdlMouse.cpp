@@ -15,7 +15,7 @@ SdlMouse::SdlMouse(App& _app)
     , updateTask(_app.AddTask(
           "SDL mouse"_name,
           needs(GetModule<SdlApp>().mainTask),
-          [&]() { return this->PollEvents(); }))
+          PollEvents))
 {}
 
 MouseState SdlMouse::PollEvents()

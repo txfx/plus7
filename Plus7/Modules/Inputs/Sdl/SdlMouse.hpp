@@ -20,7 +20,7 @@ public:
     const tasks::TypedID<MouseState> updateTask;
 
 private:
-    MouseState PollEvents();
+    static MouseState PollEvents();
 };
 
 } // namespace inputs
