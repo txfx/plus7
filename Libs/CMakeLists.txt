@@ -3,7 +3,7 @@ include(FetchContent)
 FetchContent_Declare(
     Imgui
     GIT_REPOSITORY https://github.com/ocornut/imgui
-    GIT_TAG        v1.67
+    GIT_TAG        v1.75
     GIT_SHALLOW    TRUE
 )
 FetchContent_GetProperties(Imgui)
