@@ -1,9 +1,8 @@
 #include <iostream>
 
 #include <App.hpp>
-#include <Modules/Gfx/Renderer.hpp>
-#include <Modules/ImGui.hpp>
-
+#include <ImGui.hpp>
+#include <Renderer.hpp>
 #include <imgui.h>
 
 #include <Tasks/Task.hpp>
