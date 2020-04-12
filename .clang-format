@@ -1,7 +1,10 @@
 ﻿---
 BasedOnStyle: WebKit
+AlignAfterOpenBracket: 'Align'
 AlignConsecutiveAssignments: 'true'
 AlignConsecutiveDeclarations: 'true'
+BinPackArguments: false
+BinPackParameters: false
 BreakBeforeBraces: Custom
 BraceWrapping:
   AfterClass: true
