@@ -12,13 +12,9 @@ void Pipeline::ExecuteTasks()
         ComputeExecutionOrder();
     }
 
-    std::vector<uint8_t> returnValues;
-    returnValues.resize(returnValuesSize);
-
-    for (auto taskId : ::std::as_const(executionOrder))
+    for (auto taskId : std::as_const(executionOrder))
     {
-        const auto& task = tasks[taskId];
-        task->Call(taskId, returnValues, returnValuesOffset);
+        tasks[taskId]->Call(0);
     }
 }
 
@@ -26,12 +22,10 @@ void Pipeline::ComputeExecutionOrder()
 {
     executionOrder.clear();
     executionOrder.reserve(tasks.size());
-    returnValuesOffset.resize(tasks.size());
 
     std::vector<std::size_t> dependencies;
     dependencies.resize(tasks.size());
 
-    //for (ID::type id = 0; id < tasks.size(); ++id)
     for (auto& task : std::as_const(tasks))
     {
         const auto nbParents = task->GetParents().size();
@@ -42,14 +36,11 @@ void Pipeline::ComputeExecutionOrder()
         dependencies[task->GetID()] = nbParents;
     }
 
-    size_t offset = 0;
     for (uint16_t done = 0; done < tasks.size(); done++)
     {
         auto        taskId = executionOrder[done];
         const auto& task   = tasks[taskId];
 
-        returnValuesOffset[taskId] = offset;
-        offset += task->GetReturnValueSize();
         for (auto id : task->GetChildren())
         {
             --dependencies[id];
@@ -59,7 +50,6 @@ void Pipeline::ComputeExecutionOrder()
             }
         }
     }
-    returnValuesSize = offset;
 }
 
 } // namespace p7::tasks

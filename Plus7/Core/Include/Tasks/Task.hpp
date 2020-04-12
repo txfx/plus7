@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstdint>
+#include <memory>
 #include <vector>
 
 #include "TaskDependencies.hpp"
@@ -14,11 +15,11 @@ struct Task : public NonCopyable
 {
     virtual ~Task() = default;
 
-    ::std::vector<ID>&       GetParents() { return dependencies.parents; }
-    const ::std::vector<ID>& GetParents() const { return dependencies.parents; }
+    std::vector<ID>&       GetParents() { return dependencies.parents; }
+    const std::vector<ID>& GetParents() const { return dependencies.parents; }
 
-    ::std::vector<ID>&       GetChildren() { return dependencies.children; }
-    const ::std::vector<ID>& GetChildren() const { return dependencies.children; }
+    std::vector<ID>&       GetChildren() { return dependencies.children; }
+    const std::vector<ID>& GetChildren() const { return dependencies.children; }
 
     auto GetID() const { return id; }
     auto GetName() const { return name; }
@@ -26,12 +27,7 @@ struct Task : public NonCopyable
 private:
     friend struct Pipeline;
 
-    virtual void Call(
-        ID                           _returnId,
-        ::std::vector<uint8_t>&      _data,
-        const ::std::vector<size_t>& _offsets) const = 0;
-
-    virtual size_t GetReturnValueSize() const = 0;
+    virtual void Call(std::size_t _index) = 0;
 
 protected:
     explicit Task(ID _id, Name _name, TaskDependencies _dependencies)
@@ -44,5 +40,7 @@ protected:
     const Name       name;
     TaskDependencies dependencies;
 };
+
+using TaskList = std::vector<std::unique_ptr<Task>>;
 
 } // namespace p7::tasks

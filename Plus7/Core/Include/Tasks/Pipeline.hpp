@@ -31,13 +31,11 @@ protected:
     void ComputeExecutionOrder();
 
 private:
-    std::vector<std::unique_ptr<Task>> tasks;
+    TaskList tasks;
 
-    bool   dirty            = true;
-    size_t returnValuesSize = 0;
+    bool dirty = true;
 
-    std::vector<ID>     executionOrder;
-    std::vector<size_t> returnValuesOffset;
+    std::vector<ID> executionOrder;
 };
 
 template <typename F>
@@ -61,13 +59,15 @@ auto Pipeline::AddTask(Name _name, F _functor)
 template <typename F, typename... Ts>
 auto Pipeline::AddTask(Name _name, TypedTaskDependencies<Ts...> _dependencies, F _functor)
 {
-    static_assert(::std::is_invocable<F, Ts...>::value,
-        "Your functor is not callablee with the return values from the consume dependencies");
+    static_assert(std::is_invocable<F, Ts...>::value,
+                  "Your functor is not callable with the return values from the consume dependencies");
 
     using TTask = TypedTask<F, Ts...>;
 
     TypedID<typename TTask::TReturn> id { static_cast<ID::type>(tasks.size()) };
-    tasks.emplace_back(std::make_unique<TTask>(id, _name, _functor, _dependencies));
+
+    auto taskPtr = new TTask { id, _name, _functor, _dependencies, tasks };
+    tasks.emplace_back(std::move(taskPtr));
 
     for (auto parentId : tasks.back()->GetParents())
     {
