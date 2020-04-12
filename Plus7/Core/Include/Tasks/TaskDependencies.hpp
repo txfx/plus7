@@ -9,7 +9,7 @@ namespace p7::tasks {
 
 struct TaskDependencies
 {
-    using vector = ::std::vector<ID>;
+    using vector = std::vector<ID>;
 
     vector parents;
     vector children;
@@ -23,14 +23,22 @@ struct TypedTaskDependencies : TaskDependencies
     {
         static_assert(sizeof...(Ts) == 0, "You already have specified parent tasks to consume values from.");
 
-        return TypedTaskDependencies<Us...> { { parents, children } }.needs(args...);
+        //we create a new TypedTasDependencies with our previous children
+        TypedTaskDependencies<Us...> deps { { {}, children } };
+        // we add our consumed tasks in the front
+        deps.parents.reserve(parents.size() + sizeof...(Us));
+        deps.parents.insert(std::end(deps.parents), { args... });
+        // we then add back our needed tasks
+        deps.parents.insert(std::end(deps.parents), std::begin(parents), std::end(parents));
+
+        return deps;
     }
 
     template <typename... Us>
     auto& triggers(TypedID<Us>... args)
     {
         children.reserve(children.size() + sizeof...(Us));
-        children.insert(::std::end(children), { args... });
+        children.insert(std::end(children), { args... });
         return *this;
     }
 
@@ -38,7 +46,7 @@ struct TypedTaskDependencies : TaskDependencies
     auto& needs(TypedID<Us>... args)
     {
         parents.reserve(parents.size() + sizeof...(Us));
-        parents.insert(::std::end(parents), { args... });
+        parents.insert(std::end(parents), { args... });
         return *this;
     }
 };
