@@ -1,7 +1,6 @@
 #pragma once
 
 namespace p7 {
-namespace std {
 
 template <typename T>
 struct reversion_wrapper
@@ -10,13 +9,12 @@ struct reversion_wrapper
 };
 
 template <typename T>
-auto begin(reversion_wrapper<T> w) { return ::std::rbegin(w.iterable); }
+auto begin(reversion_wrapper<T> w) { return std::rbegin(w.iterable); }
 
 template <typename T>
-auto end(reversion_wrapper<T> w) { return ::std::rend(w.iterable); }
+auto end(reversion_wrapper<T> w) { return std::rend(w.iterable); }
 
 template <typename T>
 reversion_wrapper<T> reverse(T&& iterable) { return { iterable }; }
 
-} // namespace std
 } // namespace p7
