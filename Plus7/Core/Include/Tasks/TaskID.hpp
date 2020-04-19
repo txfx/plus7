@@ -26,6 +26,14 @@ protected:
     {}
 
 private:
+    // This only exist to please MSVC that cannot construct
+    // a zero sized std::array without a default ctor for the
+    // element type.
+    constexpr TypedID()
+        : TypedID(0)
+    {}
+
+private:
     template <std::size_t NParent, std::size_t NChild, typename... Ts>
     friend struct TypedTaskDependencies;
     friend struct Pipeline;
