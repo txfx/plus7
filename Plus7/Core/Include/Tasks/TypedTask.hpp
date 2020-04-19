@@ -58,11 +58,12 @@ private:
     using id_sequence      = std::integer_sequence<TIndex, Ids...>;
     using make_id_sequence = std::make_integer_sequence<TIndex, sizeof...(Ts)>;
 
-    explicit TypedTask(TypedID<TReturn>             _id,
-                       Name                         _name,
-                       F                            _functor,
-                       TypedTaskDependencies<Ts...> _dependencies,
-                       const TaskList&              _tasks)
+    template <std::size_t NParent, std::size_t NChild>
+    explicit TypedTask(TypedID<TReturn>                              _id,
+                       Name                                          _name,
+                       F                                             _functor,
+                       TypedTaskDependencies<NParent, NChild, Ts...> _dependencies,
+                       const TaskList&                               _tasks)
         : Base(_id, _name, _dependencies)
         , functor(_functor)
         , consumedTasks(GetTaskReferences(_tasks, make_id_sequence {}))

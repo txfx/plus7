@@ -30,10 +30,11 @@ private:
     virtual void Call(std::size_t _index) = 0;
 
 protected:
-    explicit Task(ID _id, Name _name, TaskDependencies _dependencies)
+    template <std::size_t NParent, std::size_t NChild, typename... Ts>
+    explicit Task(ID _id, Name _name, TypedTaskDependencies<NParent, NChild, Ts...> _dependencies)
         : id(_id)
         , name(_name)
-        , dependencies(std::move(_dependencies))
+        , dependencies({ _dependencies.parents, _dependencies.children })
     {}
 
     const ID         id;

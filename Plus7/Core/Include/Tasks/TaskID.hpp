@@ -26,7 +26,7 @@ protected:
     {}
 
 private:
-    template <typename... Ts>
+    template <std::size_t NParent, std::size_t NChild, typename... Ts>
     friend struct TypedTaskDependencies;
     friend struct Pipeline;
 };

@@ -3,55 +3,58 @@
 #include <array>
 #include <vector>
 
+#include <Utils/Array.hpp>
+
 #include "TaskID.hpp"
 
 namespace p7::tasks {
 
 struct TaskDependencies
 {
+    template <std::size_t NParent, std::size_t NChild>
+    TaskDependencies(std::array<ID, NParent> _parents, std::array<ID, NChild> _children)
+        : parents(std::begin(_parents), std::end(_parents))
+        , children(std::begin(_children), std::end(_children))
+    {}
+
     using vector = std::vector<ID>;
 
     vector parents;
     vector children;
 };
 
-template <typename... Ts>
-struct TypedTaskDependencies : TaskDependencies
+template <std::size_t NParent, std::size_t NChild, typename... Ts>
+struct TypedTaskDependencies
 {
     template <typename... Us>
-    auto consumes(TypedID<Us>... args) const
+    constexpr auto consumes(TypedID<Us>... args) const
     {
         static_assert(sizeof...(Ts) == 0, "You already have specified parent tasks to consume values from.");
 
-        //we create a new TypedTasDependencies with our previous children
-        TypedTaskDependencies<Us...> deps { { {}, children } };
-        // we add our consumed tasks in the front
-        deps.parents.reserve(parents.size() + sizeof...(Us));
-        deps.parents.insert(std::end(deps.parents), { args... });
-        // we then add back our needed tasks
-        deps.parents.insert(std::end(deps.parents), std::begin(parents), std::end(parents));
-
-        return deps;
+        // consummed return values need to be at the front!
+        using TReturn = TypedTaskDependencies<NParent + sizeof...(Us), NChild, Us...>;
+        return TReturn { concat<ID, sizeof...(Us), NParent>({ args... }, parents), children };
     }
 
     template <typename... Us>
-    auto& triggers(TypedID<Us>... args)
+    constexpr auto triggers(TypedID<Us>... args) const
     {
-        children.reserve(children.size() + sizeof...(Us));
-        children.insert(std::end(children), { args... });
-        return *this;
+        using TReturn = TypedTaskDependencies<NParent, NChild + sizeof...(Us), Ts...>;
+        return TReturn { parents, concat<ID, NChild, sizeof...(Us)>(children, { args... }) };
     }
 
     template <typename... Us>
-    auto& needs(TypedID<Us>... args)
+    constexpr auto needs(TypedID<Us>... args) const
     {
-        parents.reserve(parents.size() + sizeof...(Us));
-        parents.insert(std::end(parents), { args... });
-        return *this;
+        using TReturn = TypedTaskDependencies<NParent + sizeof...(Us), NChild, Ts...>;
+        return TReturn { concat<ID, NParent, sizeof...(Us)>(parents, { args... }), children };
     }
+
+    std::array<ID, NParent> parents;
+    std::array<ID, NChild>  children;
 };
 
-inline auto NoDependencies() { return TypedTaskDependencies<> {}; }
+constexpr auto NoDependencies() { return TypedTaskDependencies<0, 0> {}; }
 
 template <typename... Ts>
 constexpr auto consumes(TypedID<Ts>... args)
