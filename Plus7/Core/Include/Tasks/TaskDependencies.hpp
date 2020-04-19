@@ -50,8 +50,8 @@ struct TypedTaskDependencies
         return TReturn { concat<ID, NParent, sizeof...(Us)>(parents, { args... }), children };
     }
 
-    std::array<ID, NParent> parents;
-    std::array<ID, NChild>  children;
+    std::array<ID, NParent> parents  = {};
+    std::array<ID, NChild>  children = {};
 };
 
 constexpr auto NoDependencies() { return TypedTaskDependencies<0, 0> {}; }

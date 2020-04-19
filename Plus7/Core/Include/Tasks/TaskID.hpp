@@ -15,6 +15,15 @@ protected:
         : value(_id)
     {}
     type value;
+
+private:
+    // This only exist to please MSVC that cannot construct
+    // a zero sized std::array without a default ctor for the
+    // element type.
+    constexpr ID()
+        : ID(0)
+    {}
+    friend constexpr auto NoDependencies();
 };
 
 template <typename T>
@@ -23,14 +32,6 @@ struct TypedID : public ID
 protected:
     explicit constexpr TypedID(ID::type _id)
         : ID(_id)
-    {}
-
-private:
-    // This only exist to please MSVC that cannot construct
-    // a zero sized std::array without a default ctor for the
-    // element type.
-    constexpr TypedID()
-        : TypedID(0)
     {}
 
 private:
