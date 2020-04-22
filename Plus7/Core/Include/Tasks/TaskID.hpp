@@ -4,6 +4,9 @@
 
 namespace p7::tasks {
 
+template <typename T>
+struct TypedID;
+
 struct ID
 {
     using type = uint16_t;
@@ -25,11 +28,11 @@ private:
     {}
     friend constexpr auto NoDependencies();
     template <typename... Ts>
-    friend constexpr auto consuming(Ts...);
+    friend constexpr auto consuming(TypedID<Ts>...);
     template <typename... Ts>
-    friend constexpr auto after(Ts...);
+    friend constexpr auto after(TypedID<Ts>...);
     template <typename... Ts>
-    friend constexpr auto before(Ts...);
+    friend constexpr auto before(TypedID<Ts>...);
 };
 
 template <typename T>
