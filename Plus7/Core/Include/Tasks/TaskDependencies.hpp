@@ -46,21 +46,21 @@ struct TypedTaskDependencies
 constexpr auto NoDependencies() { return TypedTaskDependencies<0, 0> {}; }
 
 template <typename... Ts>
-constexpr auto consumes(TypedID<Ts>... args)
+constexpr auto consuming(TypedID<Ts>... args)
 {
     using TReturn = TypedTaskDependencies<sizeof...(Ts), 0, Ts...>;
     return TReturn { { args... }, {} };
 }
 
 template <typename... Ts>
-constexpr auto triggers(TypedID<Ts>... args)
+constexpr auto before(TypedID<Ts>... args)
 {
     using TReturn = TypedTaskDependencies<0, sizeof...(Ts)>;
     return TReturn { {}, { args... } };
 }
 
 template <typename... Ts>
-constexpr auto needs(TypedID<Ts>... args)
+constexpr auto after(TypedID<Ts>... args)
 {
     using TReturn = TypedTaskDependencies<sizeof...(Ts), 0>;
     return TReturn { { args... }, {} };

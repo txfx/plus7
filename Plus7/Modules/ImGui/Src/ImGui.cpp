@@ -66,15 +66,15 @@ ImGui::ImGui(App& _app)
     , beginFrameTask(
           _app.AddTask(
               "ImGui begin frame"_name,
-              consumes(GetModule<inputs::Mouse>().updateTask, GetModule<inputs::Keyboard>().updateTask),
+              consuming(GetModule<inputs::Mouse>().updateTask, GetModule<inputs::Keyboard>().updateTask),
               [&](const auto& mouseState, const auto& keyboardState) {
                   return this->BeginFrame(mouseState, keyboardState);
               }))
     , endFrameTask(
           _app.AddTask(
               "ImGui end frame"_name,
-              consumes(beginFrameTask),
-              triggers(GetModule<Renderer>().displayTask),
+              consuming(beginFrameTask),
+              before(GetModule<Renderer>().displayTask),
               [&](uint64_t) { this->EndFrame(); }))
     , blendState(blendProps)
     , depthState(depthProps)

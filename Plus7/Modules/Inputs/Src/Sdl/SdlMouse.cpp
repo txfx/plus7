@@ -14,7 +14,7 @@ SdlMouse::SdlMouse(App& _app)
     : ModuleWithDependencies(_app)
     , updateTask(_app.AddTask(
           "SDL mouse"_name,
-          needs(GetModule<SdlApp>().mainTask),
+          after(GetModule<SdlApp>().mainTask),
           PollEvents))
 {}
 
@@ -23,11 +23,8 @@ MouseState SdlMouse::PollEvents()
     MouseState state;
 
     SDL_Event event;
-    while (SDL_PeepEvents(&event, 1,
-               SDL_eventaction::SDL_GETEVENT,
-               SDL_EventType::SDL_MOUSEMOTION,
-               SDL_EventType::SDL_MOUSEWHEEL)
-        == 1)
+    while (SDL_PeepEvents(&event, 1, SDL_eventaction::SDL_GETEVENT, SDL_EventType::SDL_MOUSEMOTION, SDL_EventType::SDL_MOUSEWHEEL)
+           == 1)
     {
         switch (event.type)
         {

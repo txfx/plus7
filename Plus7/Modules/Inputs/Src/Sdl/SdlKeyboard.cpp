@@ -16,7 +16,7 @@ SdlKeyboard::SdlKeyboard(App& _app)
     : ModuleWithDependencies(_app)
     , updateTask(_app.AddTask(
           "SDL Keyboard"_name,
-          needs(GetModule<SdlApp>().mainTask),
+          after(GetModule<SdlApp>().mainTask),
           PollEvents))
 {}
 
@@ -25,11 +25,8 @@ KeyboardState SdlKeyboard::PollEvents()
     KeyboardState state;
 
     SDL_Event event;
-    while (SDL_PeepEvents(&event, 1,
-               SDL_eventaction::SDL_GETEVENT,
-               SDL_EventType::SDL_KEYDOWN,
-               SDL_EventType::SDL_TEXTINPUT)
-        == 1)
+    while (SDL_PeepEvents(&event, 1, SDL_eventaction::SDL_GETEVENT, SDL_EventType::SDL_KEYDOWN, SDL_EventType::SDL_TEXTINPUT)
+           == 1)
     {
         switch (event.type)
         {

@@ -20,8 +20,8 @@ int main()
 
     helloWorldApp.AddTask(
         "Helloworld Sample"_name,
-        consumes(imgui.beginFrameTask),
-        triggers(imgui.endFrameTask),
+        consuming(imgui.beginFrameTask),
+        before(imgui.endFrameTask),
         [&renderer](uint64_t _frame) {
             static float  f           = 0.0f;
             static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
