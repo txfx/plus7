@@ -23,6 +23,7 @@ private:
     constexpr ID()
         : ID(0)
     {}
+    friend constexpr auto NoDependencies();
     template <typename... Ts>
     friend constexpr auto consuming(Ts...);
     template <typename... Ts>
