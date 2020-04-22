@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <type_traits>
+#include <utility>
 #include <vector>
 
 #include "TypedTask.hpp"
@@ -19,6 +20,9 @@ struct Pipeline : public NonCopyable
 
     template <typename F>
     auto AddTask(Name _name, F _functor);
+
+    template <typename T1, typename T2, typename... TArgs>
+    auto AddTask(Name _name, T1 _dependencies1, T2 _dependencies2, TArgs&&... _args);
 
     template <typename F, std::size_t NParent, std::size_t NChild, typename... Ts>
     auto AddTask(Name _name, TypedTaskDependencies<NParent, NChild, Ts...> _dependencies, F _functor);
@@ -54,6 +58,12 @@ template <typename F>
 auto Pipeline::AddTask(Name _name, F _functor)
 {
     return AddTask(_name, NoDependencies(), _functor);
+}
+
+template <typename T1, typename T2, typename... TArgs>
+auto Pipeline::AddTask(Name _name, T1 _dependencies1, T2 _dependencies2, TArgs&&... _args)
+{
+    return AddTask(_name, _dependencies1.merge(_dependencies2), std::forward<TArgs>(_args)...);
 }
 
 template <typename F, std::size_t NParent, std::size_t NChild, typename... Ts>

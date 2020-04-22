@@ -26,28 +26,17 @@ struct TaskDependencies
 template <std::size_t NParent, std::size_t NChild, typename... Ts>
 struct TypedTaskDependencies
 {
-    template <typename... Us>
-    constexpr auto consumes(TypedID<Us>... args) const
+    template <std::size_t NParent2, std::size_t NChild2, typename... T2s>
+    constexpr auto merge(TypedTaskDependencies<NParent2, NChild2, T2s...> _dependencies)
     {
-        static_assert(sizeof...(Ts) == 0, "You already have specified parent tasks to consume values from.");
+        static_assert(sizeof...(Ts) == 0 || sizeof...(T2s) == 0, "You cannot merge tasks dependencies which both consumes values.");
 
-        // consummed return values need to be at the front!
-        using TReturn = TypedTaskDependencies<NParent + sizeof...(Us), NChild, Us...>;
-        return TReturn { concat<ID, sizeof...(Us), NParent>({ args... }, parents), children };
-    }
-
-    template <typename... Us>
-    constexpr auto triggers(TypedID<Us>... args) const
-    {
-        using TReturn = TypedTaskDependencies<NParent, NChild + sizeof...(Us), Ts...>;
-        return TReturn { parents, concat<ID, NChild, sizeof...(Us)>(children, { args... }) };
-    }
-
-    template <typename... Us>
-    constexpr auto needs(TypedID<Us>... args) const
-    {
-        using TReturn = TypedTaskDependencies<NParent + sizeof...(Us), NChild, Ts...>;
-        return TReturn { concat<ID, NParent, sizeof...(Us)>(parents, { args... }), children };
+        using TReturn = TypedTaskDependencies<NParent + NParent2, NChild + NChild2, Ts..., T2s...>;
+        return TReturn {
+            // consummed return values need to be at the front!
+            concat<ID, NParent2, NParent>(_dependencies.parents, parents),
+            concat<ID, NChild, NChild2>(children, _dependencies.children)
+        };
     }
 
     std::array<ID, NParent> parents  = {};
@@ -59,19 +48,22 @@ constexpr auto NoDependencies() { return TypedTaskDependencies<0, 0> {}; }
 template <typename... Ts>
 constexpr auto consumes(TypedID<Ts>... args)
 {
-    return NoDependencies().consumes(args...);
+    using TReturn = TypedTaskDependencies<sizeof...(Ts), 0, Ts...>;
+    return TReturn { { args... }, {} };
 }
 
 template <typename... Ts>
 constexpr auto triggers(TypedID<Ts>... args)
 {
-    return NoDependencies().triggers(args...);
+    using TReturn = TypedTaskDependencies<0, sizeof...(Ts)>;
+    return TReturn { {}, { args... } };
 }
 
 template <typename... Ts>
 constexpr auto needs(TypedID<Ts>... args)
 {
-    return NoDependencies().needs(args...);
+    using TReturn = TypedTaskDependencies<sizeof...(Ts), 0>;
+    return TReturn { { args... }, {} };
 }
 
 } // namespace p7::tasks
