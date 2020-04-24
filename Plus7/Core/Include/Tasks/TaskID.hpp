@@ -30,9 +30,9 @@ private:
     template <typename... Ts>
     friend constexpr auto consuming(TypedID<Ts>...);
     template <typename... Ts>
-    friend constexpr auto after(TypedID<Ts>...);
+    friend constexpr auto after(Ts...);
     template <typename... Ts>
-    friend constexpr auto before(TypedID<Ts>...);
+    friend constexpr auto before(Ts...);
 };
 
 template <typename T>

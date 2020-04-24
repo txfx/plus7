@@ -53,15 +53,17 @@ constexpr auto consuming(TypedID<Ts>... args)
 }
 
 template <typename... Ts>
-constexpr auto before(TypedID<Ts>... args)
+constexpr auto before(Ts... args)
 {
+    static_assert((std::is_convertible_v<Ts, ID> && ...), "before can only be called type convertible in ID");
     using TReturn = TypedTaskDependencies<0, sizeof...(Ts)>;
     return TReturn { {}, { args... } };
 }
 
 template <typename... Ts>
-constexpr auto after(TypedID<Ts>... args)
+constexpr auto after(Ts... args)
 {
+    static_assert((std::is_convertible_v<Ts, ID> && ...), "after can only be called type convertible in ID");
     using TReturn = TypedTaskDependencies<sizeof...(Ts), 0>;
     return TReturn { { args... }, {} };
 }
