@@ -1,24 +1,12 @@
 #include "Sdl/SdlMouse.hpp"
 
-#include <App.hpp>
 #include <SDL.h>
-#include <SdlApp.hpp>
+#include <Tasks/Pipeline.hpp>
 
-#include <array>
+namespace p7::inputs::sdl {
 
-namespace p7::inputs {
-
-using namespace p7::tasks;
-
-SdlMouse::SdlMouse(App& _app)
-    : ModuleWithDependencies(_app)
-    , updateTask(_app.AddTask(
-          "SDL mouse"_name,
-          after(GetModule<SdlApp>().mainTask),
-          PollEvents))
-{}
-
-MouseState SdlMouse::PollEvents()
+namespace {
+MouseState PollEvents()
 {
     MouseState state;
 
@@ -52,5 +40,12 @@ MouseState SdlMouse::PollEvents()
 
     return state;
 }
+} // namespace
 
-} // namespace p7::inputs
+tasks::TypedID<MouseState> CreateUpdateMouseTask(tasks::Pipeline& _pipeline, const tasks::ID aSdlMainTask)
+{
+    using namespace tasks;
+    return _pipeline.AddTask("SDL mouse"_name, after(aSdlMainTask), PollEvents);
+}
+
+} // namespace p7::inputs::sdl

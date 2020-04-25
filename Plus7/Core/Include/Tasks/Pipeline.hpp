@@ -27,12 +27,12 @@ struct Pipeline : public NonCopyable
     template <typename F, std::size_t NParent, std::size_t NChild, typename... Ts>
     auto AddTask(Name _name, TypedTaskDependencies<NParent, NChild, Ts...> _dependencies, F _functor);
 
-    const auto& GetTasks() const { return tasks; }
+    template <typename T>
+    const TaskWithReturn<T>& GetTask(TypedID<T> _id) const;
 
-protected:
-    void ExecuteTasks();
-
-    void ComputeExecutionOrder();
+    void Build();
+    bool Execute() const;
+    bool ExecuteWhile(TypedID<bool> _dep) const;
 
 private:
     TaskList tasks;
@@ -92,6 +92,12 @@ auto Pipeline::AddTask(Name _name, TypedTaskDependencies<NParent, NChild, Ts...>
     dirty = true;
 
     return id;
+}
+
+template <typename T>
+const TaskWithReturn<T>& Pipeline::GetTask(TypedID<T> _id) const
+{
+    return static_cast<const TaskWithReturn<T>&>(*tasks[_id.value].get());
 }
 
 } // namespace p7::tasks

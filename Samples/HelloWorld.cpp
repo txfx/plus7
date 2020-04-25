@@ -1,28 +1,27 @@
 #include <iostream>
 
-#include <App.hpp>
 #include <ImGui.hpp>
-#include <Renderer.hpp>
+#include <SdlApp.hpp>
 #include <imgui.h>
 
-#include <Tasks/Task.hpp>
+#include <Tasks/Pipeline.hpp>
 
 int main()
 {
-    using p7::App;
     using p7::gfx::ImGui;
     using p7::gfx::Renderer;
+    using p7::sdl::WindowedApp;
     using namespace p7::tasks;
 
-    App   helloWorldApp;
-    auto& renderer = helloWorldApp.LoadModule<Renderer>("Hello World", 1280, 720);
-    auto& imgui    = helloWorldApp.LoadModule<ImGui>();
+    Pipeline       pipeline;
+    WindowedApp    app { pipeline, "Hello World", 1280, 720 };
+    p7::gfx::ImGui imgui { pipeline, app.mouseTask, app.keyboardTask, *app.renderer };
 
-    helloWorldApp.AddTask(
+    pipeline.AddTask(
         "Helloworld Sample"_name,
         consuming(imgui.beginFrameTask),
         before(imgui.endFrameTask),
-        [&renderer](uint64_t _frame) {
+        [& renderer = *app.renderer](uint64_t _frame) {
             static float  f           = 0.0f;
             static ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -39,6 +38,7 @@ int main()
             renderer.GetCommandBuffer().Clear(clear_color.x, clear_color.y, clear_color.z, clear_color.w);
         });
 
-    helloWorldApp.Run();
-    std::cout << "Hello World" << std::endl;
+
+    pipeline.Build();
+    pipeline.ExecuteWhile(app.mainTask);
 }

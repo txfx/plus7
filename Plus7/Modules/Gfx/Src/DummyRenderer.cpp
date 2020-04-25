@@ -1,7 +1,14 @@
 #include "Dummy/DummyRenderer.hpp"
 
-namespace p7 {
-namespace gfx {
+#include "Dummy/DummyCommandBuffer.hpp"
+
+namespace p7::gfx {
+
+DummyCommandBuffer& DummyRenderer::GetCommandBuffer()
+{
+    static DummyCommandBuffer cb;
+    return cb;
+}
 
 TexturePtr DummyRenderer::CreateTexture(const TextureProperties& _properties, const void* _data)
 {
@@ -18,5 +25,4 @@ BufferSpan DummyRenderer::CreateTempBuffer(const BufferProperties& _properties, 
     return BufferSpan { CreateBuffer(_properties, _data), 0, _properties.size };
 }
 
-} // namespace gfx
-} // namespace p7
+} // namespace p7::gfx

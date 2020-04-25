@@ -1,26 +1,15 @@
 #include "Sdl/SdlKeyboard.hpp"
 
-#include <App.hpp>
 #include <SDL.h>
-#include <SdlApp.hpp>
+#include <Tasks/Pipeline.hpp>
 #include <Utils/Assert.hpp>
 
-#include <array>
 #include <cstring>
 
-namespace p7::inputs {
+namespace p7::inputs::sdl {
 
-using namespace p7::tasks;
-
-SdlKeyboard::SdlKeyboard(App& _app)
-    : ModuleWithDependencies(_app)
-    , updateTask(_app.AddTask(
-          "SDL Keyboard"_name,
-          after(GetModule<SdlApp>().mainTask),
-          PollEvents))
-{}
-
-KeyboardState SdlKeyboard::PollEvents()
+namespace {
+KeyboardState PollEvents()
 {
     KeyboardState state;
 
@@ -50,5 +39,12 @@ KeyboardState SdlKeyboard::PollEvents()
 
     return state;
 }
+} // namespace
 
-} // namespace p7::inputs
+tasks::TypedID<KeyboardState> CreateUpdateKeyboardTask(tasks::Pipeline& _pipeline, const tasks::ID aSdlMainTask)
+{
+    using namespace tasks;
+    return _pipeline.AddTask("SDL Keyboard"_name, after(aSdlMainTask), PollEvents);
+}
+
+} // namespace p7::inputs::sdl

@@ -1,27 +1,15 @@
 #pragma once
 
-#include <Module.hpp>
 #include <Tasks/Task.hpp>
 
 #include "MouseState.hpp"
 
-namespace p7 {
+namespace p7::tasks {
+struct Pipeline;
+} // namespace p7::tasks
 
-struct App;
-struct SdlApp;
+namespace p7::inputs::sdl {
 
-namespace inputs {
+tasks::TypedID<MouseState> CreateUpdateMouseTask(tasks::Pipeline& _pipeline, const tasks::ID aSdlMainTask);
 
-struct SdlMouse : public ModuleWithDependencies<SdlApp>
-{
-public:
-    explicit SdlMouse(App& _app);
-
-    const tasks::TypedID<MouseState> updateTask;
-
-private:
-    static MouseState PollEvents();
-};
-
-} // namespace inputs
-} // namespace p7
+} // namespace p7::inputs::sdl

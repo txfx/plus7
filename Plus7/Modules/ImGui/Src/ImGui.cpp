@@ -1,6 +1,8 @@
 #include "ImGui.hpp"
 
-#include <App.hpp>
+#include <KeyboardState.hpp>
+#include <MouseState.hpp>
+#include <Tasks/Pipeline.hpp>
 #include <Utils/Assert.hpp>
 #include <cstring>
 #include <imgui.h>
@@ -61,21 +63,23 @@ constexpr VertexLayoutProperties vtxLayoutProperties = {
 
 using namespace p7::tasks;
 
-ImGui::ImGui(App& _app)
-    : ModuleWithDependencies(_app)
-    , beginFrameTask(
-          _app.AddTask(
-              "ImGui begin frame"_name,
-              consuming(GetModule<inputs::Mouse>().updateTask, GetModule<inputs::Keyboard>().updateTask),
-              [&](const auto& mouseState, const auto& keyboardState) {
-                  return this->BeginFrame(mouseState, keyboardState);
-              }))
+ImGui::ImGui(tasks::Pipeline&               _pipeline,
+             TypedID<inputs::MouseState>    _mouseTask,
+             TypedID<inputs::KeyboardState> _keyboardTask,
+             Renderer&                      _renderer)
+    : beginFrameTask(
+        _pipeline.AddTask(
+            "ImGui begin frame"_name,
+            consuming(_mouseTask, _keyboardTask),
+            [&](const auto& mouseState, const auto& keyboardState) {
+                return this->BeginFrame(mouseState, keyboardState, _renderer);
+            }))
     , endFrameTask(
-          _app.AddTask(
+          _pipeline.AddTask(
               "ImGui end frame"_name,
               consuming(beginFrameTask),
-              before(GetModule<Renderer>().displayTask),
-              [&](uint64_t) { this->EndFrame(); }))
+              before(_renderer.GetEndFrameTask()),
+              [&](uint64_t) { this->EndFrame(_renderer); }))
     , blendState(blendProps)
     , depthState(depthProps)
     , rasterizerState(rasterizerProps)
@@ -88,7 +92,7 @@ ImGui::ImGui(App& _app)
     unsigned char* pixels;
     int            width, height;
     io.Fonts->GetTexDataAsRGBA32(&pixels, &width, &height);
-    font = GetModule<Renderer>().CreateTexture({ static_cast<uint32_t>(width), static_cast<uint32_t>(height) }, pixels);
+    font = _renderer.CreateTexture({ static_cast<uint32_t>(width), static_cast<uint32_t>(height) }, pixels);
 
     io.Fonts->TexID = &font;
 
@@ -125,32 +129,34 @@ ImGui::~ImGui()
     ::ImGui::DestroyContext(context);
 }
 
-uint64_t ImGui::BeginFrame(const inputs::MouseState& mouseState, const inputs::KeyboardState& keyboardState)
+uint64_t ImGui::BeginFrame(
+    const inputs::MouseState&    _mouseState,
+    const inputs::KeyboardState& _keyboardState,
+    const Renderer&              _renderer)
 {
-    auto&    renderer = GetModule<Renderer>();
-    ImGuiIO& io       = ::ImGui::GetIO();
-    io.DisplaySize    = ImVec2(renderer.GetWidth(), renderer.GetHeight());
+    ImGuiIO& io    = ::ImGui::GetIO();
+    io.DisplaySize = ImVec2(_renderer.GetWidth(), _renderer.GetHeight());
 
     // mouse
-    io.MousePos = ImVec2(mouseState.pos.x, mouseState.pos.y);
+    io.MousePos = ImVec2(_mouseState.pos.x, _mouseState.pos.y);
 
-    io.MouseDown[0] = mouseState.buttons[0];
-    io.MouseDown[1] = mouseState.buttons[1];
-    io.MouseDown[2] = mouseState.buttons[2];
+    io.MouseDown[0] = _mouseState.buttons[0];
+    io.MouseDown[1] = _mouseState.buttons[1];
+    io.MouseDown[2] = _mouseState.buttons[2];
 
-    io.MouseWheel  = mouseState.wheel.vertical;
-    io.MouseWheelH = mouseState.wheel.horizontal;
+    io.MouseWheel  = _mouseState.wheel.vertical;
+    io.MouseWheelH = _mouseState.wheel.horizontal;
 
     // keyboard
     io.ClearInputCharacters();
-    io.AddInputCharactersUTF8(keyboardState.text.data());
+    io.AddInputCharactersUTF8(_keyboardState.text.data());
 
-    static_assert(sizeof(io.KeysDown) >= sizeof(keyboardState.keysDown));
-    std::memcpy(io.KeysDown, keyboardState.keysDown.data(), sizeof(keyboardState.keysDown));
-    io.KeyShift = keyboardState.shiftMod;
-    io.KeyCtrl  = keyboardState.ctrlMod;
-    io.KeyAlt   = keyboardState.altMod;
-    io.KeySuper = keyboardState.superMod;
+    static_assert(sizeof(io.KeysDown) >= sizeof(_keyboardState.keysDown));
+    std::memcpy(io.KeysDown, _keyboardState.keysDown.data(), sizeof(_keyboardState.keysDown));
+    io.KeyShift = _keyboardState.shiftMod;
+    io.KeyCtrl  = _keyboardState.ctrlMod;
+    io.KeyAlt   = _keyboardState.altMod;
+    io.KeySuper = _keyboardState.superMod;
 
 #if IMGUI_MODULE_NEED_SDL
     SDL_ShowCursor(io.MouseDrawCursor ? 0 : 1);
@@ -161,13 +167,13 @@ uint64_t ImGui::BeginFrame(const inputs::MouseState& mouseState, const inputs::K
     return frame++;
 }
 
-void ImGui::EndFrame()
+void ImGui::EndFrame(Renderer& _renderer)
 {
     ::ImGui::Render();
-    DrawLists(::ImGui::GetDrawData());
+    DrawLists(::ImGui::GetDrawData(), _renderer);
 }
 
-void ImGui::DrawLists(ImDrawData* draw_data)
+void ImGui::DrawLists(ImDrawData* draw_data, Renderer& _renderer)
 {
     if (draw_data == nullptr)
         return;
@@ -181,8 +187,7 @@ void ImGui::DrawLists(ImDrawData* draw_data)
 
     draw_data->ScaleClipRects(io.DisplayFramebufferScale);
 
-    auto& renderer = GetModule<Renderer>();
-    auto& cb       = renderer.GetCommandBuffer();
+    auto& cb = _renderer.GetCommandBuffer();
 
     // Setup render state: alpha-blending enabled, no face culling, no depth testing, scissor enabled, polygon fill
     cb.BindBlendState(blendState);
@@ -202,7 +207,7 @@ void ImGui::DrawLists(ImDrawData* draw_data)
         { -1.0f /*              */, /*                */ 1.0f, +0.0f, +1.0f },
     };
 
-    auto ubo = renderer.CreateTempBuffer({ BufferType::Constant, sizeof(ortho_projection) }, ortho_projection);
+    auto ubo = _renderer.CreateTempBuffer({ BufferType::Constant, sizeof(ortho_projection) }, ortho_projection);
     cb.BindConstantBuffer(ubo, 0);
 
     for (int n = 0; n < draw_data->CmdListsCount; n++)
@@ -210,12 +215,12 @@ void ImGui::DrawLists(ImDrawData* draw_data)
         const auto* cmd_list          = draw_data->CmdLists[n];
         int         idx_buffer_offset = 0;
 
-        auto vertex = renderer.CreateTempBuffer(
+        auto vertex = _renderer.CreateTempBuffer(
             { BufferType::Vertex, static_cast<uint32_t>(cmd_list->VtxBuffer.Size * sizeof(ImDrawVert)) },
             cmd_list->VtxBuffer.Data);
         cb.BindVertexBuffer(vertex, 0);
 
-        auto index = renderer.CreateTempBuffer(
+        auto index = _renderer.CreateTempBuffer(
             { BufferType::Index, static_cast<uint32_t>(cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx)) },
             cmd_list->IdxBuffer.Data);
         cb.BindIndexBuffer(index);

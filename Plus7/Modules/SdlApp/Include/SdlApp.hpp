@@ -1,23 +1,26 @@
 #pragma once
 
-#include <Module.hpp>
-
+#include <KeyboardState.hpp>
+#include <MouseState.hpp>
+#include <Renderer.hpp>
 #include <Tasks/Task.hpp>
+#include <Utils/NonCopyable.hpp>
 
-namespace p7 {
+namespace p7::tasks {
+struct Pipeline;
+}
 
-struct App;
+namespace p7::sdl {
 
-struct SdlApp : public Module
+struct WindowedApp : NonCopyable
 {
-public:
-    explicit SdlApp(App& _app);
-    ~SdlApp() override;
+    WindowedApp(tasks::Pipeline& _pipeline, const char* _name, int _w, int _h);
+    ~WindowedApp();
 
-    const tasks::TypedID<void> mainTask;
-
-private:
-    void PollEvents();
+    const tasks::TypedID<bool>                  mainTask;
+    const tasks::TypedID<inputs::MouseState>    mouseTask;
+    const tasks::TypedID<inputs::KeyboardState> keyboardTask;
+    const std::unique_ptr<gfx::Renderer>        renderer;
 };
 
-} // namespace p7
+} // namespace p7::sdl

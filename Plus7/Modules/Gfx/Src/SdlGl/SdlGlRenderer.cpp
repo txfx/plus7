@@ -2,25 +2,15 @@
 
 #include "SdlGl/gl_headers.h"
 
-#include <App.hpp>
 #include <SDL.h>
-#include <SdlApp.hpp>
+#include <Tasks/Pipeline.hpp>
 
-namespace p7::gfx {
+namespace p7::gfx::sdl {
 
 using namespace p7::tasks;
 
-SdlGlRenderer::SdlGlRenderer(App& _app)
-    : SdlGlRenderer("", 0, 0, /* _visible*/ false, _app)
-{}
-
-SdlGlRenderer::SdlGlRenderer(const char* _name, int _w, int _h, App& _app)
-    : SdlGlRenderer(_name, _w, _h, /*_visible*/ true, _app)
-{}
-
-SdlGlRenderer::SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, App& _app)
-    : ModuleWithDependencies(_app)
-    , displayTask(_app.AddTask("GL EndFrame"_name, [&]() { this->EndFrame(); }))
+SdlGlRenderer::SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, Pipeline& _pipeline)
+    : endFrameTask(_pipeline.AddTask("GL EndFrame"_name, [&]() { this->EndFrame(); }))
     , width(_w)
     , height(_h)
 {
@@ -59,4 +49,4 @@ void SdlGlRenderer::EndFrame()
     SDL_GL_SwapWindow(window);
 }
 
-} // namespace p7::gfx
+} // namespace p7::gfx::sdl

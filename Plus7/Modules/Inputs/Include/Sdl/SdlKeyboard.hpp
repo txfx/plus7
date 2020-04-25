@@ -1,27 +1,15 @@
 #pragma once
 
-#include <Module.hpp>
 #include <Tasks/Task.hpp>
 
 #include "KeyboardState.hpp"
 
-namespace p7 {
+namespace p7::tasks {
+struct Pipeline;
+} // namespace p7::tasks
 
-struct App;
-struct SdlApp;
+namespace p7::inputs::sdl {
 
-namespace inputs {
+tasks::TypedID<KeyboardState> CreateUpdateKeyboardTask(tasks::Pipeline& _pipeline, const tasks::ID aSdlMainTask);
 
-struct SdlKeyboard : public ModuleWithDependencies<SdlApp>
-{
-public:
-    explicit SdlKeyboard(App& _app);
-
-    const tasks::TypedID<KeyboardState> updateTask;
-
-private:
-    static KeyboardState PollEvents();
-};
-
-} // namespace inputs
-} // namespace p7
+} // namespace p7::inputs::sdl

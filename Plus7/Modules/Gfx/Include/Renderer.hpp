@@ -4,6 +4,6 @@
 
 namespace p7 {
 namespace gfx {
-using Renderer = SdlGlRenderer;
+using Renderer = sdl::SdlGlRenderer;
 } // namespace gfx
 } // namespace p7

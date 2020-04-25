@@ -4,21 +4,22 @@
 
 namespace p7::tasks {
 
-void Pipeline::ExecuteTasks()
+bool Pipeline::Execute() const
 {
     if (dirty)
     {
-        dirty = false;
-        ComputeExecutionOrder();
+        return false;
     }
 
     for (auto taskId : std::as_const(executionOrder))
     {
         tasks[taskId]->Call(0);
     }
+
+    return true;
 }
 
-void Pipeline::ComputeExecutionOrder()
+void Pipeline::Build()
 {
     executionOrder.clear();
     executionOrder.reserve(tasks.size());
@@ -50,6 +51,21 @@ void Pipeline::ComputeExecutionOrder()
             }
         }
     }
+
+    dirty = false;
+}
+
+bool Pipeline::ExecuteWhile(TypedID<bool> _task) const
+{
+    auto& whileTask = GetTask(_task);
+    bool  valid     = true;
+    bool  stop      = false;
+    while (valid && !stop)
+    {
+        valid = Execute();
+        stop  = whileTask.GetReturnValue(0);
+    }
+    return valid;
 }
 
 } // namespace p7::tasks

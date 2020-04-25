@@ -1,31 +1,44 @@
 #pragma once
 
-#include <App.hpp>
-
-#include <Inputs.hpp>
+#include <BlendState.hpp>
+#include <DepthState.hpp>
+#include <RasterizerState.hpp>
 #include <Renderer.hpp>
+#include <ShaderState.hpp>
 #include <Tasks/Task.hpp>
+#include <Texture.hpp>
+#include <VertexLayout.hpp>
 
 struct ImDrawData;
 struct ImGuiContext;
 
+namespace p7::inputs {
+struct MouseState;
+struct KeyboardState;
+} // namespace p7::inputs
+
 namespace p7::gfx {
 
-struct ImGui : public ModuleWithDependencies<inputs::Mouse, inputs::Keyboard, Renderer>
+struct ImGui
 {
 public:
-    explicit ImGui(App& _app);
-    ~ImGui() override;
+    ImGui(tasks::Pipeline&                      _pipeline,
+          tasks::TypedID<inputs::MouseState>    _mouseTask,
+          tasks::TypedID<inputs::KeyboardState> _keyboardTask,
+          Renderer&                             _renderer);
+    ~ImGui();
 
     // Tasks
     const tasks::TypedID<uint64_t> beginFrameTask;
     const tasks::TypedID<void>     endFrameTask;
 
 private:
-    uint64_t BeginFrame(const inputs::MouseState& mouseState, const inputs::KeyboardState& keyboardState);
-    void     EndFrame();
+    uint64_t BeginFrame(const inputs::MouseState&    _mouseState,
+                        const inputs::KeyboardState& _keyboardState,
+                        const Renderer&              _renderer);
+    void     EndFrame(Renderer& _renderer);
 
-    void DrawLists(ImDrawData* draw_data);
+    void DrawLists(ImDrawData* draw_data, Renderer& _renderer);
 
 private:
     // render states
