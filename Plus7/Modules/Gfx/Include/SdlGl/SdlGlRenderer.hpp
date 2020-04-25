@@ -20,7 +20,7 @@ public:
     SdlGlRenderer(const char* _name, int _w, int _h, bool _visible, tasks::Pipeline& _pipeline);
     ~SdlGlRenderer() override;
 
-    CommandBuffer& GetCommandBuffer() { return commandBuffer; }
+    CommandBuffer& GetCommandBuffer() override { return commandBuffer; }
 
     uint32_t GetWidth() const override { return width; }
     uint32_t GetHeight() const override { return height; }
