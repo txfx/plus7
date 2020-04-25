@@ -19,20 +19,14 @@ jobs:
         sudo apt-get install -y libgl1-mesa-dev libgl1-mesa-glx cmake
     - name: build
       run: |
-        mkdir -p build
-        cd build
-        /usr/bin/cmake ..
-        make
+        /usr/bin/cmake -S . -B build
+        /usr/bin/cmake --build build
 
   windows:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v1
-    - name: Setup MSBuild.exe
-      uses: warrenbuckley/Setup-MSBuild@v1
     - name: build
       run: |
-        mkdir build
-        cd build
-        cmake ..
-        msbuild Plus7.sln
+        cmake -S . -B build
+        cmake --build build
