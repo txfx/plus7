@@ -20,7 +20,7 @@ jobs:
     - name: build
       run: |
         /usr/bin/cmake -S . -B build
-        /usr/bin/cmake --build build
+        /usr/bin/cmake --build build -j8
 
   windows:
     runs-on: windows-latest
@@ -29,4 +29,4 @@ jobs:
     - name: build
       run: |
         cmake -S . -B build
-        cmake --build build
+        cmake --build build -j8
