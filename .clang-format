@@ -1,12 +1,18 @@
 ﻿---
-BasedOnStyle: WebKit
-AlignAfterOpenBracket: 'Align'
-AlignConsecutiveAssignments: 'true'
-AlignConsecutiveDeclarations: 'true'
+BasedOnStyle: Webkit
+AlignAfterOpenBracket: AlwaysBreak
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AllowAllArgumentsOnNextLine: false
+AllowAllConstructorInitializersOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortLambdasOnASingleLine: All
+AlwaysBreakTemplateDeclarations: true
 BinPackArguments: false
 BinPackParameters: false
 BreakBeforeBraces: Custom
 BraceWrapping:
+  AfterCaseLabel: true
   AfterClass: true
   AfterControlStatement: true
   AfterEnum: true
@@ -16,12 +22,20 @@ BraceWrapping:
   AfterUnion: true
   BeforeCatch: true
   BeforeElse: true
+  #BeforeLambdaBody: true
   IndentBraces: false
   SplitEmptyFunction: false
   SplitEmptyRecord: false
   SplitEmptyNamespace: false
+ColumnLimit: 120
+ContinuationIndentWidth: 2
+Cpp11BracedListStyle: false
+FixNamespaceComments: true
 NamespaceIndentation: None
-FixNamespaceComments: 'true'
-SortIncludes: 'true'
-SortUsingDeclarations: 'true'
+PenaltyBreakAssignment: 200
+PenaltyReturnTypeOnItsOwnLine: 1000
+ReflowComments: true
+SortIncludes: true
+SortUsingDeclarations: true
+Standard: c++17
 UseTab: Never
