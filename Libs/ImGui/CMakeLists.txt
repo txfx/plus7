@@ -13,5 +13,5 @@ if(NOT Imgui_POPULATED)
 
   file(GLOB IMGUI_SOURCE_FILES ${imgui_SOURCE_DIR}/*.cpp)
   add_library(Imgui STATIC ${IMGUI_SOURCE_FILES})
-  target_include_directories(Imgui PUBLIC ${imgui_SOURCE_DIR})
+  target_include_directories(Imgui SYSTEM PUBLIC ${imgui_SOURCE_DIR})
 endif()
