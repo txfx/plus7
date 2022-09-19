@@ -8,15 +8,15 @@ on:
 
 jobs:
   linux:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
     - uses: actions/checkout@v1
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y libgl1-mesa-dev libgl1-mesa-glx cmake
-        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 100
-        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-11 100
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 100
     - name: build
       run: |
         /usr/bin/cmake -S . -B build
