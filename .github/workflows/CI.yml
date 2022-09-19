@@ -14,10 +14,11 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y libgl1-mesa-dev libgl1-mesa-glx cmake clang
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-14 100
+        sudo apt-get install -y libgl1-mesa-dev libgl1-mesa-glx cmake
     - name: build
       run: |
+        ls /usr/bin/clang*
+        ls /usr/bin/g++*
         /usr/bin/cmake -S . -B build
         /usr/bin/cmake --build build -j8
 
