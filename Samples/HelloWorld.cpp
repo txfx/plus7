@@ -4,7 +4,6 @@
 #include <Tasks/Pipeline.hpp>
 
 #include <algorithm>
-#include <fmt/format.h>
 #include <functional>
 #include <imgui.h>
 #include <iterator>
@@ -89,7 +88,6 @@ int main()
             }
 
             ::ImGui::PushStyleColor(ImGuiCol_Button, color);
-            //::ImGui::Button(fmt::format("{}", id).c_str());
             ::ImGui::Button(pipeline.GetTask(id).GetName().value);
             ::ImGui::PopStyleColor(1);
 
