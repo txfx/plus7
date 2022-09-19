@@ -1,10 +1,11 @@
 #include "Sdl/SdlKeyboard.hpp"
 
-#include <SDL.h>
 #include <Tasks/Pipeline.hpp>
 #include <Utils/Assert.hpp>
 
+#include <cstddef>
 #include <cstring>
+#include <SDL.h>
 
 namespace p7::inputs::sdl {
 
@@ -14,8 +15,9 @@ KeyboardState PollEvents()
     KeyboardState state;
 
     SDL_Event event;
-    while (SDL_PeepEvents(&event, 1, SDL_eventaction::SDL_GETEVENT, SDL_EventType::SDL_KEYDOWN, SDL_EventType::SDL_TEXTINPUT)
-           == 1)
+    while (
+      SDL_PeepEvents(&event, 1, SDL_eventaction::SDL_GETEVENT, SDL_EventType::SDL_KEYDOWN, SDL_EventType::SDL_TEXTINPUT)
+      == 1)
     {
         switch (event.type)
         {
@@ -33,7 +35,9 @@ KeyboardState PollEvents()
 
     int  nbKeys    = 0;
     auto keysState = SDL_GetKeyboardState(&nbKeys);
-    P7_ASSERT(static_cast<uint>(nbKeys) <= state.keysDown.size(), "SDL_GetKeyboardState has returned too many keys");
+    P7_ASSERT(
+      static_cast<std::size_t>(nbKeys) <= state.keysDown.size(),
+      "SDL_GetKeyboardState has returned too many keys");
     static_assert(sizeof(*keysState) == sizeof(*state.keysDown.data()));
     std::memcpy(state.keysDown.data(), keysState, nbKeys);
 
