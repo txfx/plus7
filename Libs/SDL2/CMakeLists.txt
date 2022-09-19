@@ -2,6 +2,9 @@ include(FetchContent)
 
 FetchContent_Declare(
     SDL2
-    URL https://www.libsdl.org/release/SDL2-2.0.16.tar.gz
+    GIT_REPOSITORY  https://github.com/libsdl-org/SDL
+    GIT_SHALLOW     TRUE
+    GIT_TAG         main
 )
+
 FetchContent_MakeAvailable(SDL2)
