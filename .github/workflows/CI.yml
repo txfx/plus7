@@ -8,6 +8,16 @@ on:
 
 jobs:
   linux:
+  strategy:
+    matrix:
+      compiler: [gcc, clang]
+      include:
+      - compiler: gcc
+        compiler-cc: gcc-10
+        compiler-cxx: g++-10
+      - compiler: clang
+        compiler-cc: clang-12
+        compiler-cxx: clang++-12
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -15,12 +25,10 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libgl1-mesa-dev libgl1-mesa-glx cmake
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-12 100
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang++-12 100
     - name:
       env:
-        CC: clang
-        CXX: clang++
+        CC: ${{ matrix.compiler-cc }}
+        CXX: ${{ matrix.compiler-cxx }}
       run: |
         /usr/bin/cmake -S . -B build
         /usr/bin/cmake --build build -j8
