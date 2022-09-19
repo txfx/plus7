@@ -32,6 +32,11 @@ jobs:
       run: |
         /usr/bin/cmake -S . -B build
         /usr/bin/cmake --build build -j8
+    
+    - uses: actions/upload-artifact@v3
+      with:
+        name: my-artifact
+        path: build/Samples/HelloWorld
 
   windows:
     runs-on: windows-latest
