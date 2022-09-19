@@ -12,12 +12,12 @@ jobs:
     matrix:
       compiler: [gcc, clang]
       include:
-      - compiler: gcc
-        compiler-cc: gcc-10
-        compiler-cxx: g++-10
-      - compiler: clang
-        compiler-cc: clang-12
-        compiler-cxx: clang++-12
+       - compiler: gcc
+         cc: gcc-10
+         cxx: g++-10
+       - compiler: clang
+         cc: clang-12
+         cxx: clang++-12
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -27,8 +27,8 @@ jobs:
         sudo apt-get install -y libgl1-mesa-dev libgl1-mesa-glx cmake
     - name:
       env:
-        CC: ${{ matrix.compiler-cc }}
-        CXX: ${{ matrix.compiler-cxx }}
+        CC: ${{ matrix.cc }}
+        CXX: ${{ matrix.cxx }}
       run: |
         /usr/bin/cmake -S . -B build
         /usr/bin/cmake --build build -j8
