@@ -35,7 +35,7 @@ jobs:
     
     - uses: actions/upload-artifact@v3
       with:
-        name: my-artifact
+        name: HelloWorld-binary (${{ compiler }})
         path: build/Samples/HelloWorld
 
   windows:
@@ -46,3 +46,8 @@ jobs:
       run: |
         cmake -S . -B build
         cmake --build build -j8
+    
+    - uses: actions/upload-artifact@v3
+      with:
+        name: HelloWorld-binary (win)
+        path: build/Samples/HelloWorld.exe
