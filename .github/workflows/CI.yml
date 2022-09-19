@@ -47,8 +47,8 @@ jobs:
     - uses: actions/checkout@v1
     - name: build
       run: |
-        cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }}
-        cmake --build build -j8
+        cmake -S . -B build -DCMAKE_CONFIGURATION_TYPES=${{ env.CMAKE_BUILD_TYPE }}
+        cmake --build build -j8 --config ${{ env.CMAKE_BUILD_TYPE }}
     
     - uses: actions/upload-artifact@v3
       with:
