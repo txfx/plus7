@@ -1,3 +1,16 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 480eedb..09b1a80 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -17,7 +17,7 @@ target_sources(rx-ranges
+         "${CMAKE_CURRENT_SOURCE_DIR}/include/rx/ranges.hpp"
+ )
+ target_include_directories(rx-ranges
+-    INTERFACE include
++  SYSTEM INTERFACE include
+ )
+ 
+ if (RX_TEST)
 diff --git a/include/rx/ranges.hpp b/include/rx/ranges.hpp
 index 18fbdbb..f7cd17c 100644
 --- a/include/rx/ranges.hpp
