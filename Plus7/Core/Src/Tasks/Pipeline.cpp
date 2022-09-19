@@ -1,10 +1,13 @@
 #include "Tasks/Pipeline.hpp"
 
+#include <rx/ranges.hpp>
 #include <Utils/Assert.hpp>
+
+#include <algorithm>
 
 namespace p7::tasks {
 
-bool Pipeline::Execute() const
+bool Pipeline::Execute(std::size_t _index) const
 {
     if (dirty)
     {
@@ -13,7 +16,7 @@ bool Pipeline::Execute() const
 
     for (auto taskId : std::as_const(executionOrder))
     {
-        tasks[taskId]->Call(0);
+        tasks[taskId]->Call(_index);
     }
 
     return true;
@@ -24,12 +27,12 @@ void Pipeline::Build()
     executionOrder.clear();
     executionOrder.reserve(tasks.size());
 
-    std::vector<std::size_t> dependencies;
-    dependencies.resize(tasks.size());
+    std::vector<std::size_t> dependencies(tasks.size(), 0);
 
+    auto isNotSelf = [](auto id) { return id != self<void>; };
     for (auto& task : std::as_const(tasks))
     {
-        const auto nbParents = task->GetParents().size();
+        const auto nbParents = task->GetParents() | rx::filter(isNotSelf) | rx::count();
         if (nbParents == 0)
         {
             executionOrder.emplace_back(task->GetID());
@@ -44,10 +47,13 @@ void Pipeline::Build()
 
         for (auto id : task->GetChildren())
         {
-            --dependencies[id];
-            if (dependencies[id] == 0)
+            if (id != self<void>)
             {
-                executionOrder.push_back(id);
+                --dependencies[id];
+                if (dependencies[id] == 0)
+                {
+                    executionOrder.push_back(id);
+                }
             }
         }
     }
@@ -57,12 +63,13 @@ void Pipeline::Build()
 
 bool Pipeline::ExecuteWhile(TypedID<bool> _task) const
 {
-    auto& whileTask = GetTask(_task);
-    bool  valid     = true;
-    bool  stop      = false;
+    auto&       whileTask = GetTask(_task);
+    bool        valid     = true;
+    bool        stop      = false;
+    std::size_t index     = 0;
     while (valid && !stop)
     {
-        valid = Execute();
+        valid = Execute(index++);
         stop  = whileTask.GetReturnValue(0);
     }
     return valid;

@@ -58,6 +58,7 @@ private:
     // ImGui
     ImGuiContext* context;
 
-    uint64_t frame = 0;
+    uint64_t frame    = 0;
+    uint32_t lastTick = 0;
 };
 } // namespace p7::gfx

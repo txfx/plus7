@@ -4,6 +4,7 @@
 #include <MouseState.hpp>
 #include <Tasks/Pipeline.hpp>
 #include <Utils/Assert.hpp>
+
 #include <cstring>
 #include <imgui.h>
 
@@ -54,32 +55,29 @@ void main()
     Out_Color = Frag_Color * texture( Texture, Frag_UV.st);
 })";
 
-constexpr VertexLayoutProperties vtxLayoutProperties = {
-    { VertexAttribute::Type::XYZW32F, 0 },
-    { VertexAttribute::Type::R8G8B8A8_UNORM, 0 }
-};
+constexpr VertexLayoutProperties vtxLayoutProperties { { VertexAttribute::Type::XYZW32F, 0 },
+                                                       { VertexAttribute::Type::R8G8B8A8_UNORM, 0 } };
 
 } // namespace
 
 using namespace p7::tasks;
 
-ImGui::ImGui(tasks::Pipeline&               _pipeline,
-             TypedID<inputs::MouseState>    _mouseTask,
-             TypedID<inputs::KeyboardState> _keyboardTask,
-             Renderer&                      _renderer)
-    : beginFrameTask(
-        _pipeline.AddTask(
-            "ImGui begin frame"_name,
-            consuming(_mouseTask, _keyboardTask),
-            [&](const auto& mouseState, const auto& keyboardState) {
-                return this->BeginFrame(mouseState, keyboardState, _renderer);
-            }))
-    , endFrameTask(
-          _pipeline.AddTask(
-              "ImGui end frame"_name,
-              consuming(beginFrameTask),
-              before(_renderer.GetEndFrameTask()),
-              [&](uint64_t) { this->EndFrame(_renderer); }))
+ImGui::ImGui(
+  tasks::Pipeline&               _pipeline,
+  TypedID<inputs::MouseState>    _mouseTask,
+  TypedID<inputs::KeyboardState> _keyboardTask,
+  Renderer&                      _renderer)
+    : beginFrameTask(_pipeline.AddTask(
+      "ImGui begin frame"_name,
+      consuming(_mouseTask, _keyboardTask),
+      [&](const auto& mouseState, const auto& keyboardState) {
+          return this->BeginFrame(mouseState, keyboardState, _renderer);
+      }))
+    , endFrameTask(_pipeline.AddTask(
+        "ImGui end frame"_name,
+        consuming(beginFrameTask),
+        before(_renderer.GetEndFrameTask()),
+        [&](uint64_t) { this->EndFrame(_renderer); }))
     , blendState(blendProps)
     , depthState(depthProps)
     , rasterizerState(rasterizerProps)
@@ -99,7 +97,8 @@ ImGui::ImGui(tasks::Pipeline&               _pipeline,
     static_assert(sizeof(ImDrawVert) == sizeof(ImVec2) * 2 + sizeof(ImU32));
 
 #if IMGUI_MODULE_NEED_SDL
-    // Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
+    // Keyboard mapping. ImGui will use those indices to peek into the
+    // io.KeysDown[] array.
     io.KeyMap[ImGuiKey_Tab]        = SDL_SCANCODE_TAB;
     io.KeyMap[ImGuiKey_LeftArrow]  = SDL_SCANCODE_LEFT;
     io.KeyMap[ImGuiKey_RightArrow] = SDL_SCANCODE_RIGHT;
@@ -124,15 +123,12 @@ ImGui::ImGui(tasks::Pipeline&               _pipeline,
 #endif // HACK
 }
 
-ImGui::~ImGui()
-{
-    ::ImGui::DestroyContext(context);
-}
+ImGui::~ImGui() { ::ImGui::DestroyContext(context); }
 
 uint64_t ImGui::BeginFrame(
-    const inputs::MouseState&    _mouseState,
-    const inputs::KeyboardState& _keyboardState,
-    const Renderer&              _renderer)
+  const inputs::MouseState&    _mouseState,
+  const inputs::KeyboardState& _keyboardState,
+  const Renderer&              _renderer)
 {
     ImGuiIO& io    = ::ImGui::GetIO();
     io.DisplaySize = ImVec2(_renderer.GetWidth(), _renderer.GetHeight());
@@ -160,6 +156,10 @@ uint64_t ImGui::BeginFrame(
 
 #if IMGUI_MODULE_NEED_SDL
     SDL_ShowCursor(io.MouseDrawCursor ? 0 : 1);
+
+    uint32_t now = SDL_GetTicks();
+    io.DeltaTime = (now - lastTick) / 1000.0f;
+    lastTick     = now;
 #endif
 
     ::ImGui::NewFrame();
@@ -178,7 +178,8 @@ void ImGui::DrawLists(ImDrawData* draw_data, Renderer& _renderer)
     if (draw_data == nullptr)
         return;
 
-    // Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
+    // Avoid rendering when minimized, scale coordinates for retina displays
+    // (screen coordinates != framebuffer coordinates)
     ImGuiIO& io        = ::ImGui::GetIO();
     int      fb_width  = (int)(io.DisplaySize.x * io.DisplayFramebufferScale.x);
     int      fb_height = (int)(io.DisplaySize.y * io.DisplayFramebufferScale.y);
@@ -189,7 +190,8 @@ void ImGui::DrawLists(ImDrawData* draw_data, Renderer& _renderer)
 
     auto& cb = _renderer.GetCommandBuffer();
 
-    // Setup render state: alpha-blending enabled, no face culling, no depth testing, scissor enabled, polygon fill
+    // Setup render state: alpha-blending enabled, no face culling, no depth
+    // testing, scissor enabled, polygon fill
     cb.BindBlendState(blendState);
     cb.BindDepthState(depthState);
     cb.BindRasterizerState(rasterizerState);
@@ -216,13 +218,13 @@ void ImGui::DrawLists(ImDrawData* draw_data, Renderer& _renderer)
         int         idx_buffer_offset = 0;
 
         auto vertex = _renderer.CreateTempBuffer(
-            { BufferType::Vertex, static_cast<uint32_t>(cmd_list->VtxBuffer.Size * sizeof(ImDrawVert)) },
-            cmd_list->VtxBuffer.Data);
+          { BufferType::Vertex, static_cast<uint32_t>(cmd_list->VtxBuffer.Size * sizeof(ImDrawVert)) },
+          cmd_list->VtxBuffer.Data);
         cb.BindVertexBuffer(vertex, 0);
 
         auto index = _renderer.CreateTempBuffer(
-            { BufferType::Index, static_cast<uint32_t>(cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx)) },
-            cmd_list->IdxBuffer.Data);
+          { BufferType::Index, static_cast<uint32_t>(cmd_list->IdxBuffer.Size * sizeof(ImDrawIdx)) },
+          cmd_list->IdxBuffer.Data);
         cb.BindIndexBuffer(index);
 
         for (int cmd_i = 0; cmd_i < cmd_list->CmdBuffer.Size; cmd_i++)
@@ -235,7 +237,11 @@ void ImGui::DrawLists(ImDrawData* draw_data, Renderer& _renderer)
             else
             {
                 cb.BindTexture(*static_cast<TexturePtr*>(pcmd->TextureId), 0);
-                cb.SetScissor(pcmd->ClipRect.x, fb_height - pcmd->ClipRect.w, pcmd->ClipRect.z - pcmd->ClipRect.x, pcmd->ClipRect.w - pcmd->ClipRect.y);
+                cb.SetScissor(
+                  pcmd->ClipRect.x,
+                  fb_height - pcmd->ClipRect.w,
+                  pcmd->ClipRect.z - pcmd->ClipRect.x,
+                  pcmd->ClipRect.w - pcmd->ClipRect.y);
                 cb.DrawIndexed(pcmd->ElemCount, 1, idx_buffer_offset, 0, 0);
             }
             idx_buffer_offset += pcmd->ElemCount;

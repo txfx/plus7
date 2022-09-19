@@ -1,15 +1,15 @@
 #pragma once
 
+#include "Task.hpp"
+#include "TaskDependencies.hpp"
+#include "TaskID.hpp"
+
 #include <array>
 #include <cstdint>
 #include <memory>
 #include <tuple>
 #include <type_traits>
 #include <utility>
-
-#include "Task.hpp"
-#include "TaskDependencies.hpp"
-#include "TaskID.hpp"
 
 namespace p7::tasks {
 
@@ -49,9 +49,16 @@ struct TypedTask final : TaskWithReturn<std::invoke_result_t<F, Ts...>>
 private:
     friend struct Pipeline;
 
-    using Base     = TaskWithReturn<std::invoke_result_t<F, Ts...>>;
-    using TReturn  = typename Base::TReturn;
-    using TDepsRef = std::tuple<const TaskWithReturn<Ts>&...>;
+    using Base    = TaskWithReturn<std::invoke_result_t<F, Ts...>>;
+    using TReturn = typename Base::TReturn;
+
+    template <typename T>
+    struct TDepRef
+    {
+        const TaskWithReturn<T>& task;
+        const int32_t            offset;
+    };
+    using TDepsRef = std::tuple<TDepRef<Ts>...>;
 
     using TIndex = uint16_t;
     template <TIndex... Ids>
@@ -59,66 +66,57 @@ private:
     using make_id_sequence = std::make_integer_sequence<TIndex, sizeof...(Ts)>;
 
     template <std::size_t NParent, std::size_t NChild>
-    explicit TypedTask(TypedID<TReturn>                              _id,
-                       Name                                          _name,
-                       F                                             _functor,
-                       TypedTaskDependencies<NParent, NChild, Ts...> _dependencies,
-                       const TaskList&                               _tasks)
+    explicit TypedTask(
+      TypedID<TReturn>                              _id,
+      Name                                          _name,
+      F                                             _functor,
+      TypedTaskDependencies<NParent, NChild, Ts...> _dependencies,
+      const TaskList&                               _tasks)
         : Base(_id, _name, _dependencies)
         , functor(_functor)
-        , consumedTasks(GetTaskReferences(_tasks, make_id_sequence {}))
-    {}
+        , dependencies(GetDependencies(_tasks, make_id_sequence {}))
+    { }
+
+    template <typename T>
+    TDepRef<T> GetTask(std::size_t _index, const TaskList& _tasks) const
+    {
+        const ID    parent = Base::dependencies.parents[_index];
+        const Task* task   = (parent == self<void>) ? this : _tasks[parent].get();
+        return { static_cast<const TaskWithReturn<T>&>(*task), parent.GetOffset() };
+    }
 
     template <TIndex... IDs>
-    TDepsRef GetTaskReferences(const TaskList& _tasks, id_sequence<IDs...>)
+    TDepsRef GetDependencies(const TaskList& _tasks, id_sequence<IDs...>) const
     {
-        return { *static_cast<TaskWithReturn<Ts>*>(_tasks[Base::dependencies.parents[IDs]].get())... };
+        return { GetTask<Ts>(IDs, _tasks)... };
     }
 
-    void Call(std::size_t _index) override
-    {
-        CallInternal(_index, make_id_sequence {});
-    }
+    void Call(std::size_t _index) override { CallInternal(_index, make_id_sequence {}); }
 
     template <TIndex... IDs>
     void CallInternal([[maybe_unused]] std::size_t _index, id_sequence<IDs...>)
     {
-        constexpr bool has_arguments = ((!std::is_void_v<Ts> || ...));
-
         if constexpr (Base::has_return)
         {
             auto& ret = Base::GetReturnValue(_index);
-            if constexpr (!has_arguments)
-            {
-                ret = functor();
-            }
-            else
-            {
-                ret = functor(GetParameter<IDs>(_index)...);
-            }
+            ret.~TReturn();
+            new (&ret) TReturn { functor(GetParameter<IDs>(_index)...) };
         }
         else
         {
-            if constexpr (!has_arguments)
-            {
-                functor();
-            }
-            else
-            {
-                functor(GetParameter<IDs>(_index)...);
-            }
+            functor(GetParameter<IDs>(_index)...);
         }
     }
 
     template <TIndex ID>
     auto GetParameter(std::size_t _index)
     {
-        const auto& task = std::get<ID>(consumedTasks);
-        return task.GetReturnValue(_index);
+        const auto& dependency = std::get<ID>(dependencies);
+        return dependency.task.GetReturnValue(_index + dependency.offset);
     }
 
     const F        functor;
-    const TDepsRef consumedTasks;
+    const TDepsRef dependencies;
 };
 
 } // namespace p7::tasks

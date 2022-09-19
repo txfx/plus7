@@ -1,12 +1,15 @@
 #pragma once
 
+#include "Tasks/Task.hpp"
+#include "TypedTask.hpp"
+
+#include <rx/ranges.hpp>
+#include <Utils/NonCopyable.hpp>
+
 #include <memory>
 #include <type_traits>
 #include <utility>
 #include <vector>
-
-#include "TypedTask.hpp"
-#include <Utils/NonCopyable.hpp>
 
 namespace p7::tasks {
 
@@ -30,8 +33,16 @@ struct Pipeline : public NonCopyable
     template <typename T>
     const TaskWithReturn<T>& GetTask(TypedID<T> _id) const;
 
+    const Task& GetTask(ID _id) const { return *tasks[_id]; }
+
+    auto GetTasks() const
+    {
+        auto deref = [](const auto& t) -> const auto& { return *t; };
+        return tasks | rx::transform(deref);
+    }
+
     void Build();
-    bool Execute() const;
+    bool Execute(std::size_t _index) const;
     bool ExecuteWhile(TypedID<bool> _dep) const;
 
 private:
@@ -69,8 +80,9 @@ auto Pipeline::AddTask(Name _name, T1 _dependencies1, T2 _dependencies2, TArgs&&
 template <typename F, std::size_t NParent, std::size_t NChild, typename... Ts>
 auto Pipeline::AddTask(Name _name, TypedTaskDependencies<NParent, NChild, Ts...> _dependencies, F _functor)
 {
-    static_assert(std::is_invocable<F, Ts...>::value,
-                  "Your functor is not callable with the return values from the consume dependencies");
+    static_assert(
+      std::is_invocable_v<F, Ts...>,
+      "Your functor is not callable with the return values from the consumed dependencies");
 
     using TTask = TypedTask<F, Ts...>;
 
@@ -81,12 +93,14 @@ auto Pipeline::AddTask(Name _name, TypedTaskDependencies<NParent, NChild, Ts...>
 
     for (auto parentId : tasks.back()->GetParents())
     {
-        tasks[parentId]->GetChildren().emplace_back(id);
+        if (parentId != self<void>)
+            tasks[parentId]->GetChildren().emplace_back(id);
     }
 
     for (auto childId : tasks.back()->GetChildren())
     {
-        tasks[childId]->GetParents().emplace_back(id);
+        if (childId != self<void>)
+            tasks[childId]->GetParents().emplace_back(id);
     }
 
     dirty = true;
@@ -97,7 +111,7 @@ auto Pipeline::AddTask(Name _name, TypedTaskDependencies<NParent, NChild, Ts...>
 template <typename T>
 const TaskWithReturn<T>& Pipeline::GetTask(TypedID<T> _id) const
 {
-    return static_cast<const TaskWithReturn<T>&>(*tasks[_id.value].get());
+    return static_cast<const TaskWithReturn<T>&>(*tasks[_id.value]);
 }
 
 } // namespace p7::tasks

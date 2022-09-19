@@ -14,10 +14,18 @@ namespace p7::sdl {
 
 struct WindowedApp : NonCopyable
 {
+    struct FrameInfo
+    {
+        uint32_t index         = 0;
+        uint32_t startTime     = 0;
+        uint32_t endTime       = 0;
+        bool     exitRequested = false;
+    };
+
     WindowedApp(tasks::Pipeline& _pipeline, const char* _name, int _w, int _h);
     ~WindowedApp();
 
-    const tasks::TypedID<bool>                  mainTask;
+    const tasks::TypedID<FrameInfo>             mainTask;
     const tasks::TypedID<inputs::MouseState>    mouseTask;
     const tasks::TypedID<inputs::KeyboardState> keyboardTask;
     const std::unique_ptr<gfx::Renderer>        renderer;

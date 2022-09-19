@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <type_traits>
 
 namespace p7::tasks {
 
@@ -11,39 +12,48 @@ struct ID
 {
     using type = uint16_t;
 
+    constexpr ID()
+        : ID(-1)
+    { }
+
     operator type() const { return value; }
+
+    ID(const ID&)            = default;
+    ID& operator=(const ID&) = default;
+
+    ID prev() const { return { value, offset - 1 }; }
+    ID next() const { return { value, offset + 1 }; }
+
+    int32_t GetOffset() const { return offset; }
 
 protected:
     constexpr explicit ID(type _id)
         : value(_id)
-    {}
-    type value;
+        , offset(0)
+    { }
 
-private:
-    // This only exist to please MSVC that cannot construct
-    // a zero sized std::array without a default ctor for the
-    // element type.
-    constexpr ID()
-        : ID(0)
-    {}
-    friend constexpr auto NoDependencies();
-    template <typename... Ts>
-    friend constexpr auto consuming(TypedID<Ts>...);
-    template <typename... Ts>
-    friend constexpr auto after(Ts...);
-    template <typename... Ts>
-    friend constexpr auto before(Ts...);
+    constexpr ID(type _id, int32_t _offset)
+        : value(_id)
+        , offset(_offset)
+    { }
+
+    type    value;
+    int32_t offset;
 };
 
 template <typename T>
 struct TypedID : public ID
 {
+    using ID::ID;
+
+    TypedID<T> prev() const { return { value, offset - 1 }; }
+    TypedID<T> next() const { return { value, offset + 1 }; }
+
 protected:
     explicit constexpr TypedID(ID::type _id)
         : ID(_id)
-    {}
+    { }
 
-private:
     template <std::size_t NParent, std::size_t NChild, typename... Ts>
     friend struct TypedTaskDependencies;
     friend struct Pipeline;
@@ -60,12 +70,12 @@ private:
     constexpr Name(const char* literal, std::size_t len)
         : value(literal)
         , size(len)
-    {}
+    { }
 };
 
-constexpr Name operator"" _name(char const* str, std::size_t len)
-{
-    return Name(str, len);
-}
+constexpr Name operator"" _name(char const* str, std::size_t len) { return Name(str, len); }
+
+template <typename T>
+inline constexpr TypedID<T> self;
 
 } // namespace p7::tasks
