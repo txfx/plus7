@@ -35,7 +35,7 @@ jobs:
     
     - uses: actions/upload-artifact@v3
       with:
-        name: HelloWorld-binary (${{ compiler }})
+        name: HelloWorld-binary (${{ matrix.compiler }})
         path: build/Samples/HelloWorld
 
   windows:
