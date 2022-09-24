@@ -69,8 +69,9 @@ bool Pipeline::ExecuteWhile(TypedID<bool> _task) const
     std::size_t index     = 0;
     while (valid && !stop)
     {
-        valid = Execute(index++);
-        stop  = whileTask.GetReturnValue(0);
+        valid = Execute(index);
+        stop  = whileTask.GetReturnValue(index);
+        index++;
     }
     return valid;
 }
