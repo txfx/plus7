@@ -36,7 +36,7 @@ jobs:
         /usr/bin/cmake -S . -B build -DCMAKE_BUILD_TYPE=${{ env.CMAKE_BUILD_TYPE }}
         /usr/bin/cmake --build build -j8
     
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: HelloWorld-binary (${{ matrix.compiler }})
         path: build/Samples/HelloWorld
@@ -50,7 +50,7 @@ jobs:
         cmake -S . -B build -DCMAKE_CONFIGURATION_TYPES=${{ env.CMAKE_BUILD_TYPE }}
         cmake --build build -j8 --config ${{ env.CMAKE_BUILD_TYPE }}
     
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: HelloWorld-binary (win)
         path: build/Samples/${{ env.CMAKE_BUILD_TYPE }}/HelloWorld.exe
