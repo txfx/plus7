@@ -1,13 +1,12 @@
 #include <ImGui.hpp>
-#include <rx/ranges.hpp>
 #include <SdlApp.hpp>
 #include <Tasks/Pipeline.hpp>
 
 #include <algorithm>
 #include <functional>
 #include <imgui.h>
-#include <iterator>
 #include <optional>
+#include <ranges>
 
 int main()
 {
@@ -50,11 +49,11 @@ int main()
 
     auto isParent = [&](ID parent, ID child) {
         auto& parents = pipeline.GetTask(child).GetParents();
-        return parents | rx::any_of([parent](auto id) { return id == parent; });
+        return std::ranges::any_of(parents, [parent](auto id) { return id == parent; });
     };
     auto isChild = [&](ID child, ID parent) {
         auto& children = pipeline.GetTask(parent).GetChildren();
-        return children | rx::any_of([child](auto id) { return id == child; });
+        return std::ranges::any_of(children, [child](auto id) { return id == child; });
     };
 
     pipeline.AddTask("Display Task Graph"_name, after(imgui.beginFrameTask), before(imgui.endFrameTask), [&]() {
@@ -123,7 +122,9 @@ int main()
         return std::make_pair(getTaskDepth(id), id);
     };
 
-    depthsAndIds = pipeline.GetTasks() | rx::transform(toDepthAndId) | rx::sort() | rx::to_vector();
+    auto view    = pipeline.GetTasks() | std::views::transform(toDepthAndId);
+    depthsAndIds = { view.begin(), view.end() };
+    std::ranges::sort(depthsAndIds);
 
     pipeline.Build();
     pipeline.ExecuteWhile(cont);

@@ -1,6 +1,5 @@
 #include "Tasks/Pipeline.hpp"
 
-#include <rx/ranges.hpp>
 #include <Utils/Assert.hpp>
 
 #include <algorithm>
@@ -32,7 +31,7 @@ void Pipeline::Build()
     auto isNotSelf = [](auto id) { return id != self<void>; };
     for (auto& task : std::as_const(tasks))
     {
-        const auto nbParents = task->GetParents() | rx::filter(isNotSelf) | rx::count();
+        const auto nbParents = std::ranges::count_if(task->GetParents(), isNotSelf);
         if (nbParents == 0)
         {
             executionOrder.emplace_back(task->GetID());

@@ -4,7 +4,7 @@ FetchContent_Declare(
     SDL2
     GIT_REPOSITORY  https://github.com/libsdl-org/SDL
     GIT_SHALLOW     TRUE
-    GIT_TAG         main
+    GIT_TAG         release-2.30.2
 )
 
 FetchContent_MakeAvailable(SDL2)

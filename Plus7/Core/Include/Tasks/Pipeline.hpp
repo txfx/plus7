@@ -3,10 +3,10 @@
 #include "Tasks/Task.hpp"
 #include "TypedTask.hpp"
 
-#include <rx/ranges.hpp>
 #include <Utils/NonCopyable.hpp>
 
 #include <memory>
+#include <ranges>
 #include <type_traits>
 #include <utility>
 #include <vector>
@@ -38,7 +38,7 @@ struct Pipeline : public NonCopyable
     auto GetTasks() const
     {
         auto deref = [](const auto& t) -> const auto& { return *t; };
-        return tasks | rx::transform(deref);
+        return tasks | std::views::transform(deref);
     }
 
     void Build();
