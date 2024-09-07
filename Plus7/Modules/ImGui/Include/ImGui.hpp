@@ -22,10 +22,11 @@ namespace p7::gfx {
 struct ImGui
 {
 public:
-    ImGui(tasks::Pipeline&                      _pipeline,
-          tasks::TypedID<inputs::MouseState>    _mouseTask,
-          tasks::TypedID<inputs::KeyboardState> _keyboardTask,
-          Renderer&                             _renderer);
+    ImGui(
+      tasks::Pipeline&                      _pipeline,
+      tasks::TypedID<inputs::MouseState>    _mouseTask,
+      tasks::TypedID<inputs::KeyboardState> _keyboardTask,
+      Renderer&                             _renderer);
     ~ImGui();
 
     // Tasks
@@ -33,10 +34,12 @@ public:
     const tasks::TypedID<void>     endFrameTask;
 
 private:
-    uint64_t BeginFrame(const inputs::MouseState&    _mouseState,
-                        const inputs::KeyboardState& _keyboardState,
-                        const Renderer&              _renderer);
-    void     EndFrame(Renderer& _renderer);
+    uint64_t BeginFrame(
+      const inputs::MouseState&    _mouseState,
+      const inputs::KeyboardState& _prevKeyboardState,
+      const inputs::KeyboardState& _keyboardState,
+      const Renderer&              _renderer);
+    void EndFrame(Renderer& _renderer);
 
     void DrawLists(ImDrawData* draw_data, Renderer& _renderer);
 
